@@ -33,3 +33,15 @@ python manage.py runserver
 ## Документация
 
 http://localhost:8000/api/docs
+
+### Токен
+
+Выдаёт конечная точка jwt/create
+
+{
+
+"email": "admin@admin.com",
+
+"password": "admin"
+
+}
