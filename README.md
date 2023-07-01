@@ -8,7 +8,7 @@
 
 ## Запуск
 
-git clone git@github.com:Konstantin8891/Tracker.git
+git clone https://github.com/Konstantin8891/Tracker.git
 
 cd backend
 
