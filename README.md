@@ -33,3 +33,19 @@ python manage.py runserver
 ## Документация
 
 http://localhost:8000/api/docs
+
+Требует авторизации (кнопка authorize)
+
+Bearer {token}
+
+### Токен
+
+Выдаёт конечная точка jwt/create
+
+{
+
+"email": "admin@admin.com",
+
+"password": "admin"
+
+}
