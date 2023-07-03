@@ -1,0 +1,433 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2023-07-03T04:52:29.620Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Phone\", \"Date of birth\", \"Gender\", \"Country\", \"Timezone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2023-07-03T04:53:28.600Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "2",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Username\", \"Phone\", \"Date of birth\", \"Gender\", \"Country\", \"Timezone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2023-07-03T04:53:42.917Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2023-07-03T05:14:11.660Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "1",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2023-07-03T05:14:35.025Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2023-07-03T05:14:51.851Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "1",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2023-07-03T05:15:04.417Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "2",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2023-07-03T06:05:25.429Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "admin@admin.com(1)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"\\u0414\\u043e\\u043b\\u0436\\u043d\\u043e\\u0441\\u0442\\u044c\", \"\\u0421\\u0442\\u0440\\u0430\\u043d\\u0430\", \"\\u0427\\u0430\\u0441\\u043e\\u0432\\u043e\\u0439 \\u043f\\u043e\\u044f\\u0441\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2023-07-03T06:06:20.417Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "user@user.com(2)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"\\u0414\\u043e\\u043b\\u0436\\u043d\\u043e\\u0441\\u0442\\u044c\", \"\\u0421\\u0442\\u0440\\u0430\\u043d\\u0430\", \"\\u0427\\u0430\\u0441\\u043e\\u0432\\u043e\\u0439 \\u043f\\u043e\\u044f\\u0441\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2023-07-03T06:06:35.100Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "admin@admin.com(1)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2023-07-03T06:06:42.951Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "user@user.com(2)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Last name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2023-07-03T06:08:09.317Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "3",
+    "object_repr": "user_2@user.com(3)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "o5f5b6tqjukm5gbis3y9o8o9dyfx2k40",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQAP-FsyELZbPUo3e_gbA8pGogKe3J-O9K0oNeZybzEs7vW3F7T6tbojgLJU6_jH14pDpEvPt6azK0uq0Ly5HIw3Z5bTE9L0f7Nyi-l7HNhDhlzRA4qKBUBkM6T4ZDjt4wEGqImLwGyjMobSzNaC3xNyZC8f4A3wo3MA:1qGBHg:ybXRVGxDCRmWXxQzQSFEyJNTUofhkZSe0OebtJffxmc",
+    "expire_date": "2023-07-17T04:35:32.573Z"
+  }
+},
+{
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "last_login": "2023-07-03T04:35:32Z",
+    "is_superuser": true,
+    "first_name": "Иван",
+    "last_name": "Иванов",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2023-06-29T17:35:13Z",
+    "email": "admin@admin.com",
+    "username": "admin",
+    "photo": "",
+    "phone": "+79223332233",
+    "position": "Директор",
+    "date_of_birth": "2023-07-03",
+    "gender": "male",
+    "country": "Россия",
+    "timezone": "Europe/Moscow",
+    "password": "pbkdf2_sha256$600000$JJzAWcOa8467rFDqkPzQSl$UZD9A2fKau0L9StNYYtpqNMC7iIpjtB9uUbya7/+yFQ=",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 2,
+  "fields": {
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Ольга",
+    "last_name": "Петрова",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-06-30T06:56:00Z",
+    "email": "user@user.com",
+    "username": "user",
+    "photo": "",
+    "phone": "+79992233223",
+    "position": "Менеджер",
+    "date_of_birth": "2023-07-03",
+    "gender": "female",
+    "country": "Беларусь",
+    "timezone": "Europe/Minsk",
+    "password": "pbkdf2_sha256$600000$ApktMOgjZsLGBmVyZbWYLZ$pmQCLO5F+Hl8kxSxC8yE1CRq+3hJpHYhfmFT2azcfj8=",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 3,
+  "fields": {
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Сергей",
+    "last_name": "Акопян",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-07-03T06:08:09.304Z",
+    "email": "user_2@user.com",
+    "username": "user_2",
+    "photo": "",
+    "phone": "+79989989898",
+    "position": "Работник",
+    "date_of_birth": null,
+    "gender": "male",
+    "country": "Армения",
+    "timezone": "Asia/Yerevan",
+    "password": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 2,
+  "fields": {
+    "title": "string_patched"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 3,
+  "fields": {
+    "title": "string1"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 4,
+  "fields": {
+    "title": "string4"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 5,
+  "fields": {
+    "title": "string5"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 6,
+  "fields": {
+    "title": "string6"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 7,
+  "fields": {
+    "title": "string7"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 8,
+  "fields": {
+    "title": "string8"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 9,
+  "fields": {
+    "title": "string9"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 10,
+  "fields": {
+    "title": "string10"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 11,
+  "fields": {
+    "title": "string11"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 12,
+  "fields": {
+    "title": "string12"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 13,
+  "fields": {
+    "title": "string13"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 1,
+  "fields": {
+    "organization_id": 2,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 2,
+  "fields": {
+    "organization_id": 3,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 3,
+  "fields": {
+    "organization_id": 4,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 4,
+  "fields": {
+    "organization_id": 5,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 5,
+  "fields": {
+    "organization_id": 6,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 6,
+  "fields": {
+    "organization_id": 7,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 7,
+  "fields": {
+    "organization_id": 8,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 8,
+  "fields": {
+    "organization_id": 9,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 9,
+  "fields": {
+    "organization_id": 10,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 10,
+  "fields": {
+    "organization_id": 11,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 11,
+  "fields": {
+    "organization_id": 12,
+    "user_id": 1,
+    "role": "создатель"
+  }
+},
+{
+  "model": "tasks.organizationuser",
+  "pk": 12,
+  "fields": {
+    "organization_id": 13,
+    "user_id": 1,
+    "role": "создатель"
+  }
+}
+]

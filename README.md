@@ -8,27 +8,40 @@
 
 ## Запуск
 
+```
 git clone https://github.com/Konstantin8891/Tracker.git
 
 cd backend
+```
 
 Windows:
 
+```
 python -m venv venv
 
 source venv/Scripts/activate
+```
 
 Mac, Linux:
 
+```
 python3 -m venv venv
 
 . venv/bin/activate
+```
 
 Далее:
 
+```
 pip install -r requirements.txt
 
+python manage.py migrate
+
+python manage.py loaddata db.json
+
 python manage.py runserver
+
+```
 
 ## Документация
 
@@ -42,6 +55,7 @@ Bearer {token}
 
 Выдаёт конечная точка jwt/create
 
+```
 {
 
 "email": "admin@admin.com",
@@ -49,3 +63,12 @@ Bearer {token}
 "password": "admin"
 
 }
+```
+
+## Сделать дамп базы на Windows
+
+```
+
+python -Xutf8 manage.py dumpdata --exclude auth.permission --exclude contenttypes --indent 2 > db.json
+
+```
