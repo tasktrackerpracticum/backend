@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from .permissions import IsCreatorOrReadOnly, IsProjectOrCreatorOrReadOnly
+from .permissions import IsCreatorOrReadOnly, IsProjectOrCreatorOrReadOnly, IsCreator
 from .serializers import OrganizationViewSerializer, OrganizationCreateSerializer, ProjectSerializer, OrganizationUserSerializer
 from tasks.models import Organization, OrganizationUser, Project
 from users.models import User
@@ -26,8 +26,8 @@ class OrganizationViewSet(ModelViewSet):
         self.perform_create(serializer)
         organization = Organization.objects.get(title=request.data['title'])
         OrganizationUser.objects.create(
-            organization_id=organization,
-            user_id=request.user,
+            organization=organization,
+            user=request.user,
             role='создатель'
         )
         serializer = OrganizationViewSerializer(instance=organization)
@@ -44,15 +44,22 @@ class OrganizationViewSet(ModelViewSet):
         detail=True,
         methods=["PATCH"],
         permission_classes=[IsCreator],
-        url_path="post_user",
+        url_path="add_user",
         serializer_class=OrganizationUserSerializer
     )
-    def post_user(self, request, pk):
+    def add_user(self, request, pk):
         organization = Organization.objects.get(id=pk)
-        user = User.objects.get(id=request.data['user_id'])
+        if OrganizationUser.objects.filter(
+            organization_id=pk,
+            user_id=request.user.id,
+        ).exists():
+            return Response(
+                data='User already added to organization',
+                status=status.HTTP_400_BAD_REQUEST
+            )
         OrganizationUser.objects.create(
             organization_id=pk,
-            user_id=request.data['user_id'],
+            user_id=request.user.id,
             role=request.data['role']
         )
         organization = Organization.objects.get(id=pk)

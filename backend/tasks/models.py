@@ -1,81 +1,119 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
-from timezone_utils.fields import TimeZoneField
-from timezone_utils.choices import PRETTY_ALL_TIMEZONES_CHOICES
 
-from .managers import MyUserManager
+from users.models import User
 
 
-class User(AbstractUser): # is_superuser, is_active, is_staff
+class Organization(models.Model):
+    title = models.CharField(max_length=200, unique=True)
+    users = models.ManyToManyField(User, through='OrganizationUser')
 
-    MALE = 'male'
-    FEMALE = 'female'
 
-    GENDERS = (
-        (MALE, 'male'),
-        (FEMALE, 'female'),
+class OrganizationUser(models.Model):
+
+    OBSERVER = 'наблюдатель'
+    BASE_USER = 'базовый пользователь'
+    PROJECT_MANAGER = 'ПМ'
+    CREATOR = 'создатель'
+    FORBIDDEN = 'запрещено'
+
+    ROLES = (
+        (OBSERVER, 'наблюдатель'),
+        (BASE_USER, 'базовый пользователь'),
+        (PROJECT_MANAGER, 'ПМ'),
+        (CREATOR, 'создатель'),
+        (FORBIDDEN, 'запрещено')
     )
 
-    email = models.EmailField(unique=True)
-    username = models.CharField(
-        'Имя пользователя',
-        max_length=100,
-        null=True,
-        blank=True,
-    )
-    photo = models.ImageField(
-        'Фотография',
-        upload_to='media/users',
-        null=True, blank=True,
-    )
-    phone = PhoneNumberField(
-        verbose_name='Телефон',
-        region='RU',
-        blank=True,
-        null=True,
-    )
-    position = models.CharField(
-        'Должность',
-        max_length=100,
-        null=True,
-        blank=True,
-    )
-    date_of_birth = models.DateField(
-        'Дата рождения',
-        null=True,
-        blank=True,
-    )
-    gender = models.CharField(
-        'Пол',
-        max_length=6,
-        choices=GENDERS,
-        null=True,
-        blank=True,
-    )
-    country = models.CharField( 
-        'Страна',
-        max_length=20,
-        null=True,
-        blank=True,
-    )
-    timezone = TimeZoneField(
-        'Часовой пояс',
-        choices=PRETTY_ALL_TIMEZONES_CHOICES,
-        null=True,
-        blank=True,
-    )
-    password = models.CharField('Пароль', max_length=200)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=ROLES)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
-    objects = MyUserManager()
-
-    
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-    
+        unique_together = ('organization_id', 'user_id',)
+
     def __str__(self):
-        return f"{self.email}({self.id})"
+        return self.role
+
+
+class Project(models.Model):
+    title = models.CharField(max_length=200)
+    organization_id = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='projects')
+    users = models.ManyToManyField(User, through='ProjectUser')
+
+
+class ProjectUser(models.Model):
+
+    OBSERVER = 'наблюдатель'
+    BASE_USER = 'базовый пользователь'
+    PROJECT_MANAGER = 'ПМ'
+    FORBIDDEN = 'запрещено'
+
+    ROLES = (
+        (OBSERVER, 'наблюдатель'),
+        (BASE_USER, 'базовый пользователь'),
+        (PROJECT_MANAGER, 'ПМ'),
+        (FORBIDDEN, 'запрещено')
+    )
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=ROLES)
+
+
+
+class Task(models.Model):
+
+    BACKLOG = 'Беклог'
+    TODO = 'В работе'
+    TEST = 'Тестирование'
+    DONE = 'Завершено'
+    DELETED = 'Удалено'
+
+    COLUMNS = (
+        (BACKLOG, 'Беклог'),
+        (TODO, 'В работе'),
+        (TEST, 'Тестирование'),
+        (DONE, 'Завершено'),
+        (DELETED, 'Удалено'),
+    )
+
+    URGENTLY = 'Срочно'
+    NONURGENTLY = 'Несрочно'
+
+    STATUSES = (
+        (URGENTLY, 'Срочно'),
+        (NONURGENTLY, 'Несрочно'),
+    )
+
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    column = models.CharField(max_length=15, choices=COLUMNS)
+    users = models.ManyToManyField(User, related_name='tasks')
+    project_id = models.ForeignKey(Project, related_name='tasks', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='tasks_author', on_delete=models.CASCADE)
+    status = models.CharField(max_length=15, choices=STATUSES)
+    deadline = models.DateTimeField()
+
+
+class TaskFile(models.Model):
+    title = models.CharField(max_length=200)
+    file = models.ImageField(upload_to='media/tasks')
+    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='files')
+
+
+class TaskImage(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='media/tasks')
+    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='images')
+
+
+class Comment(models.Model):
+    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
+    description = models.TextField()
+    image = models.ImageField(upload_to='media/comments')
+    author = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+
+
+class Subtask(models.Model):
+    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task')
+    subtask_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
