@@ -38,3 +38,10 @@ class IsProjectOrCreatorOrReadOnly(permissions.BasePermission):
         except:
             return False
         return request.method == 'GET' or org_user.role in ('создатель', 'ПМ')
+
+
+class IsCreator(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_anonymous:
+            return False
+        return request.user in obj.users.all()

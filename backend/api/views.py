@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from djoser.views import UserViewSet
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from .permissions import IsCreatorOrReadOnly, IsProjectOrCreatorOrReadOnly
-from .serializers import OrganizationViewSerializer, OrganizationCreateSerializer, ProjectSerializer
+from .serializers import OrganizationViewSerializer, OrganizationCreateSerializer, ProjectSerializer, OrganizationUserSerializer
 from tasks.models import Organization, OrganizationUser, Project
 from users.models import User
 
@@ -38,6 +39,25 @@ class OrganizationViewSet(ModelViewSet):
         serializer = OrganizationViewSerializer(instance=organization, many=True)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+
+    @action(
+        detail=True,
+        methods=["PATCH"],
+        permission_classes=[IsCreator],
+        url_path="post_user",
+        serializer_class=OrganizationUserSerializer
+    )
+    def post_user(self, request, pk):
+        organization = Organization.objects.get(id=pk)
+        user = User.objects.get(id=request.data['user_id'])
+        OrganizationUser.objects.create(
+            organization_id=pk,
+            user_id=request.data['user_id'],
+            role=request.data['role']
+        )
+        organization = Organization.objects.get(id=pk)
+        serializer = OrganizationViewSerializer(instance=organization)
+        return Response(data=serializer.data, status=status.HTTP_206_PARTIAL_CONTENT)
 
 
 class ProjectViewSet(ModelViewSet):
