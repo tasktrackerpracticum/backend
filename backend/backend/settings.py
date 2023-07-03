@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'drf_yasg',
+    "phonenumber_field",
     'users.apps.UsersConfig',
     'tasks.apps.TasksConfig',
 ]
@@ -79,7 +80,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
