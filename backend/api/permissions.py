@@ -22,7 +22,7 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
 
 class IsProjectOrCreatorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        organization_id = request.resolver_match.kwargs.get('organization_id')
+        organization_id = request.resolver_match.kwargs.get('organizations_id')
         organization = Organization.objects.get(id=organization_id)
         try:
             org_user = OrganizationUser.objects.get(organization_id=organization, user_id=request.user)
