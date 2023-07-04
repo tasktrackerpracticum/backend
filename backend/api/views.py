@@ -1,9 +1,9 @@
-from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.mixins import DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
 
 from .permissions import IsCreatorOrReadOnly, IsProjectOrCreatorOrReadOnly
@@ -59,6 +59,18 @@ class OrganizationViewSet(ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_200_OK, headers=headers)
+
+
+class UserDeleteOrganizationViewSet(DestroyModelMixin, GenericViewSet):
+    queryset = OrganizationUser.objects.all()
+    permission_classes = (IsCreatorOrReadOnly,)
+    serializer_class = OrganizationUserAddSerializer
+    lookup_field = 'organization__pk'
+    lookup_url_kwarg = 'organization' 
+     
+    def get_object(self):
+       qs = super().get_queryset()
+       return qs.get(user__pk=self.kwargs.get('user_id'))
 
 
 class ProjectViewSet(ModelViewSet):
