@@ -128,3 +128,10 @@ SWAGGER_SETTINGS = {
       }
    }
 } 
+DJOSER = {
+    'SERIALIZERS': {
+        "user": "api.serializers.UserSerializer",
+        "current_user": "api.serializers.UserSerializer",
+    },
+    'HIDE_USERS': False,
+}
