@@ -3,7 +3,6 @@ from rest_framework.routers import SimpleRouter
 
 from .views import (
     UserViewSet, OrganizationViewSet, ProjectViewSet,
-    UserDeleteOrganizationViewSet
 )
 
 
@@ -21,8 +20,4 @@ router.register(
 
 urlpatterns = [
     path('', include(router.urls)),
-    path(
-    'organizations/<organization>/users/<user_id>',
-    UserDeleteOrganizationViewSet.as_view({'delete': 'destroy'}),
-)
 ]

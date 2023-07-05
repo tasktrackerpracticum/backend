@@ -1,23 +1,51 @@
 from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
 
 from users.models import User
 from tasks.models import Organization, OrganizationUser
 
+class BaseRolePermission(IsAuthenticated):
+    role = None
+
+    def has_object_permission(self, request, view, obj):
+        if obj.users.filter(id=request.user.id).exists():
+            role = OrganizationUser.objects.get(
+                user=request.user, organization=obj).role
+            if role==OrganizationUser.FORBIDDEN:
+                return False
+            return role==self.role
+        return False
+    
+
+class IsCreator(BaseRolePermission):
+    role = OrganizationUser.CREATOR
+
+
+class IsProjectManager(BaseRolePermission):
+    role = OrganizationUser.PROJECT_MANAGER
+
+    
+class IsObserver(BaseRolePermission):
+    role = OrganizationUser.OBSERVER
+
+    
+class IsBaseUser(BaseRolePermission):
+    role = OrganizationUser.BASE_USER
+    
 
 class IsCreatorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
         ids = []
         for user in obj.users.all():
             org_user = OrganizationUser.objects.get(organization=obj, user=user)
             if org_user.role == 'создатель':
                 ids.append(user.id)
-        return (
-            request.method in permissions.SAFE_METHODS and request.user.is_authenticated
-            or request.user.id in ids
-        )
+        return request.user.id in ids
 
 
 class IsProjectOrCreatorOrReadOnly(permissions.BasePermission):
