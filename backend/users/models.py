@@ -78,4 +78,4 @@ class User(AbstractUser): # is_superuser, is_active, is_staff
         verbose_name_plural = 'Пользователи'
     
     def __str__(self):
-        return f"{self.email}({self.id})"
+        return f"{self.email}({self.pk})"

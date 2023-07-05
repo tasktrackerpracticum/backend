@@ -7,6 +7,9 @@ class Organization(models.Model):
     title = models.CharField(max_length=200, unique=True)
     users = models.ManyToManyField(User, through='OrganizationUser')
 
+    def __str__(self):
+        return self.title
+
 
 class OrganizationUser(models.Model):
 
@@ -32,7 +35,7 @@ class OrganizationUser(models.Model):
         unique_together = ('organization', 'user',)
 
     def __str__(self):
-        return self.role
+        return f"{self.organization}: {self.user} -> {self.role}"
 
 
 class Project(models.Model):
