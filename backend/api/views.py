@@ -7,7 +7,7 @@ from djoser.serializers import UserDeleteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from .permissions import (
-    IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated, IsProjectManager,
+    IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated,
     IsAdminUser, IsSelf
 )
 from .serializers import (
