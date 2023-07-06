@@ -51,6 +51,8 @@ http://localhost:8000/api/docs
 
 Bearer {token}
 
+Также работает авторизация Django - нажать кнопку Django Login
+
 ### Токен
 
 Выдаёт конечная точка jwt/create

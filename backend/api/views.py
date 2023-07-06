@@ -7,7 +7,7 @@ from djoser.serializers import UserDeleteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from .permissions import (
-    IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated, IsProjectManager,
+    IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated,
     IsAdminUser, IsSelf
 )
 from .serializers import (
@@ -42,12 +42,7 @@ class OrganizationViewSet(ModelViewSet):
     update_permision_classes = (IsCreator,)
     serializer_class = OrganizationViewSerializer
     action_serializers = {
-        'retrieve': OrganizationViewSerializer,
-        'list': OrganizationViewSerializer,
-        'create': OrganizationViewSerializer,
-        'partial_update': OrganizationViewSerializer,
         'update': OrganizationUserAddSerializer,
-        'delete': OrganizationViewSerializer,
     }
 
     def get_queryset(self):

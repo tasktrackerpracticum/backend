@@ -21,18 +21,6 @@ class IsCreator(BaseRolePermission):
     role = OrganizationUser.CREATOR
 
 
-class IsProjectManager(BaseRolePermission):
-    role = OrganizationUser.PROJECT_MANAGER
-
-    
-class IsObserver(BaseRolePermission):
-    role = OrganizationUser.OBSERVER
-
-    
-class IsBaseUser(BaseRolePermission):
-    role = OrganizationUser.BASE_USER
-    
-
 class IsSelf(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return request.user == obj
