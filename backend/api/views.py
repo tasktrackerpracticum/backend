@@ -42,12 +42,7 @@ class OrganizationViewSet(ModelViewSet):
     update_permision_classes = (IsCreator,)
     serializer_class = OrganizationViewSerializer
     action_serializers = {
-        'retrieve': OrganizationViewSerializer,
-        'list': OrganizationViewSerializer,
-        'create': OrganizationViewSerializer,
-        'partial_update': OrganizationViewSerializer,
         'update': OrganizationUserAddSerializer,
-        'delete': OrganizationViewSerializer,
     }
 
     def get_queryset(self):
