@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from .permissions import (
-    IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated
+    IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated, IsProjectManager,
 )
 from .serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer, ProjectSerializer,
@@ -33,7 +33,7 @@ class UserViewSet(DjoserUserViewSet):
 
 class OrganizationViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
-    update_permision_classes = (IsCreator,)
+    update_permision_classes = (IsCreator | IsProjectManager,)
     serializer_class = OrganizationViewSerializer
     action_serializers = {
         'retrieve': OrganizationViewSerializer,
@@ -52,7 +52,7 @@ class OrganizationViewSet(ModelViewSet):
         return Organization.objects.filter(users=self.request.user).all()
 
     def get_permissions(self):
-        if self.action in ('update', 'partial_update', 'delete'):
+        if self.action in ('patch', 'put', 'destroy'):
             permission_classes = self.update_permision_classes
         else:
             permission_classes = self.permission_classes
@@ -60,7 +60,8 @@ class OrganizationViewSet(ModelViewSet):
     
     def get_serializer_class(self):
         if hasattr(self, 'action_serializers'):
-            return self.action_serializers.get(self.action, self.serializer_class)
+            return self.action_serializers.get(
+                self.action, self.serializer_class)
         return super(OrganizationViewSet, self).get_serializer_class()
  
     def create(self, request, *args, **kwargs):
@@ -91,20 +92,17 @@ class OrganizationViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
     
     def update(self, request, *args, **kwargs):
-        """В этом эндпоинте можно удалить или добавить пользователя в 
-        огранизацию. 
-         - Для удаления передать булев параметр delete_user.
-         - Для добавления пользователя или/и изменения роли 
-            передать user: id, role: string.
+        """В этом эндпоинте можно добавить пользователя или изменить его роль в 
+        огранизации. 
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         organization = self.get_object()
-        user = User.objects.get(id=serializer.initial_data.get('user'))
+        user = User.objects.get(id=serializer.data.get('user'))
         obj, _ = OrganizationUser.objects.update_or_create(
             organization=organization,
             user=user,
-            defaults={'role': serializer.initial_data.get('role')}
+            defaults={'role': serializer.data.get('role')}
         )
         obj.save()
         return Response(
@@ -114,6 +112,23 @@ class OrganizationViewSet(ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         """В этом эндпоинте можно переименовать организацию."""
         return super().partial_update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """В этом эндпоинте можно удалить организацию 
+        или пользователя в организации."""
+        user_id = self.kwargs.get('user_id')
+        if not user_id:
+            return super().destroy(request, *args, **kwargs)
+        user = User.objects.get(id=user_id)
+        organization = Organization.objects.get(id=self.kwargs.get('pk'))
+        org_user = OrganizationUser.objects.get(
+            user=user, organization=organization)
+        org_user.delete()
+        if not OrganizationUser.objects.filter(
+            organization=organization).exists():
+            organization.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
             
 
 class ProjectViewSet(ModelViewSet):

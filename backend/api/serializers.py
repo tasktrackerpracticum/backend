@@ -22,15 +22,19 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
 class OrganizationUserAddSerializer(serializers.ModelSerializer):
     organization = serializers.SerializerMethodField()
     role = serializers.ChoiceField(choices=OrganizationUser.ROLES)
-    delete_user = serializers.BooleanField()
+    user = serializers.SerializerMethodField()
 
     class Meta:
         model = OrganizationUser
-        fields = ('user', 'role', 'organization', 'delete_user')
+        fields = ('user', 'role', 'organization')
         
     def get_organization(self, _):
         return Organization.objects.get(
-            pk=self.context.get('view').kwargs.get('pk')).pk
+            pk=self.context['view'].kwargs.get('pk')).pk
+    
+    def get_user(self, _):
+        return User.objects.get(
+            pk=self.context['view'].kwargs.get('user_id')).pk
         
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):
