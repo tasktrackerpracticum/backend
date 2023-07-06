@@ -2,11 +2,14 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import DestroyModelMixin
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
+from djoser.serializers import UserDeleteSerializer
+from drf_yasg.utils import swagger_auto_schema
 
-from .permissions import IsCreatorOrReadOnly, IsProjectOrCreatorOrReadOnly
+from .permissions import (
+    IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated, IsProjectManager,
+    IsAdminUser, IsSelf
+)
 from .serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer, ProjectSerializer,
     OrganizationUserAddSerializer
@@ -16,7 +19,7 @@ from users.models import User
 
 
 class UserViewSet(DjoserUserViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
     queryset = User.objects.all()
     
     @action(["get", "patch", "delete"], detail=False)
@@ -28,15 +31,48 @@ class UserViewSet(DjoserUserViewSet):
             return self.partial_update(request, *args, **kwargs)
         elif request.method == "DELETE":
             return self.destroy(request, *args, **kwargs)
-    
+
+    @swagger_auto_schema(request_body=UserDeleteSerializer)
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 
 class OrganizationViewSet(ModelViewSet):
-    queryset = Organization.objects.all()
-    permission_classes = [IsCreatorOrReadOnly]
+    permission_classes = (IsAuthenticated,)
+    update_permision_classes = (IsCreator,)
     serializer_class = OrganizationViewSerializer
+    action_serializers = {
+        'retrieve': OrganizationViewSerializer,
+        'list': OrganizationViewSerializer,
+        'create': OrganizationViewSerializer,
+        'partial_update': OrganizationViewSerializer,
+        'update': OrganizationUserAddSerializer,
+        'delete': OrganizationViewSerializer,
+    }
 
+    def get_queryset(self):
+        """Возвращает только те Организации, в которых участвует авторизованный 
+        пользователь, для администратора - все организации"""
+        if self.request.user.is_staff and self.request.user.is_active:
+            return Organization.objects.all()
+        return Organization.objects.filter(users=self.request.user).all()
+
+    def get_permissions(self):
+        if self.action in ('patch', 'put', 'destroy'):
+            permission_classes = self.update_permision_classes
+        else:
+            permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
+    
+    def get_serializer_class(self):
+        if hasattr(self, 'action_serializers'):
+            return self.action_serializers.get(
+                self.action, self.serializer_class)
+        return super(OrganizationViewSet, self).get_serializer_class()
+ 
     def create(self, request, *args, **kwargs):
+        """В этом эндпоинте создается организация, статус владельца 
+        автоматически получает авторизованный пользователь."""
         serializer = OrganizationCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -44,34 +80,62 @@ class OrganizationViewSet(ModelViewSet):
         OrganizationUser.objects.create(
             organization=organization,
             user=request.user,
-            role='создатель'
+            role=OrganizationUser.CREATOR,
         )
         serializer = OrganizationViewSerializer(instance=organization)
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
+    def retrieve(self, request, *args, **kwargs):
+        """В этом эндпоинте можно посмотреть конкретную 
+        организацию и ее пользователей."""
+        return super().retrieve(request, *args, **kwargs)
 
-    def list(self, request):
-        organization = Organization.objects.filter(users=request.user).all()
-        serializer = OrganizationViewSerializer(
-            instance=organization, many=True
+    def list(self, request, *args, **kwargs):
+        """В этом эндпоинте можно получить весь список 
+        организаций авторизованного пользователя."""
+        return super().list(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        """В этом эндпоинте можно добавить пользователя или изменить его роль в 
+        огранизации. 
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        organization = self.get_object()
+        user = User.objects.get(id=serializer.data.get('user'))
+        obj, _ = OrganizationUser.objects.update_or_create(
+            organization=organization,
+            user=user,
+            defaults={'role': serializer.data.get('role')}
         )
-        headers = self.get_success_headers(serializer.data)
+        obj.save()
         return Response(
-            serializer.data, status=status.HTTP_200_OK, headers=headers)
+            serializer.data, status=status.HTTP_200_OK
+        )
+    
+    def partial_update(self, request, *args, **kwargs):
+        """В этом эндпоинте можно переименовать организацию."""
+        return super().partial_update(request, *args, **kwargs)
 
-
-class UserDeleteOrganizationViewSet(DestroyModelMixin, GenericViewSet):
-    queryset = OrganizationUser.objects.all()
-    permission_classes = (IsCreatorOrReadOnly,)
-    serializer_class = OrganizationUserAddSerializer
-    lookup_field = 'organization__pk'
-    lookup_url_kwarg = 'organization' 
-     
-    def get_object(self):
-       qs = super().get_queryset()
-       return qs.get(user__pk=self.kwargs.get('user_id'))
-
+    def destroy(self, request, *args, **kwargs):
+        """В этом эндпоинте можно удалить организацию 
+        или пользователя в организации."""
+        user_id = self.kwargs.get('user_id')
+        if not user_id:
+            return super().destroy(request, *args, **kwargs)
+        user = User.objects.get(id=user_id)
+        organization = Organization.objects.get(id=self.kwargs.get('pk'))
+        org_user = OrganizationUser.objects.get(
+            user=user, organization=organization)
+        org_user.delete()
+        if not OrganizationUser.objects.filter(
+            organization=organization).exists():
+            organization.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+            
 
 class ProjectViewSet(ModelViewSet):
     queryset = Project.objects.all()

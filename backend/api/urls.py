@@ -3,7 +3,6 @@ from rest_framework.routers import SimpleRouter
 
 from .views import (
     UserViewSet, OrganizationViewSet, ProjectViewSet,
-    UserDeleteOrganizationViewSet
 )
 
 
@@ -12,7 +11,6 @@ app_name = 'api'
 router = SimpleRouter()
 
 router.register('users', UserViewSet)
-router.register('organizations', OrganizationViewSet, basename='organizations')
 router.register(
     r'organizations/(?P<organizations_id>\d+)/projects',
     ProjectViewSet,
@@ -22,7 +20,15 @@ router.register(
 urlpatterns = [
     path('', include(router.urls)),
     path(
-    'organizations/<organization>/users/<user_id>',
-    UserDeleteOrganizationViewSet.as_view({'delete': 'destroy'}),
-)
+        'organizations',
+        OrganizationViewSet.as_view({'get': 'list', 'post': 'create'})
+    ),
+    path(
+        'organizations/<int:pk>/', OrganizationViewSet.as_view(
+        {'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'})
+    ),
+    path(
+        'organizations/<int:pk>/users/<int:user_id>/',
+        OrganizationViewSet.as_view({'delete': 'destroy', 'put': 'update'})
+    ),
 ]
