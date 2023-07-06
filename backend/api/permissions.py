@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from users.models import User
 from tasks.models import Organization, OrganizationUser
@@ -32,6 +32,11 @@ class IsObserver(BaseRolePermission):
 class IsBaseUser(BaseRolePermission):
     role = OrganizationUser.BASE_USER
     
+
+class IsSelf(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj
+
 
 class IsCreatorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):

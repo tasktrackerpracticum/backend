@@ -3,9 +3,12 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from djoser.serializers import UserDeleteSerializer
+from drf_yasg.utils import swagger_auto_schema
 
 from .permissions import (
     IsProjectOrCreatorOrReadOnly, IsCreator, IsAuthenticated, IsProjectManager,
+    IsAdminUser, IsSelf
 )
 from .serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer, ProjectSerializer,
@@ -16,9 +19,10 @@ from users.models import User
 
 
 class UserViewSet(DjoserUserViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
     queryset = User.objects.all()
     
+    # @swagger_auto_schema(method='delete', request_body=UserDeleteSerializer)
     @action(["get", "patch", "delete"], detail=False)
     def me(self, request, *args, **kwargs):
         self.get_object = self.get_instance
@@ -28,7 +32,10 @@ class UserViewSet(DjoserUserViewSet):
             return self.partial_update(request, *args, **kwargs)
         elif request.method == "DELETE":
             return self.destroy(request, *args, **kwargs)
-    
+
+    @swagger_auto_schema(request_body=UserDeleteSerializer)
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 
 class OrganizationViewSet(ModelViewSet):
