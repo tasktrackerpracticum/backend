@@ -7,6 +7,9 @@ class Organization(models.Model):
     title = models.CharField(max_length=200, unique=True)
     users = models.ManyToManyField(User, through='OrganizationUser')
 
+    def __str__(self):
+        return self.title
+
 
 class OrganizationUser(models.Model):
 
@@ -24,20 +27,31 @@ class OrganizationUser(models.Model):
         (FORBIDDEN, 'запрещено')
     )
 
-    organization_id = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name='organization_users'
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='user_organizations'
+    )
     role = models.CharField(max_length=20, choices=ROLES)
 
     class Meta:
-        unique_together = ('organization_id', 'user_id',)
+        unique_together = ('organization', 'user',)
 
     def __str__(self):
-        return self.role
+        return f"{self.organization}: {self.user} -> {self.role}"
 
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
-    organization_id = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='projects')
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name='projects'
+    )
     users = models.ManyToManyField(User, through='ProjectUser')
 
 
@@ -55,8 +69,8 @@ class ProjectUser(models.Model):
         (FORBIDDEN, 'запрещено')
     )
 
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLES)
 
 
@@ -89,8 +103,10 @@ class Task(models.Model):
     description = models.TextField()
     column = models.CharField(max_length=15, choices=COLUMNS)
     users = models.ManyToManyField(User, related_name='tasks')
-    project_id = models.ForeignKey(Project, related_name='tasks', on_delete=models.CASCADE)
-    author = models.ForeignKey(User, related_name='tasks_author', on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        Project, related_name='tasks', on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, related_name='tasks_author', on_delete=models.CASCADE)
     status = models.CharField(max_length=15, choices=STATUSES)
     deadline = models.DateTimeField()
 
@@ -103,22 +119,28 @@ class Task(models.Model):
 class TaskFile(models.Model):
     title = models.CharField(max_length=200)
     file = models.ImageField(upload_to='media/tasks')
-    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='files')
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name='files')
 
 
 class TaskImage(models.Model):
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='media/tasks')
-    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='images')
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name='images')
 
 
 class Comment(models.Model):
-    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name='comments')
     description = models.TextField()
     image = models.ImageField(upload_to='media/comments')
-    author = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, related_name='comments', on_delete=models.CASCADE)
 
 
 class Subtask(models.Model):
-    task_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task')
-    subtask_id = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name='task')
+    subtask = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name='subtask')
