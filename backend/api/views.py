@@ -22,7 +22,6 @@ class UserViewSet(DjoserUserViewSet):
     permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
     queryset = User.objects.all()
     
-    # @swagger_auto_schema(method='delete', request_body=UserDeleteSerializer)
     @action(["get", "patch", "delete"], detail=False)
     def me(self, request, *args, **kwargs):
         self.get_object = self.get_instance
@@ -40,7 +39,7 @@ class UserViewSet(DjoserUserViewSet):
 
 class OrganizationViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
-    update_permision_classes = (IsCreator | IsProjectManager,)
+    update_permision_classes = (IsCreator,)
     serializer_class = OrganizationViewSerializer
     action_serializers = {
         'retrieve': OrganizationViewSerializer,
