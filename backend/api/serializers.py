@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from tasks.models import Organization, OrganizationUser, Project
+from tasks.models import Organization, OrganizationUser, Project, ProjectUser
 from users.models import User
 
 
@@ -48,6 +48,24 @@ class OrganizationUserAddSerializer(serializers.ModelSerializer):
             pk=self.context['view'].kwargs.get('user_id')).pk
 
 
+class ProjectUserAddSerializer(serializers.ModelSerializer):
+    project = serializers.SerializerMethodField()
+    role = serializers.ChoiceField(choices=ProjectUser.ROLES)
+    user = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProjectUser
+        fields = ('user', 'role', 'project')
+
+    def get_project(self, _):
+        return Project.objects.get(
+            pk=self.context['view'].kwargs.get('project_id')).pk
+
+    def get_user(self, _):
+        return User.objects.get(
+            pk=self.context['view'].kwargs.get('user_id')).pk
+
+
 class OrganizationCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -71,4 +89,11 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ('id', 'title')
+
+
+class ProjectCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = ('title',)

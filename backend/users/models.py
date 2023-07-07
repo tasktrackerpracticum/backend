@@ -30,8 +30,8 @@ class User(AbstractUser): # is_superuser, is_active, is_staff
         null=True, blank=True,
     )
     phone = PhoneNumberField(
-        verbose_name='Телефон',
         region='RU',
+        verbose_name='Телефон',
         blank=True,
         null=True,
     )
@@ -53,7 +53,7 @@ class User(AbstractUser): # is_superuser, is_active, is_staff
         null=True,
         blank=True,
     )
-    country = models.CharField( 
+    country = models.CharField(
         'Страна',
         max_length=20,
         null=True,
@@ -72,10 +72,13 @@ class User(AbstractUser): # is_superuser, is_active, is_staff
 
     objects = MyUserManager()
 
-    
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-    
+
+    @property
+    def is_admin(self):
+        return self.is_superuser or self.is_staff
+
     def __str__(self):
         return f"{self.email}({self.pk})"

@@ -558,5 +558,97 @@
     "user": 5,
     "role": "базовый пользователь"
   }
+},
+{
+  "model": "tasks.project",
+  "pk": 1,
+  "fields": {
+    "title": "Украсть у корейко миллион",
+    "organization": 1
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 2,
+  "fields": {
+    "title": "Жениться на Зосе",
+    "organization": 1
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 3,
+  "fields": {
+    "title": "Продать облигации с доходностью 100000%",
+    "organization": 2
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 4,
+  "fields": {
+    "title": "Выплатить дивиденды",
+    "organization": 5
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 5,
+  "fields": {
+    "title": "И зубной порошок",
+    "organization": 3
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 6,
+  "fields": {
+    "title": "И густой гребешок",
+    "organization": 3
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 7,
+  "fields": {
+    "title": "И полотенце пушистое",
+    "organization": 3
+  }
+},
+{
+  "model": "tasks.projectuser",
+  "pk": 1,
+  "fields": {
+    "project": 1,
+    "user": 3,
+    "role": "запрещено"
+  }
+},
+{
+  "model": "tasks.projectuser",
+  "pk": 2,
+  "fields": {
+    "project": 1,
+    "user": 2,
+    "role": "наблюдатель"
+  }
+},
+{
+  "model": "tasks.projectuser",
+  "pk": 3,
+  "fields": {
+    "project": 1,
+    "user": 1,
+    "role": "ПМ"
+  }
+},
+{
+  "model": "tasks.projectuser",
+  "pk": 4,
+  "fields": {
+    "project": 2,
+    "user": 5,
+    "role": "базовый пользователь"
+  }
 }
 ]
