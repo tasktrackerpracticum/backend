@@ -74,7 +74,6 @@ class ProjectUser(models.Model):
     role = models.CharField(max_length=20, choices=ROLES)
 
 
-
 class Task(models.Model):
 
     BACKLOG = 'Беклог'
