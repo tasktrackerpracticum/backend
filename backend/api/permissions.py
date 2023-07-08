@@ -2,7 +2,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from users.models import User
 from tasks.models import Organization, OrganizationUser, ProjectUser
 
 
@@ -49,3 +48,49 @@ class IsOrganizationCreator(BaseRoleOrganizationPermission):
 class IsSelf(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return request.user == obj
+
+
+class BaseTaskPermission(IsAuthenticated):
+    role = None
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        try:
+            project_user = ProjectUser.objects.get(
+                project=obj.project,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
+            return False
+        return project_user.role == self.role
+
+
+class IsProjectManagerTask(BaseTaskPermission):
+    role = ProjectUser.PROJECT_MANAGER
+
+
+class IsBaseUserTask(BaseTaskPermission):
+    role = ProjectUser.BASE_USER
+
+
+class IsObserverTask(BaseTaskPermission):
+    role = ProjectUser.OBSERVER
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return False
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        try:
+            project_user = ProjectUser.objects.get(
+                project=obj.project,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
+            return False
+        if request.method == 'GET':
+            return project_user.role == self.role
+        return False

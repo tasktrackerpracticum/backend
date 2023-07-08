@@ -4,20 +4,25 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import CreateModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin
+from rest_framework.mixins import (
+    CreateModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin,
+    RetrieveModelMixin
+)
 from djoser.serializers import UserDeleteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from .permissions import (
     IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
-    IsProjectManager
+    IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask
 )
 from .serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer,
     ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
-    ProjectUserAddSerializer
+    ProjectUserAddSerializer, TaskSerializer, TaskUserAddSerializer
 )
-from tasks.models import Organization, OrganizationUser, Project, ProjectUser
+from tasks.models import (
+    Organization, OrganizationUser, Project, ProjectUser, Task
+)
 from users.models import User
 
 
@@ -239,3 +244,59 @@ class AddUserToProjectViewSet(UpdateModelMixin, BaseProjectViewset):
         return Response(
             serializer.data, status=status.HTTP_200_OK
         )
+
+
+class TasksViewSet(ModelViewSet):
+    queryset = Task.objects.all()
+    permission_classes = (
+        IsProjectManagerTask | IsObserverTask | IsBaseUserTask,
+    )
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            return Task.objects.filter(
+                project_id=self.request.query_params.get('project_id')
+            ).all()
+        return Task.objects.all()
+
+    def destroy(self, request, pk):
+        instance = self.get_object()
+        instance.column = 'Удалено'
+        instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(
+        detail=True,
+        methods=['POST', 'DELETE'],
+        permission_classes=[IsProjectManagerTask],
+        serializer_class=TaskUserAddSerializer,
+    )
+    def users(self, request, pk):
+        try:
+            task = Task.objects.get(id=pk)
+        except Exception:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST, data='Task not found'
+            )
+        try:
+            user = User.objects.get(email=request.data.get('email'))
+        except Exception:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST, data='User not found'
+            )
+        if request.method == 'POST':
+            if user in task.users.all():
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data='User have already added in task'
+                )
+            task.users.add(user)
+            return Response(status=status.HTTP_200_OK)
+        if user not in task.users.all():
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data='Can not delete user from task'
+            )
+        task.users.remove(user)
+        return Response(status=status.HTTP_204_NO_CONTENT, data='Deleted')
