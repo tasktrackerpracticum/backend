@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from tasks.models import Organization, OrganizationUser, Project, ProjectUser
+from tasks.models import (
+    Organization, OrganizationUser, Project, ProjectUser, Task
+)
 from users.models import User
 
 
@@ -13,6 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
             'phone', 'position', 'date_of_birth', 'gender',
             'country', 'timezone',
         )
+
 
 class ShortUserSerializer(serializers.ModelSerializer):
 
@@ -97,3 +100,20 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ('title',)
+
+
+class TaskSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Task
+        fields = (
+            'title', 'description', 'column', 'users', 'project', 'author',
+            'status', 'deadline'
+        )
+
+
+class TaskUserAddSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('email',)

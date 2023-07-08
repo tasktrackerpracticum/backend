@@ -3,7 +3,7 @@ from rest_framework.routers import SimpleRouter
 
 from .views import (
     UserViewSet, OrganizationViewSet, ProjectViewSet, SimpleProjectViewSet,
-    ProjectCreateViewSet, AddUserToProjectViewSet
+    ProjectCreateViewSet, AddUserToProjectViewSet, TasksViewSet
 )
 
 
@@ -12,6 +12,7 @@ app_name = 'api'
 router = SimpleRouter()
 
 router.register('users', UserViewSet, basename='users')
+router.register('tasks', TasksViewSet, basename='tasks')
 
 urlpatterns = [
     path('', include(router.urls)),
