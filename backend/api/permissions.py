@@ -94,3 +94,48 @@ class IsObserverTask(BaseTaskPermission):
         if request.method == 'GET':
             return project_user.role == self.role
         return False
+
+
+class BaseCommentPermission(IsAuthenticated):
+    role = None
+
+    def has_object_permission(self, request, view, obj):
+        project_id = self.request.query_params.get('project_id')
+        try:
+            project_user = ProjectUser.objects.get(
+                project_id=project_id,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
+            return False
+        return project_user.role == self.role
+
+
+class IsProjectManagerComment(BaseCommentPermission):
+    role = ProjectUser.PROJECT_MANAGER
+
+
+class IsBaseUserComment(BaseCommentPermission):
+    role = ProjectUser.BASE_USER
+
+
+class IsObserverComment(BaseCommentPermission):
+    role = ProjectUser.OBSERVER
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return False
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        project_id = self.request.query_params.get('project_id')
+        try:
+            project_user = ProjectUser.objects.get(
+                project_id=project_id,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
+            return False
+        if request.method == 'GET':
+            return project_user.role == self.role
+        return False

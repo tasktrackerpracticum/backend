@@ -3,7 +3,7 @@ from rest_framework.routers import SimpleRouter
 
 from .views import (
     UserViewSet, OrganizationViewSet, ProjectViewSet, SimpleProjectViewSet,
-    ProjectCreateViewSet, AddUserToProjectViewSet, TasksViewSet
+    ProjectCreateViewSet, AddUserToProjectViewSet, TasksViewSet, CommentViewSet
 )
 
 
@@ -13,6 +13,7 @@ router = SimpleRouter()
 
 router.register('users', UserViewSet, basename='users')
 router.register('tasks', TasksViewSet, basename='tasks')
+router.register('comments', CommentViewSet, basename='comments')
 
 urlpatterns = [
     path('', include(router.urls)),
