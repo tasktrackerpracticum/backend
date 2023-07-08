@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from tasks.models import (
-    Organization, OrganizationUser, Project, ProjectUser, Task
+    Organization, OrganizationUser, Project, ProjectUser, Task, Comment
 )
 from users.models import User
 
@@ -117,3 +117,10 @@ class TaskUserAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email',)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('task', 'description', 'image', 'author')

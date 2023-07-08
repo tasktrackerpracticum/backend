@@ -13,15 +13,17 @@ from drf_yasg.utils import swagger_auto_schema
 
 from .permissions import (
     IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
-    IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask
+    IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
+    IsProjectManagerComment, IsObserverComment, IsBaseUserComment
 )
 from .serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer,
     ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
-    ProjectUserAddSerializer, TaskSerializer, TaskUserAddSerializer
+    ProjectUserAddSerializer, TaskSerializer, TaskUserAddSerializer,
+    CommentSerializer
 )
 from tasks.models import (
-    Organization, OrganizationUser, Project, ProjectUser, Task
+    Organization, OrganizationUser, Project, ProjectUser, Task, Comment
 )
 from users.models import User
 
@@ -300,3 +302,28 @@ class TasksViewSet(ModelViewSet):
             )
         task.users.remove(user)
         return Response(status=status.HTTP_204_NO_CONTENT, data='Deleted')
+
+
+class CommentViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (
+        IsProjectManagerComment | IsObserverComment | IsBaseUserComment,
+    )
+
+    def get_queryset(self):
+        project_id = self.request.query_params.get('project_id')
+        task_id = self.request.query_params.get('task_id')
+        if not project_id and not task_id:
+            # return Response(status=status.HTTP_404_NOT_FOUND, data='Project or task not found')        tasks = Task.objects.filter(project=project_id).filter(id=task_id)
+            return Comment.objects.none()
+        tasks = Task.objects.filter(project_id=project_id, id=task_id)
+        if not tasks.exists():
+            return Comment.objects.none()
+            # return Response(
+            #     status=status.HTTP_404_NOT_FOUND,
+            #     data='Something wrong with your query params'
+            # )
+        return Comment.objects.filter(
+                task__in=tasks
+            ).all()
