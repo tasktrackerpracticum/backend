@@ -99,9 +99,6 @@ class IsObserverTask(BaseTaskPermission):
 class BaseCommentPermission(IsAuthenticated):
     role = None
 
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
-
     def has_object_permission(self, request, view, obj):
         project_id = self.request.query_params.get('project_id')
         try:
