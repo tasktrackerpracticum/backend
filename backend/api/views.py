@@ -277,13 +277,13 @@ class TasksViewSet(ModelViewSet):
             task = Task.objects.get(id=pk)
         except Exception:
             return Response(
-                status=status.HTTP_400_BAD_REQUEST, data='Task not found'
+                status=status.HTTP_404_NOT_FOUND, data='Task not found'
             )
         try:
             user = User.objects.get(email=request.data.get('email'))
         except Exception:
             return Response(
-                status=status.HTTP_400_BAD_REQUEST, data='User not found'
+                status=status.HTTP_404_NOT_FOUND, data='User not found'
             )
         if request.method == 'POST':
             if user in task.users.all():
