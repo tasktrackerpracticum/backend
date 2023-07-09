@@ -1,68 +1,141 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from users.models import User
-from tasks.models import Organization, OrganizationUser
+from tasks.models import Organization, OrganizationUser, ProjectUser
 
-class BaseRolePermission(IsAuthenticated):
+
+class BaseRoleOrganizationPermission(IsAuthenticated):
     role = None
 
     def has_object_permission(self, request, view, obj):
         if obj.users.filter(id=request.user.id).exists():
             role = OrganizationUser.objects.get(
-                user=request.user, organization=obj).role
-            if role==OrganizationUser.FORBIDDEN:
-                return False
-            return role==self.role
+                user=request.user,
+                organization=obj
+            ).role
+            return (False
+                    if role == OrganizationUser.FORBIDDEN
+                    else role == self.role)
         return False
-    
-
-class IsCreator(BaseRolePermission):
-    role = OrganizationUser.CREATOR
 
 
-class IsProjectManager(BaseRolePermission):
-    role = OrganizationUser.PROJECT_MANAGER
+class BaseProjectPermission(IsAuthenticated):
+    role = None
 
-    
-class IsObserver(BaseRolePermission):
-    role = OrganizationUser.OBSERVER
-
-    
-class IsBaseUser(BaseRolePermission):
-    role = OrganizationUser.BASE_USER
-    
-
-class IsCreatorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        ids = []
-        for user in obj.users.all():
-            org_user = OrganizationUser.objects.get(organization=obj, user=user)
-            if org_user.role == 'создатель':
-                ids.append(user.id)
-        return request.user.id in ids
-
-
-class IsProjectOrCreatorOrReadOnly(permissions.BasePermission):
-    def has_permission(self, request, view):
-        organization = request.resolver_match.kwargs.get('organizations_id')
-        organization = Organization.objects.get(id=organization)
         try:
-            org_user = OrganizationUser.objects.get(organization=organization, user=request.user)
-        except:
+            project_user = ProjectUser.objects.get(
+                project=obj,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
             return False
-        return (request.method == 'POST' and org_user.role == 'создатель') or request.method in permissions.SAFE_METHODS
+        return project_user.role == self.role
+
+
+class IsProjectManager(BaseProjectPermission):
+    role = ProjectUser.PROJECT_MANAGER
+
+
+class IsOrganizationCreator(BaseRoleOrganizationPermission):
+    role = OrganizationUser.CREATOR
+
+
+class IsSelf(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj
+
+
+class BaseTaskPermission(IsAuthenticated):
+    role = None
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        organization = request.resolver_match.kwargs.get('organization')
-        organization = Organization.objects.get(id=organization)
         try:
-            org_user = OrganizationUser.objects.get(organization=organization, user=request.user)
-        except:
+            project_user = ProjectUser.objects.get(
+                project=obj.project,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
             return False
-        return request.method == 'GET' or org_user.role in ('создатель', 'ПМ')
+        return project_user.role == self.role
+
+
+class IsProjectManagerTask(BaseTaskPermission):
+    role = ProjectUser.PROJECT_MANAGER
+
+
+class IsBaseUserTask(BaseTaskPermission):
+    role = ProjectUser.BASE_USER
+
+
+class IsObserverTask(BaseTaskPermission):
+    role = ProjectUser.OBSERVER
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return False
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        try:
+            project_user = ProjectUser.objects.get(
+                project=obj.project,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
+            return False
+        if request.method == 'GET':
+            return project_user.role == self.role
+        return False
+
+
+class BaseCommentPermission(IsAuthenticated):
+    role = None
+
+    def has_object_permission(self, request, view, obj):
+        project_id = self.request.query_params.get('project_id')
+        try:
+            project_user = ProjectUser.objects.get(
+                project_id=project_id,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
+            return False
+        return project_user.role == self.role
+
+
+class IsProjectManagerComment(BaseCommentPermission):
+    role = ProjectUser.PROJECT_MANAGER
+
+
+class IsBaseUserComment(BaseCommentPermission):
+    role = ProjectUser.BASE_USER
+
+
+class IsObserverComment(BaseCommentPermission):
+    role = ProjectUser.OBSERVER
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return False
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        project_id = self.request.query_params.get('project_id')
+        try:
+            project_user = ProjectUser.objects.get(
+                project_id=project_id,
+                user=request.user,
+            )
+        except ObjectDoesNotExist:
+            return False
+        if request.method == 'GET':
+            return project_user.role == self.role
+        return False

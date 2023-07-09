@@ -133,7 +133,7 @@ class Comment(models.Model):
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, related_name='comments')
     description = models.TextField()
-    image = models.ImageField(upload_to='media/comments')
+    image = models.ImageField(upload_to='media/comments', null=True, blank=True)
     author = models.ForeignKey(
         User, related_name='comments', on_delete=models.CASCADE)
 
