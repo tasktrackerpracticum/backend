@@ -22,11 +22,12 @@ from .serializers import (
     ProjectUserAddSerializer, TaskSerializer, TaskUserAddSerializer,
     CommentSerializer
 )
+from .schemas import (
+    user_id_param, organization_id_param, pk_param, project_id_param)
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
 )
 from users.models import User
-
 
 class UserViewSet(DjoserUserViewSet):
     permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
@@ -42,7 +43,6 @@ class UserViewSet(DjoserUserViewSet):
         elif request.method == "DELETE":
             return self.destroy(request, *args, **kwargs)
 
-    @swagger_auto_schema(request_body=UserDeleteSerializer)
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
@@ -58,7 +58,10 @@ class OrganizationViewSet(ModelViewSet):
     def get_queryset(self):
         """Возвращает только те Организации, в которых участвует авторизованный
         пользователь, для администратора - все организации"""
-        if self.request.user.is_admin and self.request.user.is_active:
+        if (
+            self.request.user.is_authenticated and self.request.user.is_admin
+            and self.request.user.is_active
+        ):
             return Organization.objects.all()
         return Organization.objects.filter(users=self.request.user).all()
 
@@ -93,6 +96,7 @@ class OrganizationViewSet(ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    @swagger_auto_schema(manual_parameters=[pk_param])
     def retrieve(self, request, *args, **kwargs):
         """В этом эндпоинте можно посмотреть конкретную
         организацию и ее пользователей."""
@@ -103,6 +107,7 @@ class OrganizationViewSet(ModelViewSet):
         организаций авторизованного пользователя."""
         return super().list(request, *args, **kwargs)
 
+    @swagger_auto_schema(manual_parameters=[pk_param, user_id_param])
     def update(self, request, *args, **kwargs):
         """В этом эндпоинте можно добавить пользователя или изменить его роль в
         огранизации.
@@ -121,10 +126,12 @@ class OrganizationViewSet(ModelViewSet):
             serializer.data, status=status.HTTP_200_OK
         )
 
+    @swagger_auto_schema(manual_parameters=[pk_param])
     def partial_update(self, request, *args, **kwargs):
         """В этом эндпоинте можно переименовать организацию."""
         return super().partial_update(request, *args, **kwargs)
 
+    @swagger_auto_schema(manual_parameters=[pk_param, user_id_param])
     @transaction.atomic
     def destroy(self, request, *args, **kwargs):
         """В этом эндпоинте можно удалить организацию
@@ -159,7 +166,8 @@ class ProjectViewSet(CreateModelMixin, ListModelMixin, BaseProjectViewset):
             return Project.objects.filter(organization=self.kwargs.get('id'))
         return Project.objects.filter(users=self.request.user).all()
 
-    @swagger_auto_schema(tags=["projects"])
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[organization_id_param])
     def list(self, request, *args, **kwargs):
         """В этом эндпоинте можно получить весь список
         проектов пользователя."""
@@ -171,7 +179,8 @@ class SimpleProjectViewSet(
     BaseProjectViewset
 ):
 
-    @swagger_auto_schema(tags=["projects"])
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[project_id_param, user_id_param])
     @transaction.atomic
     def destroy(self, request, *args, **kwargs):
         """В этом эндпоинте можно удалить проект
@@ -190,12 +199,14 @@ class SimpleProjectViewSet(
             project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(tags=["projects"])
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[project_id_param])
     def retrieve(self, request, *args, **kwargs):
         """В этом энпоинте можно посмотреть конкретный проект."""
         return super().retrieve(request, *args, **kwargs)
 
-    @swagger_auto_schema(tags=["projects"])
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[project_id_param])
     def partial_update(self, request, *args, **kwargs):
         """В этом эндпоинте можно переименовать проект."""
         return super().partial_update(request, *args, **kwargs)
@@ -229,6 +240,7 @@ class ProjectCreateViewSet(CreateModelMixin, BaseProjectViewset):
 class AddUserToProjectViewSet(UpdateModelMixin, BaseProjectViewset):
     serializer_class = ProjectUserAddSerializer
 
+    @swagger_auto_schema(manual_parameters=[project_id_param, user_id_param])
     def update(self, request, *args, **kwargs):
         """В этом эндпоинте можно добавить пользователя или изменить его роль в
         проекте.

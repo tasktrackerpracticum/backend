@@ -22,7 +22,7 @@ urlpatterns = [
         OrganizationViewSet.as_view({'get': 'list', 'post': 'create'}),
     ),
     path(
-        'organizations/<int:pk>/', OrganizationViewSet.as_view(
+        'organizations/(<int:pk>/', OrganizationViewSet.as_view(
             {'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'}
         ),
     ),
