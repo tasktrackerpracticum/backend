@@ -23,7 +23,8 @@ from .serializers import (
     CommentSerializer
 )
 from .schemas import (
-    user_id_param, organization_id_param, pk_param, project_id_param)
+    user_id_param, organization_id_param, pk_param, project_id_param,
+    project_id_in_query)
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
 )
@@ -267,12 +268,17 @@ class TasksViewSet(ModelViewSet):
     )
     serializer_class = TaskSerializer
 
+    @swagger_auto_schema(manual_parameters=[project_id_in_query])
+    def list(self, request):
+        return super().list(request)
+
     def get_queryset(self):
-        if self.request.method == 'GET':
+        project_id = self.request.query_params.get('project_id')
+        if self.request.method == 'GET' and project_id:
             return Task.objects.filter(
-                project_id=self.request.query_params.get('project_id')
+                project_id=project_id,
             ).all()
-        return Task.objects.all()
+        return super().get_queryset()
 
     def destroy(self, request, pk):
         instance = self.get_object()
