@@ -103,6 +103,9 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    users = ShortUserSerializer(many=True)
+    author = ShortUserSerializer()
+    project = ProjectSerializer()
 
     class Meta:
         model = Task
