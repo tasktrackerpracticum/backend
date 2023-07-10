@@ -22,6 +22,7 @@ class ProjectUserInline(admin.TabularInline):
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
+    search_fields = ('title', 'users__username')
     inlines = [
         OrganizationUserInline,
     ]
@@ -29,6 +30,9 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('title', 'organization')
+    list_filter = ('organization',)
+    search_fields = ('title', 'users__username', 'organization__title')
     inlines = [
         ProjectUserInline,
     ]
@@ -36,6 +40,10 @@ class ProjectAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
+    list_display = ('title', 'column', 'status', 'deadline')
+    list_filter = ('column', 'status')
+    search_fields = (
+        'title', 'description', 'users__username', 'author__username')
     inlines = [
         CommentInline,
     ]
