@@ -34,18 +34,13 @@ class UserViewSet(DjoserUserViewSet):
     permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
     queryset = User.objects.all()
 
-    @action(["get", "patch", "delete"], detail=False)
+    @action(["get", "patch"], detail=False)
     def me(self, request, *args, **kwargs):
         self.get_object = self.get_instance
         if request.method == "GET":
             return self.retrieve(request, *args, **kwargs)
         elif request.method == "PATCH":
             return self.partial_update(request, *args, **kwargs)
-        elif request.method == "DELETE":
-            return self.destroy(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs)
 
 
 class OrganizationViewSet(ModelViewSet):
