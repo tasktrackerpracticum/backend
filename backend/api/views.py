@@ -10,6 +10,7 @@ from rest_framework.mixins import (
     RetrieveModelMixin
 )
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from api.filters import TaskFilter
 from api.permissions import (
@@ -25,7 +26,7 @@ from api.serializers import (
 )
 from api.schemas import (
     user_id_param, pk_param, project_id_param, organization_id_param,
-    project_id_in_query, task_id_param
+    project_id_in_query, task_id_param, current_password
     )
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
@@ -47,6 +48,13 @@ class UserViewSet(DjoserUserViewSet):
         elif request.method == "DELETE":
             return self.destroy(request, *args, **kwargs)
 
+    @swagger_auto_schema(request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'current_password': openapi.Schema(type=openapi.TYPE_STRING)
+                },
+                ),
+                )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 

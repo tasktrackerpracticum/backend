@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     "phonenumber_field",
+    'rest_framework.authtoken',
     'users.apps.UsersConfig',
     'tasks.apps.TasksConfig',
 ]
