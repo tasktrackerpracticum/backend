@@ -24,7 +24,7 @@ from api.serializers import (
     CommentSerializer
 )
 from api.schemas import (
-    user_id_param, pk_param, project_id_param,
+    user_id_param, pk_param, project_id_param, organization_id_param
     )
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
@@ -164,27 +164,15 @@ class BaseProjectViewset(GenericViewSet):
 
 class SimpleProjectViewSet(
     UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin,
-    BaseProjectViewset):
+    BaseProjectViewset
+):
 
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[project_id_param, user_id_param])
+        tags=["projects"], manual_parameters=[project_id_param])
     @transaction.atomic
     def destroy(self, request, *args, **kwargs):
-        """В этом эндпоинте можно удалить проект
-        или пользователя в проекте."""
-        user_id = self.kwargs.get('user_id')
-        if not user_id:
-            return super().destroy(request, *args, **kwargs)
-        user = User.objects.get(id=user_id)
-        project = self.get_object()
-        project_user = ProjectUser.objects.get(
-            user=user, project=project)
-        project_user.delete()
-        if not ProjectUser.objects.filter(
-            project=project,
-        ).exists():
-            project.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        """В этом эндпоинте можно удалить проект."""
+        return super().destroy(request, *args, **kwargs)
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[project_id_param])
@@ -199,12 +187,33 @@ class SimpleProjectViewSet(
         return super().partial_update(request, *args, **kwargs)
 
 
+class DeleteUserProjectViewset(SimpleProjectViewSet):
+
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[project_id_param, user_id_param])
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        """В этом эндпоинте можно удалить пользователя в проекте."""
+        user_id = self.kwargs.get('user_id')
+        user = User.objects.get(id=user_id)
+        project = self.get_object()
+        project_user = ProjectUser.objects.get(
+            user=user, project=project)
+        project_user.delete()
+        if not ProjectUser.objects.filter(
+            project=project,
+        ).exists():
+            project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class ProjectCreateViewSet(CreateModelMixin, BaseProjectViewset):
 
     @transaction.atomic
-    @swagger_auto_schema(tags=["projects"])
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[organization_id_param])
     def create(self, request, *args, **kwargs):
-        """В этом эндпоинте можно создать новый проект."""
+        """В этом эндпоинте можно создать новый проект у организации."""
         serializer = ProjectCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         organization = Organization.objects.get(
@@ -225,7 +234,9 @@ class ProjectCreateViewSet(CreateModelMixin, BaseProjectViewset):
         )
 
 
-class AddUserToProjectViewSet(UpdateModelMixin, BaseProjectViewset):
+class AddUserToProjectViewSet(
+    DeleteUserProjectViewset, UpdateModelMixin, BaseProjectViewset
+):
     serializer_class = ProjectUserAddSerializer
 
     @swagger_auto_schema(manual_parameters=[project_id_param, user_id_param])
@@ -236,7 +247,7 @@ class AddUserToProjectViewSet(UpdateModelMixin, BaseProjectViewset):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         project = self.get_object()
-        user = User.objects.get(id=serializer.data.get('user'))
+        user = User.objects.get(id=serializer.data.get('user').get('id'))
         obj, _ = ProjectUser.objects.update_or_create(
             project=project,
             user=user,

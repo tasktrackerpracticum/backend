@@ -61,12 +61,14 @@ class ProjectUserAddSerializer(serializers.ModelSerializer):
         fields = ('user', 'role', 'project')
 
     def get_project(self, _):
-        return Project.objects.get(
-            pk=self.context['view'].kwargs.get('project_id')).pk
+        project = Project.objects.get(
+            pk=self.context['view'].kwargs.get('project_id'))
+        return ProjectSerializer(project).data
 
     def get_user(self, _):
-        return User.objects.get(
-            pk=self.context['view'].kwargs.get('user_id')).pk
+        user = User.objects.get(
+            pk=self.context['view'].kwargs.get('user_id'))
+        return ShortUserSerializer(user).data
 
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):

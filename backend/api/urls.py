@@ -19,7 +19,7 @@ router.register('comments', CommentViewSet, basename='comments')
 urlpatterns = [
     path('', include(router.urls)),
     path(
-        'organizations',
+        'organizations/',
         OrganizationViewSet.as_view({'get': 'list', 'post': 'create'}),
     ),
     path(
@@ -39,16 +39,15 @@ urlpatterns = [
         )
     ),
     path(
-        'projects/<int:project_id>',
+        'projects/<int:project_id>/',
         SimpleProjectViewSet.as_view(
             {'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'}
         ),
     ),
     path(
-        ('projects/<int:project_id>'
-            '/users/<int:user_id>/'),
+        'projects/<int:project_id>/users/<int:user_id>/',
         AddUserToProjectViewSet.as_view(
-            {'put': 'update'}
+            {'delete': 'destroy', 'put': 'update'}
         ),
     ),
 ]
