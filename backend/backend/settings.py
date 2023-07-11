@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'drf_yasg',
+    'django_filters',
     "phonenumber_field",
     'users.apps.UsersConfig',
     'tasks.apps.TasksConfig',

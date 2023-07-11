@@ -2,8 +2,9 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from .views import (
-    UserViewSet, OrganizationViewSet, ProjectViewSet, SimpleProjectViewSet,
-    ProjectCreateViewSet, AddUserToProjectViewSet, TasksViewSet, CommentViewSet
+    OrganizationDeleteUserViewSet, UserViewSet, OrganizationViewSet,
+    SimpleProjectViewSet, ProjectCreateViewSet, AddUserToProjectViewSet,
+    TasksViewSet, CommentViewSet
 )
 
 
@@ -28,11 +29,8 @@ urlpatterns = [
     ),
     path(
         'organizations/<int:pk>/users/<int:user_id>/',
-        OrganizationViewSet.as_view({'delete': 'destroy', 'put': 'update'})
-    ),
-    path(
-        'users/<int:id>/projects/',
-        ProjectViewSet.as_view({'get': 'list'}),
+        OrganizationDeleteUserViewSet.as_view(
+            {'delete': 'destroy', 'put': 'update'})
     ),
     path(
         'organizations/<int:organization_id>/projects/',

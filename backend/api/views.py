@@ -1,34 +1,36 @@
 from django.db import transaction
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import (
-    CreateModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin,
+    CreateModelMixin, UpdateModelMixin, DestroyModelMixin,
     RetrieveModelMixin
 )
-from djoser.serializers import UserDeleteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
-from .permissions import (
+from api.filters import TaskFilter
+from api.permissions import (
     IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
     IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
     IsProjectManagerComment, IsObserverComment, IsBaseUserComment
 )
-from .serializers import (
+from api.serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer,
     ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
     ProjectUserAddSerializer, TaskSerializer, TaskUserAddSerializer,
     CommentSerializer
 )
-from .schemas import (
-    user_id_param, organization_id_param, pk_param, project_id_param,
-    project_id_in_query)
+from api.schemas import (
+    user_id_param, pk_param, project_id_param,
+    )
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
 )
 from users.models import User
+
 
 class UserViewSet(DjoserUserViewSet):
     permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
@@ -59,11 +61,6 @@ class OrganizationViewSet(ModelViewSet):
     def get_queryset(self):
         """Возвращает только те Организации, в которых участвует авторизованный
         пользователь, для администратора - все организации"""
-        if (
-            self.request.user.is_authenticated and self.request.user.is_admin
-            and self.request.user.is_active
-        ):
-            return Organization.objects.all()
         return Organization.objects.filter(users=self.request.user).all()
 
     def get_permissions(self):
@@ -132,14 +129,19 @@ class OrganizationViewSet(ModelViewSet):
         """В этом эндпоинте можно переименовать организацию."""
         return super().partial_update(request, *args, **kwargs)
 
+    @swagger_auto_schema(manual_parameters=[pk_param])
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        """В этом эндпоинте можно удалить организацию."""
+        return super().destroy(request, *args, **kwargs)
+
+
+class OrganizationDeleteUserViewSet(OrganizationViewSet):
     @swagger_auto_schema(manual_parameters=[pk_param, user_id_param])
     @transaction.atomic
     def destroy(self, request, *args, **kwargs):
-        """В этом эндпоинте можно удалить организацию
-        или пользователя в организации."""
+        """В этом эндпоинте можно удалить пользователя из организации."""
         user_id = self.kwargs.get('user_id')
-        if not user_id:
-            return super().destroy(request, *args, **kwargs)
         user = User.objects.get(id=user_id)
         organization = Organization.objects.get(id=self.kwargs.get('pk'))
         org_user = OrganizationUser.objects.get(
@@ -160,25 +162,9 @@ class BaseProjectViewset(GenericViewSet):
     queryset = Project.objects.all()
 
 
-class ProjectViewSet(CreateModelMixin, ListModelMixin, BaseProjectViewset):
-
-    def get_queryset(self):
-        if self.request.user.is_admin and self.request.user.is_active:
-            return Project.objects.filter(organization=self.kwargs.get('id'))
-        return Project.objects.filter(users=self.request.user).all()
-
-    @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[organization_id_param])
-    def list(self, request, *args, **kwargs):
-        """В этом эндпоинте можно получить весь список
-        проектов пользователя."""
-        return super().list(request, *args, **kwargs)
-
-
 class SimpleProjectViewSet(
     UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin,
-    BaseProjectViewset
-):
+    BaseProjectViewset):
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[project_id_param, user_id_param])
@@ -218,6 +204,7 @@ class ProjectCreateViewSet(CreateModelMixin, BaseProjectViewset):
     @transaction.atomic
     @swagger_auto_schema(tags=["projects"])
     def create(self, request, *args, **kwargs):
+        """В этом эндпоинте можно создать новый проект."""
         serializer = ProjectCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         organization = Organization.objects.get(
@@ -267,8 +254,9 @@ class TasksViewSet(ModelViewSet):
         IsProjectManagerTask | IsObserverTask | IsBaseUserTask,
     )
     serializer_class = TaskSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TaskFilter
 
-    @swagger_auto_schema(manual_parameters=[project_id_in_query])
     def list(self, request):
         return super().list(request)
 
@@ -333,7 +321,10 @@ class CommentViewSet(ModelViewSet):
         project_id = self.request.query_params.get('project_id')
         task_id = self.request.query_params.get('task_id')
         if not project_id and not task_id:
-            # return Response(status=status.HTTP_404_NOT_FOUND, data='Project or task not found')        tasks = Task.objects.filter(project=project_id).filter(id=task_id)
+            # return Response(status=status.HTTP_404_NOT_FOUND,
+            # data='Project or task not found')
+            # tasks = Task.objects.filter(project=project_id).filter(
+            # id=task_id)
             return Comment.objects.none()
         tasks = Task.objects.filter(project_id=project_id, id=task_id)
         if not tasks.exists():

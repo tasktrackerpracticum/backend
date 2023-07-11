@@ -22,7 +22,7 @@ class ShortUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'email', 'position', 'phone')
+            'id', 'first_name', 'last_name', 'email', 'phone', 'photo')
 
 
 class OrganizationUserSerializer(serializers.ModelSerializer):
@@ -88,11 +88,24 @@ class OrganizationViewSerializer(serializers.ModelSerializer):
         return OrganizationUserSerializer(users, many=True).data
 
 
+class ProjectUserSerializer(serializers.ModelSerializer):
+    user = ShortUserSerializer()
+
+    class Meta:
+        model = ProjectUser
+        fields = ('user', 'role')
+
+
 class ProjectSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ('id', 'title')
+        fields = ('id', 'title', 'users')
+
+    def get_users(self, obj):
+        users = ProjectUser.objects.filter(project=obj)
+        return ProjectUserSerializer(users, many=True).data
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
