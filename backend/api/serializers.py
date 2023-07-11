@@ -114,20 +114,33 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('title',)
+        fields = ('id', 'title')
 
 
 class TaskSerializer(serializers.ModelSerializer):
     users = ShortUserSerializer(many=True)
     author = ShortUserSerializer()
-    project = ProjectSerializer()
 
     class Meta:
         model = Task
         fields = (
-            'title', 'description', 'column', 'users', 'project', 'author',
+            'title', 'description', 'column', 'users', 'author',
             'status', 'deadline'
         )
+
+
+class TaskAddSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Task
+        fields = ('title', 'description', 'column', 'status', 'deadline')
+
+
+class TaskUserAddSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Task
+        fields = ('user',)
 
 
 class TaskUserAddSerializer(serializers.ModelSerializer):

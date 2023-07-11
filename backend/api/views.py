@@ -20,11 +20,12 @@ from api.permissions import (
 from api.serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer,
     ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
-    ProjectUserAddSerializer, TaskSerializer, TaskUserAddSerializer,
+    ProjectUserAddSerializer, TaskAddSerializer, TaskSerializer, TaskUserAddSerializer,
     CommentSerializer
 )
 from api.schemas import (
-    user_id_param, pk_param, project_id_param, organization_id_param
+    user_id_param, pk_param, project_id_param, organization_id_param,
+    project_id_in_query, task_id_param
     )
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
@@ -228,9 +229,11 @@ class ProjectCreateViewSet(CreateModelMixin, BaseProjectViewset):
             user=self.request.user,
             role=ProjectUser.PROJECT_MANAGER,
         )
+        response = serializer.data
+        response.update({'id': project.pk})
         project_user.save()
         return Response(
-            serializer.data, status=status.HTTP_201_CREATED,
+            response, status=status.HTTP_201_CREATED,
         )
 
 
@@ -267,9 +270,39 @@ class TasksViewSet(ModelViewSet):
     serializer_class = TaskSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TaskFilter
+    action_serializers = {
+        'create': TaskAddSerializer,
+        'partial_update': TaskAddSerializer,
+        'update': TaskUserAddSerializer,
 
+    }
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action_serializers'):
+            return self.action_serializers.get(
+                self.action, self.serializer_class)
+        return super(OrganizationViewSet, self).get_serializer_class()
+
+    @swagger_auto_schema(manual_parameters=[project_id_in_query])
     def list(self, request):
+        """Отображает список задач конкретного проекта."""
         return super().list(request)
+
+    @swagger_auto_schema(manual_parameters=[pk_param])
+    def partial_update(self, request):
+        """Позволяет изменить основные параметры задачи."""
+        return super().partial_update()
+
+    @swagger_auto_schema(manual_parameters=[pk_param])
+    def update(self, request, **kwargs):
+        """Добавляет пользователей в задачу."""
+        task = Task.objects.get(pk=kwargs.get('pk'))
+        serializer = self.get_serializer(
+            data={'email': request.data.get('email')})
+        serializer.is_valid()
+        user = User.objects.get(email=serializer.data.get('email'))
+        task.users.add(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         project_id = self.request.query_params.get('project_id')
@@ -279,7 +312,9 @@ class TasksViewSet(ModelViewSet):
             ).all()
         return super().get_queryset()
 
+    @swagger_auto_schema(manual_parameters=[pk_param])
     def destroy(self, request, pk):
+        """Удаляет задачу."""
         instance = self.get_object()
         instance.column = 'Удалено'
         instance.save()
