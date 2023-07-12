@@ -116,7 +116,12 @@ class Task(models.Model):
     project = models.ForeignKey(
         Project, related_name='tasks', on_delete=models.CASCADE)
     author = models.ForeignKey(
-        User, related_name='tasks_author', on_delete=models.CASCADE)
+        User,
+        related_name='tasks_author',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
     status = models.CharField(max_length=15, choices=STATUSES)
     deadline = models.DateTimeField()
 
