@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'djoser',
     'drf_yasg',
     'django_filters',
-    "phonenumber_field",
+    'phonenumber_field',
     'rest_framework.authtoken',
     'users.apps.UsersConfig',
     'tasks.apps.TasksConfig',

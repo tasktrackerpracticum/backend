@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from .views import (
-    OrganizationDeleteUserViewSet, UserViewSet, OrganizationViewSet,
+    OrganizationDeleteUserViewSet, TasksUserDeleteViewSet, UserViewSet, OrganizationViewSet,
     SimpleProjectViewSet, ProjectCreateViewSet, AddUserToProjectViewSet,
     TasksViewSet, CommentViewSet
 )
@@ -50,4 +50,10 @@ urlpatterns = [
             {'delete': 'destroy', 'put': 'update'}
         ),
     ),
+    path(
+        'tasks/<int:task_id>/users/<int:user_id>/',
+        TasksUserDeleteViewSet.as_view(
+            {'delete': 'destroy'}
+        )
+    )
 ]
