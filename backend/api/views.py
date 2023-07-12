@@ -21,7 +21,7 @@ from api.permissions import (
 from api.serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer,
     ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
-    ProjectUserAddSerializer, TaskAddSerializer, TaskSerializer, TaskUserAddSerializer,
+    ProjectUserAddSerializer, TaskAddSerializer, TaskEditSerializer, TaskSerializer, TaskUserAddSerializer,
     CommentSerializer
 )
 from api.schemas import (
@@ -297,9 +297,24 @@ class TasksViewSet(ModelViewSet):
         return super().list(request)
 
     @swagger_auto_schema(manual_parameters=[pk_param])
-    def partial_update(self, request):
+    def partial_update(self, request, **kwargs):
         """Позволяет изменить основные параметры задачи."""
-        return super().partial_update()
+        task = self.get_object()
+        serializer = self.get_serializer(task, data=request.data, partial=True)
+        serializer.is_valid()
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        """Создает задачу."""
+        data = request.data
+        data.update({'author': self.request.user})
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @swagger_auto_schema(manual_parameters=[pk_param])
     def update(self, request, **kwargs):
@@ -328,40 +343,18 @@ class TasksViewSet(ModelViewSet):
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(
-        detail=True,
-        methods=['POST', 'DELETE'],
-        permission_classes=[IsProjectManagerTask],
-        serializer_class=TaskUserAddSerializer,
-    )
-    def users(self, request, pk):
-        try:
-            task = Task.objects.get(id=pk)
-        except Exception:
-            return Response(
-                status=status.HTTP_404_NOT_FOUND, data='Task not found'
-            )
-        try:
-            user = User.objects.get(email=request.data.get('email'))
-        except Exception:
-            return Response(
-                status=status.HTTP_404_NOT_FOUND, data='User not found'
-            )
-        if request.method == 'POST':
-            if user in task.users.all():
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data='User have already added in task'
-                )
-            task.users.add(user)
-            return Response(status=status.HTTP_200_OK)
-        if user not in task.users.all():
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data='Can not delete user from task'
-            )
+
+class TasksUserDeleteViewSet(TasksViewSet):
+    lookup_url_kwarg = 'task_id'
+
+    @swagger_auto_schema(manual_parameters=[task_id_param, user_id_param])
+    def destroy(self, *args, **kwargs):
+        """Удаляет пользователя из задачи."""
+        user_id = self.kwargs.get('user_id')
+        user = User.objects.get(id=user_id)
+        task = self.get_object()
         task.users.remove(user)
-        return Response(status=status.HTTP_204_NO_CONTENT, data='Deleted')
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CommentViewSet(ModelViewSet):

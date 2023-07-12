@@ -130,17 +130,24 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class TaskAddSerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Task
-        fields = ('title', 'description', 'column', 'status', 'deadline')
+        fields = (
+            'title', 'description', 'column', 'status', 'deadline', 'author',
+            'project'
+        )
 
 
-class TaskUserAddSerializer(serializers.ModelSerializer):
+class TaskEditSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ('user',)
+        fields = (
+            'title', 'description', 'column', 'status', 'deadline',
+            'project'
+        )
 
 
 class TaskUserAddSerializer(serializers.ModelSerializer):
