@@ -22,7 +22,7 @@ class ShortUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'email', 'position', 'phone')
+            'id', 'first_name', 'last_name', 'email', 'phone', 'photo')
 
 
 class OrganizationUserSerializer(serializers.ModelSerializer):
@@ -61,12 +61,14 @@ class ProjectUserAddSerializer(serializers.ModelSerializer):
         fields = ('user', 'role', 'project')
 
     def get_project(self, _):
-        return Project.objects.get(
-            pk=self.context['view'].kwargs.get('project_id')).pk
+        project = Project.objects.get(
+            pk=self.context['view'].kwargs.get('project_id'))
+        return ProjectSerializer(project).data
 
     def get_user(self, _):
-        return User.objects.get(
-            pk=self.context['view'].kwargs.get('user_id')).pk
+        user = User.objects.get(
+            pk=self.context['view'].kwargs.get('user_id'))
+        return ShortUserSerializer(user).data
 
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):
@@ -88,31 +90,57 @@ class OrganizationViewSerializer(serializers.ModelSerializer):
         return OrganizationUserSerializer(users, many=True).data
 
 
+class ProjectUserSerializer(serializers.ModelSerializer):
+    user = ShortUserSerializer()
+
+    class Meta:
+        model = ProjectUser
+        fields = ('user', 'role')
+
+
 class ProjectSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ('id', 'title')
+        fields = ('id', 'title', 'users')
+
+    def get_users(self, obj):
+        users = ProjectUser.objects.filter(project=obj)
+        return ProjectUserSerializer(users, many=True).data
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('title',)
+        fields = ('id', 'title')
 
 
 class TaskSerializer(serializers.ModelSerializer):
     users = ShortUserSerializer(many=True)
     author = ShortUserSerializer()
-    project = ProjectSerializer()
 
     class Meta:
         model = Task
         fields = (
-            'title', 'description', 'column', 'users', 'project', 'author',
+            'title', 'description', 'column', 'users', 'author',
             'status', 'deadline'
         )
+
+
+class TaskAddSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Task
+        fields = ('title', 'description', 'column', 'status', 'deadline')
+
+
+class TaskUserAddSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Task
+        fields = ('user',)
 
 
 class TaskUserAddSerializer(serializers.ModelSerializer):

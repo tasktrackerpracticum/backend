@@ -53,9 +53,6 @@ class IsSelf(permissions.BasePermission):
 class BaseTaskPermission(IsAuthenticated):
     role = None
 
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
-
     def has_object_permission(self, request, view, obj):
         try:
             project_user = ProjectUser.objects.get(

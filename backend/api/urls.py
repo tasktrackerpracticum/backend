@@ -2,8 +2,9 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from .views import (
-    UserViewSet, OrganizationViewSet, ProjectViewSet, SimpleProjectViewSet,
-    ProjectCreateViewSet, AddUserToProjectViewSet, TasksViewSet, CommentViewSet
+    OrganizationDeleteUserViewSet, UserViewSet, OrganizationViewSet,
+    SimpleProjectViewSet, ProjectCreateViewSet, AddUserToProjectViewSet,
+    TasksViewSet, CommentViewSet
 )
 
 
@@ -18,7 +19,7 @@ router.register('comments', CommentViewSet, basename='comments')
 urlpatterns = [
     path('', include(router.urls)),
     path(
-        'organizations',
+        'organizations/',
         OrganizationViewSet.as_view({'get': 'list', 'post': 'create'}),
     ),
     path(
@@ -28,11 +29,8 @@ urlpatterns = [
     ),
     path(
         'organizations/<int:pk>/users/<int:user_id>/',
-        OrganizationViewSet.as_view({'delete': 'destroy', 'put': 'update'})
-    ),
-    path(
-        'users/<int:id>/projects/',
-        ProjectViewSet.as_view({'get': 'list'}),
+        OrganizationDeleteUserViewSet.as_view(
+            {'delete': 'destroy', 'put': 'update'})
     ),
     path(
         'organizations/<int:organization_id>/projects/',
@@ -41,16 +39,15 @@ urlpatterns = [
         )
     ),
     path(
-        'projects/<int:project_id>',
+        'projects/<int:project_id>/',
         SimpleProjectViewSet.as_view(
             {'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'}
         ),
     ),
     path(
-        ('projects/<int:project_id>'
-            '/users/<int:user_id>/'),
+        'projects/<int:project_id>/users/<int:user_id>/',
         AddUserToProjectViewSet.as_view(
-            {'put': 'update'}
+            {'delete': 'destroy', 'put': 'update'}
         ),
     ),
 ]
