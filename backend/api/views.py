@@ -21,12 +21,12 @@ from api.permissions import (
 from api.serializers import (
     OrganizationViewSerializer, OrganizationCreateSerializer,
     ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
-    ProjectUserAddSerializer, TaskAddSerializer, TaskEditSerializer, TaskSerializer, TaskUserAddSerializer,
-    CommentSerializer
+    ProjectUserAddSerializer, TaskAddSerializer, TaskSerializer,
+    TaskUserAddSerializer, CommentSerializer
 )
 from api.schemas import (
     user_id_param, pk_param, project_id_param, organization_id_param,
-    project_id_in_query, task_id_param, current_password
+    project_id_in_query, task_id_param
     )
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
@@ -48,13 +48,15 @@ class UserViewSet(DjoserUserViewSet):
         elif request.method == "DELETE":
             return self.destroy(request, *args, **kwargs)
 
-    @swagger_auto_schema(request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'current_password': openapi.Schema(type=openapi.TYPE_STRING)
+    @swagger_auto_schema(
+            request_body=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'current_password': openapi.Schema(
+                        type=openapi.TYPE_STRING)
                 },
-                ),
-                )
+            ),
+        )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
@@ -73,7 +75,7 @@ class OrganizationViewSet(ModelViewSet):
         return Organization.objects.filter(users=self.request.user).all()
 
     def get_permissions(self):
-        if self.action in ('patch', 'put', 'destroy'):
+        if self.action in ('patch', 'put', 'destroy', 'delete_user'):
             permission_classes = self.update_permision_classes
         else:
             permission_classes = self.permission_classes
@@ -114,15 +116,21 @@ class OrganizationViewSet(ModelViewSet):
         организаций авторизованного пользователя."""
         return super().list(request, *args, **kwargs)
 
-    @swagger_auto_schema(manual_parameters=[pk_param, user_id_param])
-    def update(self, request, *args, **kwargs):
+    @swagger_auto_schema(manual_parameters=[pk_param])
+    @action(
+        methods=['POST'],
+        detail=True,
+        serializer_class=OrganizationUserAddSerializer
+    )
+    def users(self, request, *args, **kwargs):
         """В этом эндпоинте можно добавить пользователя или изменить его роль в
         огранизации.
         """
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid()
         organization = self.get_object()
-        user = User.objects.get(id=serializer.data.get('user'))
+        self.check_object_permissions(organization, request)
+        user = User.objects.get(email=serializer.data.get('email'))
         obj, _ = OrganizationUser.objects.update_or_create(
             organization=organization,
             user=user,
@@ -144,15 +152,13 @@ class OrganizationViewSet(ModelViewSet):
         """В этом эндпоинте можно удалить организацию."""
         return super().destroy(request, *args, **kwargs)
 
-
-class OrganizationDeleteUserViewSet(OrganizationViewSet):
     @swagger_auto_schema(manual_parameters=[pk_param, user_id_param])
     @transaction.atomic
-    def destroy(self, request, *args, **kwargs):
+    def delete_user(self, request, *args, **kwargs):
         """В этом эндпоинте можно удалить пользователя из организации."""
         user_id = self.kwargs.get('user_id')
         user = User.objects.get(id=user_id)
-        organization = Organization.objects.get(id=self.kwargs.get('pk'))
+        organization = self.get_object()
         org_user = OrganizationUser.objects.get(
             user=user, organization=organization)
         org_user.delete()

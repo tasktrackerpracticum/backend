@@ -2,8 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from .views import (
-    OrganizationDeleteUserViewSet, TasksUserDeleteViewSet, UserViewSet, OrganizationViewSet,
-    SimpleProjectViewSet, ProjectCreateViewSet, AddUserToProjectViewSet,
+    TasksUserDeleteViewSet, UserViewSet, OrganizationViewSet,
+    SimpleProjectViewSet, AddUserToProjectViewSet,
     TasksViewSet, CommentViewSet
 )
 
@@ -15,28 +15,14 @@ router = SimpleRouter()
 router.register('users', UserViewSet, basename='users')
 router.register('tasks', TasksViewSet, basename='tasks')
 router.register('comments', CommentViewSet, basename='comments')
+router.register('organizations', OrganizationViewSet, basename='organizations')
 
 urlpatterns = [
     path('', include(router.urls)),
     path(
-        'organizations/',
-        OrganizationViewSet.as_view({'get': 'list', 'post': 'create'}),
-    ),
-    path(
-        'organizations/<int:pk>/', OrganizationViewSet.as_view(
-            {'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'}
-        ),
-    ),
-    path(
         'organizations/<int:pk>/users/<int:user_id>/',
-        OrganizationDeleteUserViewSet.as_view(
-            {'delete': 'destroy', 'put': 'update'})
-    ),
-    path(
-        'organizations/<int:organization_id>/projects/',
-        ProjectCreateViewSet.as_view(
-            {'post': 'create'}
-        )
+        OrganizationViewSet.as_view(
+            {'delete': 'delete_user'})
     ),
     path(
         'projects/<int:project_id>/',
