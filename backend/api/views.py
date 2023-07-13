@@ -169,18 +169,12 @@ class OrganizationViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class BaseProjectViewset(GenericViewSet):
+class ProjectViewSet(ModelViewSet):
     permission_classes = (IsProjectManager | IsAdminUser,)
     serializer_class = ProjectSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'project_id'
     queryset = Project.objects.all()
-
-
-class SimpleProjectViewSet(
-    UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin,
-    BaseProjectViewset
-):
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[project_id_param])
@@ -201,13 +195,10 @@ class SimpleProjectViewSet(
         """В этом эндпоинте можно переименовать проект."""
         return super().partial_update(request, *args, **kwargs)
 
-
-class DeleteUserProjectViewset(SimpleProjectViewSet):
-
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[project_id_param, user_id_param])
     @transaction.atomic
-    def destroy(self, request, *args, **kwargs):
+    def delete_user(self, request, *args, **kwargs):
         """В этом эндпоинте можно удалить пользователя в проекте."""
         user_id = self.kwargs.get('user_id')
         user = User.objects.get(id=user_id)
@@ -220,9 +211,6 @@ class DeleteUserProjectViewset(SimpleProjectViewSet):
         ).exists():
             project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class ProjectCreateViewSet(CreateModelMixin, BaseProjectViewset):
 
     @transaction.atomic
     @swagger_auto_schema(
@@ -250,21 +238,20 @@ class ProjectCreateViewSet(CreateModelMixin, BaseProjectViewset):
             response, status=status.HTTP_201_CREATED,
         )
 
-
-class AddUserToProjectViewSet(
-    DeleteUserProjectViewset, UpdateModelMixin, BaseProjectViewset
-):
-    serializer_class = ProjectUserAddSerializer
-
-    @swagger_auto_schema(manual_parameters=[project_id_param, user_id_param])
-    def update(self, request, *args, **kwargs):
+    @swagger_auto_schema(manual_parameters=[project_id_param])
+    @action(
+        methods=['POST'],
+        detail=True,
+        serializer_class=ProjectUserAddSerializer,
+    )
+    def users(self, request, *args, **kwargs):
         """В этом эндпоинте можно добавить пользователя или изменить его роль в
         проекте.
         """
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid()
         project = self.get_object()
-        user = User.objects.get(id=serializer.data.get('user').get('id'))
+        user = User.objects.get(email=serializer.data.get('email'))
         obj, _ = ProjectUser.objects.update_or_create(
             project=project,
             user=user,
@@ -287,8 +274,6 @@ class TasksViewSet(ModelViewSet):
     action_serializers = {
         'create': TaskAddSerializer,
         'partial_update': TaskAddSerializer,
-        'update': TaskUserAddSerializer,
-
     }
 
     def get_serializer_class(self):
@@ -323,7 +308,12 @@ class TasksViewSet(ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @swagger_auto_schema(manual_parameters=[pk_param])
-    def update(self, request, **kwargs):
+    @action(
+        methods=['POST'],
+        detail=True,
+        serializer_class=TaskUserAddSerializer,
+    )
+    def users(self, request, **kwargs):
         """Добавляет пользователей в задачу."""
         task = Task.objects.get(pk=kwargs.get('pk'))
         serializer = self.get_serializer(
@@ -349,12 +339,8 @@ class TasksViewSet(ModelViewSet):
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class TasksUserDeleteViewSet(TasksViewSet):
-    lookup_url_kwarg = 'task_id'
-
     @swagger_auto_schema(manual_parameters=[task_id_param, user_id_param])
-    def destroy(self, *args, **kwargs):
+    def user_delete(self, *args, **kwargs):
         """Удаляет пользователя из задачи."""
         user_id = self.kwargs.get('user_id')
         user = User.objects.get(id=user_id)

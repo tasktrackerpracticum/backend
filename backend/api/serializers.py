@@ -34,11 +34,11 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
 
 
 class OrganizationUserAddSerializer(serializers.ModelSerializer):
+    role = serializers.ChoiceField(choices=OrganizationUser.ROLES)
 
     class Meta:
         model = User
         fields = ('email', 'role')
-    role = serializers.ChoiceField(choices=OrganizationUser.ROLES)
 
 
 class OrganizationUserDeleteSerializer(serializers.ModelSerializer):
@@ -49,24 +49,11 @@ class OrganizationUserDeleteSerializer(serializers.ModelSerializer):
 
 
 class ProjectUserAddSerializer(serializers.ModelSerializer):
-    project = serializers.SerializerMethodField()
     role = serializers.ChoiceField(choices=ProjectUser.ROLES)
-    user = serializers.SerializerMethodField()
 
     class Meta:
-        model = ProjectUser
-        fields = ('user', 'role', 'project')
-
-    def get_project(self, _):
-        project = Project.objects.get(
-            pk=self.context['view'].kwargs.get('project_id'))
-        return ProjectSerializer(project).data
-
-    def get_user(self, _):
-        user = User.objects.get(
-            pk=self.context['view'].kwargs.get('user_id'))
-        return ShortUserSerializer(user).data
-
+        model = User
+        fields = ('email', 'role')
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):
 
