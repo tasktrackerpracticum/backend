@@ -34,42 +34,26 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
 
 
 class OrganizationUserAddSerializer(serializers.ModelSerializer):
-    organization = serializers.SerializerMethodField()
     role = serializers.ChoiceField(choices=OrganizationUser.ROLES)
-    user = serializers.SerializerMethodField()
 
     class Meta:
-        model = OrganizationUser
-        fields = ('user', 'role', 'organization')
+        model = User
+        fields = ('email', 'role')
 
-    def get_organization(self, _):
-        return Organization.objects.get(
-            pk=self.context['view'].kwargs.get('pk')).pk
 
-    def get_user(self, _):
-        return User.objects.get(
-            pk=self.context['view'].kwargs.get('user_id')).pk
+class OrganizationUserDeleteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('email',)
 
 
 class ProjectUserAddSerializer(serializers.ModelSerializer):
-    project = serializers.SerializerMethodField()
     role = serializers.ChoiceField(choices=ProjectUser.ROLES)
-    user = serializers.SerializerMethodField()
 
     class Meta:
-        model = ProjectUser
-        fields = ('user', 'role', 'project')
-
-    def get_project(self, _):
-        project = Project.objects.get(
-            pk=self.context['view'].kwargs.get('project_id'))
-        return ProjectSerializer(project).data
-
-    def get_user(self, _):
-        user = User.objects.get(
-            pk=self.context['view'].kwargs.get('user_id'))
-        return ShortUserSerializer(user).data
-
+        model = User
+        fields = ('email', 'role')
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):
 
