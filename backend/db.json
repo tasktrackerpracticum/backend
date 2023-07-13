@@ -326,6 +326,14 @@
 },
 {
   "model": "sessions.session",
+  "pk": "0gb9503xw880l23bzyfqayfhgjth9xtc",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQAP-FsyELZbPUo3e_gbA8pGogKe3J-O9K0oNeZybzEs7vW3F7T6tbojgLJU6_jH14pDpEvPt6azK0uq0Ly5HIw3Z5bTE9L0f7Nyi-l7HNhDhlzRA4qKBUBkM6T4ZDjt4wEGqImLwGyjMobSzNaC3xNyZC8f4A3wo3MA:1qJcCj:N3ZfbhFn5RXXoHYqpTiImZCA_aPFAgpeW2BXEfAosKE",
+    "expire_date": "2023-07-26T15:56:37.216Z"
+  }
+},
+{
+  "model": "sessions.session",
   "pk": "gcoh2wumcdhsljsn9za037pw2zgvi5a8",
   "fields": {
     "session_data": ".eJxVjEEOwiAQRe_C2hCGFmZw6d4zNFMYbNVAUtqV8e7apAvd_vfef6mBt3UatibLMCd1Vl6dfreR40PKDtKdy63qWMu6zKPeFX3Qpq81yfNyuH8HE7fpWzMBdSg2p4gCaACyw0DRUBd67xBCb3rjMglmGdkzWEuUfMdJGB2o9wfEWzco:1qIpNQ:O18-x6THwfFXGC2tpzDlxJ7gfbkxbYyBntY9p52bLsk",
@@ -654,6 +662,13 @@
   "pk": 13,
   "fields": {
     "title": "Риа новости"
+  }
+},
+{
+  "model": "tasks.organization",
+  "pk": 14,
+  "fields": {
+    "title": "string"
   }
 },
 {
@@ -1037,6 +1052,15 @@
   }
 },
 {
+  "model": "tasks.projectuser",
+  "pk": 32,
+  "fields": {
+    "project": 1,
+    "user": 4,
+    "role": "наблюдатель"
+  }
+},
+{
   "model": "tasks.task",
   "pk": 1,
   "fields": {
@@ -1068,6 +1092,36 @@
       8,
       9
     ]
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 1,
+  "fields": {
+    "task": 1,
+    "description": "тестовый коммент",
+    "image": "",
+    "author": 1
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 2,
+  "fields": {
+    "task": 1,
+    "description": "второй тестовый коммент",
+    "image": "",
+    "author": 2
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 3,
+  "fields": {
+    "task": 2,
+    "description": "третий тестовый коммент",
+    "image": "",
+    "author": 1
   }
 }
 ]

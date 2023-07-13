@@ -4,11 +4,7 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import (
-    CreateModelMixin, UpdateModelMixin, DestroyModelMixin,
-    RetrieveModelMixin
-)
+from rest_framework.viewsets import ModelViewSet
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -26,7 +22,7 @@ from api.serializers import (
 )
 from api.schemas import (
     user_id_param, pk_param, project_id_param, organization_id_param,
-    project_id_in_query, task_id_param
+    project_id_in_query, task_id_param, task_id_in_query
     )
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
@@ -360,18 +356,15 @@ class CommentViewSet(ModelViewSet):
         project_id = self.request.query_params.get('project_id')
         task_id = self.request.query_params.get('task_id')
         if not project_id and not task_id:
-            # return Response(status=status.HTTP_404_NOT_FOUND,
-            # data='Project or task not found')
-            # tasks = Task.objects.filter(project=project_id).filter(
-            # id=task_id)
             return Comment.objects.none()
         tasks = Task.objects.filter(project_id=project_id, id=task_id)
         if not tasks.exists():
             return Comment.objects.none()
-            # return Response(
-            #     status=status.HTTP_404_NOT_FOUND,
-            #     data='Something wrong with your query params'
-            # )
         return Comment.objects.filter(
                 task__in=tasks
             ).all()
+
+    @swagger_auto_schema(
+        manual_parameters=[project_id_in_query, task_id_in_query])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
