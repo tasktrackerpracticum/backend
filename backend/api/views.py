@@ -15,7 +15,7 @@ from api.permissions import (
     IsProjectManagerComment, IsObserverComment, IsBaseUserComment
 )
 from api.serializers import (
-    OrganizationViewSerializer, OrganizationCreateSerializer,
+    AddCommentSerializer, OrganizationViewSerializer, OrganizationCreateSerializer,
     ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
     ProjectUserAddSerializer, TaskAddSerializer, TaskSerializer,
     TaskUserAddSerializer, CommentSerializer
@@ -346,25 +346,31 @@ class TasksViewSet(ModelViewSet):
 
 
 class CommentViewSet(ModelViewSet):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (
         IsProjectManagerComment | IsObserverComment | IsBaseUserComment,
     )
 
     def get_queryset(self):
-        project_id = self.request.query_params.get('project_id')
-        task_id = self.request.query_params.get('task_id')
-        if not project_id and not task_id:
-            return Comment.objects.none()
-        tasks = Task.objects.filter(project_id=project_id, id=task_id)
-        if not tasks.exists():
-            return Comment.objects.none()
-        return Comment.objects.filter(
-                task__in=tasks
-            ).all()
+        return Task.objects.get(pk=self.kwargs.get('task_id')).comments.all()
 
-    @swagger_auto_schema(
-        manual_parameters=[project_id_in_query, task_id_in_query])
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AddCommentSerializer
+        return super().get_serializer_class()
+
     def list(self, request, *args, **kwargs):
+        """Выдает все комментарии определенной задачи."""
         return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        """Создает новый комментарий к посту."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        task = Task.objects.get(pk=kwargs.get('task_id'))
+        comment = Comment.objects.create(
+            author=request.user, task=task, **serializer.data)
+        comment.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers)

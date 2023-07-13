@@ -11,9 +11,10 @@ app_name = 'api'
 
 router = SimpleRouter()
 
+router.register(
+    r'tasks/(?P<task_id>\d+)/comments', CommentViewSet, basename='comments')
 router.register('users', UserViewSet, basename='users')
 router.register('tasks', TasksViewSet, basename='tasks')
-router.register('comments', CommentViewSet, basename='comments')
 router.register('organizations', OrganizationViewSet, basename='organizations')
 router.register('projects', ProjectViewSet, basename='projects')
 
