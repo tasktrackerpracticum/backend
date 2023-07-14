@@ -98,7 +98,7 @@ class BaseCommentPermission(IsAuthenticated):
     role = None
 
     def has_object_permission(self, request, view, obj):
-        project_id = self.request.query_params.get('project_id')
+        project_id = view.kwargs.get('pk')
         try:
             project_user = ProjectUser.objects.get(
                 project_id=project_id,

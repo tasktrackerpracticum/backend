@@ -142,7 +142,17 @@ class TaskUserAddSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    author = ShortUserSerializer()
 
     class Meta:
         model = Comment
         fields = ('task', 'description', 'image', 'author')
+
+
+class AddCommentSerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    image = serializers.ImageField(required=False)
+
+    class Meta:
+        model = Comment
+        fields = ('description', 'image', 'author')
