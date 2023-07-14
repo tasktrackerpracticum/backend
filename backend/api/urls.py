@@ -19,7 +19,6 @@ router.register('organizations', OrganizationViewSet, basename='organizations')
 router.register('projects', ProjectViewSet, basename='projects')
 
 urlpatterns = [
-    path('', include(router.urls)),
     path(
         'organizations/<int:pk>/users/<int:user_id>/',
         OrganizationViewSet.as_view(
@@ -37,5 +36,6 @@ urlpatterns = [
         TasksViewSet.as_view(
             {'delete': 'user_delete'}
         )
-    )
+    ),
+    path('', include(router.urls)),
 ]

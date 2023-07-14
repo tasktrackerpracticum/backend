@@ -22,7 +22,7 @@ from api.serializers import (
 )
 from api.schemas import (
     user_id_param, pk_param, project_id_param, organization_id_param,
-    project_id_in_query, task_id_param, task_id_in_query
+    project_id_in_query, task_id_param, task_id_in_query, organization_id_in_query
     )
 from tasks.models import (
     Organization, OrganizationUser, Project, ProjectUser, Task, Comment
@@ -210,13 +210,13 @@ class ProjectViewSet(ModelViewSet):
 
     @transaction.atomic
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[organization_id_param])
+        tags=["projects"], manual_parameters=[organization_id_in_query])
     def create(self, request, *args, **kwargs):
         """В этом эндпоинте можно создать новый проект у организации."""
         serializer = ProjectCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         organization = Organization.objects.get(
-            pk=kwargs.get('organization_id'))
+            pk=request.query_params.get('organization_id'))
         project = Project.objects.create(
             organization=organization,
             title=serializer.data.get('title'),
