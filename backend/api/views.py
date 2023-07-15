@@ -253,7 +253,10 @@ class ProjectViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         project = self.get_object()
-        user = User.objects.get(email=serializer.data.get('email'))
+        try:
+            user = User.objects.get(email=serializer.data.get('email'))
+        except ObjectDoesNotExist:
+            raise NotFound('пользователя с таким id не существует')
         obj, _ = ProjectUser.objects.update_or_create(
             project=project,
             user=user,
@@ -317,11 +320,17 @@ class TasksViewSet(ModelViewSet):
     )
     def users(self, request, **kwargs):
         """Добавляет пользователей в задачу."""
-        task = Task.objects.get(pk=kwargs.get('pk'))
+        try:
+            task = Task.objects.get(pk=kwargs.get('pk'))
+        except ObjectDoesNotExist:
+            raise NotFound('задачи с таким id не существует')
         serializer = self.get_serializer(
             data={'email': request.data.get('email')})
         serializer.is_valid()
-        user = User.objects.get(email=serializer.data.get('email'))
+        try:
+            user = User.objects.get(email=serializer.data.get('email'))
+        except ObjectDoesNotExist:
+            raise NotFound('пользователь с таким email не существует.')
         task.users.add(user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -345,7 +354,10 @@ class TasksViewSet(ModelViewSet):
     def user_delete(self, *args, **kwargs):
         """Удаляет пользователя из задачи."""
         user_id = self.kwargs.get('user_id')
-        user = User.objects.get(id=user_id)
+        try:
+            user = User.objects.get(id=user_id)
+        except ObjectDoesNotExist:
+            raise NotFound('Пользователя с таким id не существует.')
         task = self.get_object()
         task.users.remove(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
