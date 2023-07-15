@@ -139,3 +139,7 @@ DJOSER = {
     },
     'HIDE_USERS': False,
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
