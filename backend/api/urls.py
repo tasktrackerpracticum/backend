@@ -11,7 +11,7 @@ router = SimpleRouter()
 router.register('users', UserViewSet, basename='users')
 router.register('tasks', TasksViewSet, basename='tasks')
 router.register('organizations', OrganizationViewSet, basename='organizations')
-router.register('projects', ProjectViewSet, basename='projects')
+# router.register('projects', ProjectViewSet, basename='projects')
 
 urlpatterns = [
     path(
@@ -36,6 +36,24 @@ urlpatterns = [
         'projects/<int:project_id>/users/<int:user_id>/',
         ProjectViewSet.as_view(
             {'delete': 'delete_user'}
+        )
+    ),
+    path(
+        'projects/',
+        ProjectViewSet.as_view(
+            {'get': 'list'}
+        )
+    ),
+    path(
+        'projects/<int:project_id>/',
+        ProjectViewSet.as_view(
+            {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'}
+        )
+    ),
+    path(
+        'organizations/<int:organization_id>/projects',
+        ProjectViewSet.as_view(
+            {'post': 'create'}
         )
     ),
     path(

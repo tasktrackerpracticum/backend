@@ -1,33 +1,35 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from api.filters import TaskFilter
-from api.permissions import (IsAdminUser, IsAuthenticated, IsBaseUserComment,
-                             IsBaseUserTask, IsObserverComment, IsObserverTask,
-                             IsOrganizationCreator, IsProjectManager,
-                             IsProjectManagerComment, IsProjectManagerTask,
-                             IsSelf)
-from api.schemas import (organization_id_in_query, pk_param,
-                         project_id_in_query, project_id_param, task_id_param,
-                         user_id_param)
-from api.serializers import (AddCommentSerializer, CommentSerializer,
-                             OrganizationCreateSerializer,
-                             OrganizationUserAddSerializer,
-                             OrganizationViewSerializer,
-                             ProjectCreateSerializer, ProjectSerializer,
-                             ProjectUserAddSerializer, TaskAddSerializer,
-                             TaskSerializer, TaskUserAddSerializer)
-from tasks.models import (Comment, Organization, OrganizationUser, Project,
-                          ProjectUser, Task)
+from api.permissions import (
+    IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
+    IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
+    IsProjectManagerComment, IsObserverComment, IsBaseUserComment
+)
+from api.serializers import (
+    AddCommentSerializer, OrganizationViewSerializer,
+    OrganizationCreateSerializer, ProjectSerializer,
+    OrganizationUserAddSerializer, ProjectCreateSerializer,
+    ProjectUserAddSerializer, TaskAddSerializer, TaskSerializer,
+    TaskUserAddSerializer, CommentSerializer
+)
+from api.schemas import (
+    user_id_param, pk_param, project_id_param, project_id_in_query,
+    task_id_param, organization_id_param
+    )
+from tasks.models import (
+    Organization, OrganizationUser, Project, ProjectUser, Task, Comment
+)
 from users.models import User
 
 
@@ -211,13 +213,16 @@ class ProjectViewSet(ModelViewSet):
 
     @transaction.atomic
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[organization_id_in_query])
+        tags=["projects"], manual_parameters=[organization_id_param])
     def create(self, request, *args, **kwargs):
         """В этом эндпоинте можно создать новый проект у организации."""
         serializer = ProjectCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        organization = Organization.objects.get(
-            pk=request.query_params.get('organization_id'))
+        try:
+            organization = Organization.objects.get(
+                pk=kwargs.get('organization_id'))
+        except ObjectDoesNotExist:
+            raise NotFound('Организации с таким id не существует')
         project = Project.objects.create(
             organization=organization,
             title=serializer.data.get('title'),
