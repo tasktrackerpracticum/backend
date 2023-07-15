@@ -1,9 +1,33 @@
 from rest_framework import serializers
 
-from tasks.models import (
-    Organization, OrganizationUser, Project, ProjectUser, Task, Comment
-)
+from tasks.models import (Comment, Organization, OrganizationUser, Project,
+                          ProjectUser, Task)
 from users.models import User
+
+
+class ShortUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'first_name', 'last_name', 'email', 'phone', 'photo')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = ShortUserSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ('task', 'description', 'image', 'author')
+
+
+class AddCommentSerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    image = serializers.ImageField()
+
+    class Meta:
+        model = Comment
+        fields = ('description', 'image', 'author')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,14 +39,6 @@ class UserSerializer(serializers.ModelSerializer):
             'phone', 'position', 'date_of_birth', 'gender',
             'country', 'timezone',
         )
-
-
-class ShortUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = (
-            'id', 'first_name', 'last_name', 'email', 'phone', 'photo')
 
 
 class OrganizationUserSerializer(serializers.ModelSerializer):
@@ -54,6 +70,7 @@ class ProjectUserAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'role')
+
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):
 
@@ -104,13 +121,17 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     users = ShortUserSerializer(many=True)
     author = ShortUserSerializer()
+    comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = (
             'title', 'description', 'column', 'users', 'author',
-            'status', 'deadline'
+            'status', 'deadline', 'comments'
         )
+
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comments, many=True).data
 
 
 class TaskAddSerializer(serializers.ModelSerializer):
@@ -139,20 +160,3 @@ class TaskUserAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email',)
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    author = ShortUserSerializer()
-
-    class Meta:
-        model = Comment
-        fields = ('task', 'description', 'image', 'author')
-
-
-class AddCommentSerializer(serializers.ModelSerializer):
-    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    image = serializers.ImageField(required=False)
-
-    class Meta:
-        model = Comment
-        fields = ('description', 'image', 'author')

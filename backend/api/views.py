@@ -1,32 +1,33 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 from api.filters import TaskFilter
-from api.permissions import (
-    IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
-    IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
-    IsProjectManagerComment, IsObserverComment, IsBaseUserComment
-)
-from api.serializers import (
-    AddCommentSerializer, OrganizationViewSerializer, OrganizationCreateSerializer,
-    ProjectSerializer, OrganizationUserAddSerializer, ProjectCreateSerializer,
-    ProjectUserAddSerializer, TaskAddSerializer, TaskSerializer,
-    TaskUserAddSerializer, CommentSerializer
-)
-from api.schemas import (
-    user_id_param, pk_param, project_id_param, organization_id_param,
-    project_id_in_query, task_id_param, task_id_in_query, organization_id_in_query
-    )
-from tasks.models import (
-    Organization, OrganizationUser, Project, ProjectUser, Task, Comment
-)
+from api.permissions import (IsAdminUser, IsAuthenticated, IsBaseUserComment,
+                             IsBaseUserTask, IsObserverComment, IsObserverTask,
+                             IsOrganizationCreator, IsProjectManager,
+                             IsProjectManagerComment, IsProjectManagerTask,
+                             IsSelf)
+from api.schemas import (organization_id_in_query, pk_param,
+                         project_id_in_query, project_id_param, task_id_param,
+                         user_id_param)
+from api.serializers import (AddCommentSerializer, CommentSerializer,
+                             OrganizationCreateSerializer,
+                             OrganizationUserAddSerializer,
+                             OrganizationViewSerializer,
+                             ProjectCreateSerializer, ProjectSerializer,
+                             ProjectUserAddSerializer, TaskAddSerializer,
+                             TaskSerializer, TaskUserAddSerializer)
+from tasks.models import (Comment, Organization, OrganizationUser, Project,
+                          ProjectUser, Task)
 from users.models import User
 
 
@@ -346,25 +347,38 @@ class TasksViewSet(ModelViewSet):
 
 
 class CommentViewSet(ModelViewSet):
-    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+    serializer_class = AddCommentSerializer
     permission_classes = (
         IsProjectManagerComment | IsObserverComment | IsBaseUserComment,
     )
-
-    def get_queryset(self):
-        return Task.objects.get(pk=self.kwargs.get('task_id')).comments.all()
+    action_serializers = {
+        'list': CommentSerializer,
+    }
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return AddCommentSerializer
+        if hasattr(self, 'action_serializers'):
+            return self.action_serializers.get(
+                self.action, self.serializer_class)
         return super().get_serializer_class()
 
+    def get_queryset(self):
+        if not self.kwargs.get('task_id'):
+            return super().get_queryset()
+        try:
+            return Task.objects.get(
+                pk=self.kwargs.get('task_id')).comments.all()
+        except ObjectDoesNotExist as e:
+            raise NotFound(detail='Задачи с таким id не существует') from e
+
+    @swagger_auto_schema(manual_parameters=[task_id_param])
     def list(self, request, *args, **kwargs):
         """Выдает все комментарии определенной задачи."""
         return super().list(request, *args, **kwargs)
 
+    @swagger_auto_schema(manual_parameters=[task_id_param])
     def create(self, request, *args, **kwargs):
-        """Создает новый комментарий к посту."""
+        """Создает новый комментарий к задаче."""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         task = Task.objects.get(pk=kwargs.get('task_id'))
@@ -374,3 +388,18 @@ class CommentViewSet(ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @swagger_auto_schema(tags=['tasks'])
+    def destroy(self, request, *args, **kwargs):
+        """Удаляет комментарий."""
+        return super().destroy(request, *args, **kwargs)
+
+    @swagger_auto_schema(tags=['tasks'])
+    def update(self, request, *args, **kwargs):
+        """Изменяет комментарий."""
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(tags=['tasks'])
+    def partial_update(self, request, *args, **kwargs):
+        """Позволяет частично изменить комментарий."""
+        return super().partial_update(request, *args, **kwargs)
