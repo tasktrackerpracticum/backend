@@ -1,13 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from timezone_utils.fields import TimeZoneField
 from timezone_utils.choices import PRETTY_ALL_TIMEZONES_CHOICES
+from timezone_utils.fields import TimeZoneField
 
 from .managers import MyUserManager
 
 
-class User(AbstractUser): # is_superuser, is_active, is_staff
+class User(AbstractUser):
 
     MALE = 'male'
     FEMALE = 'female'
