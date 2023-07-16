@@ -11,7 +11,6 @@ router = SimpleRouter()
 router.register('users', UserViewSet, basename='users')
 router.register('tasks', TasksViewSet, basename='tasks')
 router.register('organizations', OrganizationViewSet, basename='organizations')
-# router.register('projects', ProjectViewSet, basename='projects')
 
 urlpatterns = [
     path(

@@ -7,10 +7,13 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="API Documentation",
+        title="Task Tracker",
         default_version="v1",
-        description="API documentation",
-        license=openapi.License(name="BSD License"),
+        description="""API documentation for Task Tracker project.
+        Made by graduates of Yandex Practikum school.
+        <a href="https://t.me/catstyle1101">Anton Masyuk</a> and \
+        <a href="https://t.me/K0nstantin8891">Konstantin Vasilyev</a>""",
+        license=openapi.License(name="MIT License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
