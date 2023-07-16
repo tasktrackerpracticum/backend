@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -9,8 +10,6 @@ schema_view = get_schema_view(
         title="API Documentation",
         default_version="v1",
         description="API documentation",
-        # terms_of_service="https://www.example.com/policies/terms/",
-        # contact=openapi.Contact(email="contact@example.com"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
@@ -19,8 +18,17 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('djoser.urls')),
+    path('accounts/login/', LoginView.as_view(
+        template_name='admin/login.html',
+    )),
+    path('accounts/logout/', LogoutView.as_view(
+        template_name='admin/logout.html',
+    )),
     path('', include('djoser.urls.jwt')),
     path('', include("api.urls", namespace="api")),
-    path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),
+    path(
+        'api/docs/',
+        schema_view.with_ui('swagger', cache_timeout=0),
+        name='swagger-ui',
+    ),
 ]
