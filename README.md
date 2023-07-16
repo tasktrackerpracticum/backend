@@ -51,28 +51,20 @@ http://localhost:8000/api/docs
 
 Bearer {token}
 
-Также работает авторизация Django - нажать кнопку Django Login
+Также работает авторизация Django - нажать кнопку Django Login (только пока тестовый режим)
 
 ### Токен
 
-Выдаёт конечная точка jwt/create
+Выдаёт конечная точка http//localhost:8000/jwt/create/
 
 ```
 {
 
 "email": "admin@admin.com",
-
 "password": "admin"
 
 }
 ```
-
-###  Второй вариант авторизации (только для тестового режима)
-
-перейти по адресу: http://localhost:8000/admin
-авторизоваться по email: admin@admin.com
-пароль: admin
-
 ## Сделать дамп базы на Windows
 
 ```
