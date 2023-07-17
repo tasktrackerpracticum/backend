@@ -105,7 +105,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
-            'id', 'title', 'date_start', 'date_finish', 'status', 'users')
+            'id', 'title', 'date_start', 'date_finish', 'is_active', 'users')
 
     def get_users(self, obj):
         users = ProjectUser.objects.filter(project=obj)
