@@ -71,7 +71,9 @@ class OrganizationViewSet(ModelViewSet):
     def get_queryset(self):
         """Возвращает только те Организации, в которых участвует авторизованный
         пользователь, для администратора - все организации"""
-        return Organization.objects.filter(users=self.request.user).all()
+        if self.request.user.is_authenticated:
+            return Organization.objects.filter(users=self.request.user).all()
+        return Organization.objects.all()
 
     def get_permissions(self):
         if self.action in ('patch', 'put', 'destroy', 'delete_user'):
