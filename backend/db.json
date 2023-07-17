@@ -1,725 +1,1141 @@
 [
-{
-  "model": "admin.logentry",
-  "pk": 1,
-  "fields": {
-    "action_time": "2023-07-03T04:52:29.620Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "1",
-    "object_repr": "1",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Phone\", \"Date of birth\", \"Gender\", \"Country\", \"Timezone\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 2,
-  "fields": {
-    "action_time": "2023-07-03T04:53:28.600Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "2",
-    "object_repr": "2",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Username\", \"Phone\", \"Date of birth\", \"Gender\", \"Country\", \"Timezone\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 3,
-  "fields": {
-    "action_time": "2023-07-03T04:53:42.917Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "1",
-    "object_repr": "1",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"First name\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 4,
-  "fields": {
-    "action_time": "2023-07-03T05:14:11.660Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "1",
-    "object_repr": "1",
-    "action_flag": 2,
-    "change_message": "[]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 5,
-  "fields": {
-    "action_time": "2023-07-03T05:14:35.025Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "1",
-    "object_repr": "1",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 6,
-  "fields": {
-    "action_time": "2023-07-03T05:14:51.851Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "1",
-    "object_repr": "1",
-    "action_flag": 2,
-    "change_message": "[]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 7,
-  "fields": {
-    "action_time": "2023-07-03T05:15:04.417Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "2",
-    "object_repr": "2",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 8,
-  "fields": {
-    "action_time": "2023-07-03T06:05:25.429Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "1",
-    "object_repr": "admin@admin.com(1)",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"\\u0414\\u043e\\u043b\\u0436\\u043d\\u043e\\u0441\\u0442\\u044c\", \"\\u0421\\u0442\\u0440\\u0430\\u043d\\u0430\", \"\\u0427\\u0430\\u0441\\u043e\\u0432\\u043e\\u0439 \\u043f\\u043e\\u044f\\u0441\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 9,
-  "fields": {
-    "action_time": "2023-07-03T06:06:20.417Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "2",
-    "object_repr": "user@user.com(2)",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"\\u0414\\u043e\\u043b\\u0436\\u043d\\u043e\\u0441\\u0442\\u044c\", \"\\u0421\\u0442\\u0440\\u0430\\u043d\\u0430\", \"\\u0427\\u0430\\u0441\\u043e\\u0432\\u043e\\u0439 \\u043f\\u043e\\u044f\\u0441\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 10,
-  "fields": {
-    "action_time": "2023-07-03T06:06:35.100Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "1",
-    "object_repr": "admin@admin.com(1)",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 11,
-  "fields": {
-    "action_time": "2023-07-03T06:06:42.951Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "2",
-    "object_repr": "user@user.com(2)",
-    "action_flag": 2,
-    "change_message": "[{\"changed\": {\"fields\": [\"Last name\"]}}]"
-  }
-},
-{
-  "model": "admin.logentry",
-  "pk": 12,
-  "fields": {
-    "action_time": "2023-07-03T06:08:09.317Z",
-    "user": 1,
-    "content_type": 6,
-    "object_id": "3",
-    "object_repr": "user_2@user.com(3)",
-    "action_flag": 1,
-    "change_message": "[{\"added\": {}}]"
-  }
-},
-{
-  "model": "sessions.session",
-  "pk": "o5f5b6tqjukm5gbis3y9o8o9dyfx2k40",
-  "fields": {
-    "session_data": ".eJxVjMsOwiAQAP-FsyELZbPUo3e_gbA8pGogKe3J-O9K0oNeZybzEs7vW3F7T6tbojgLJU6_jH14pDpEvPt6azK0uq0Ly5HIw3Z5bTE9L0f7Nyi-l7HNhDhlzRA4qKBUBkM6T4ZDjt4wEGqImLwGyjMobSzNaC3xNyZC8f4A3wo3MA:1qGBHg:ybXRVGxDCRmWXxQzQSFEyJNTUofhkZSe0OebtJffxmc",
-    "expire_date": "2023-07-17T04:35:32.573Z"
-  }
-},
-{
-  "model": "users.user",
-  "pk": 1,
-  "fields": {
-    "last_login": "2023-07-03T04:35:32Z",
-    "is_superuser": false,
-    "first_name": "Иван",
-    "last_name": "Иванов",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2023-06-29T17:35:13Z",
-    "email": "admin@admin.com",
-    "username": "admin",
-    "photo": "",
-    "phone": "+79223332233",
-    "position": "Директор",
-    "date_of_birth": "2023-07-03",
-    "gender": "male",
-    "country": "Россия",
-    "timezone": "Europe/Moscow",
-    "password": "pbkdf2_sha256$600000$JJzAWcOa8467rFDqkPzQSl$UZD9A2fKau0L9StNYYtpqNMC7iIpjtB9uUbya7/+yFQ=",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "users.user",
-  "pk": 2,
-  "fields": {
-    "last_login": null,
-    "is_superuser": false,
-    "first_name": "Ольга",
-    "last_name": "Петрова",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2023-06-30T06:56:00Z",
-    "email": "user@user.com",
-    "username": "user",
-    "photo": "",
-    "phone": "+79992233223",
-    "position": "Менеджер",
-    "date_of_birth": "2023-07-03",
-    "gender": "female",
-    "country": "Беларусь",
-    "timezone": "Europe/Minsk",
-    "password": "pbkdf2_sha256$600000$ApktMOgjZsLGBmVyZbWYLZ$pmQCLO5F+Hl8kxSxC8yE1CRq+3hJpHYhfmFT2azcfj8=",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "users.user",
-  "pk": 3,
-  "fields": {
-    "last_login": null,
-    "is_superuser": false,
-    "first_name": "Сергей",
-    "last_name": "Акопян",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2023-07-03T06:08:09.304Z",
-    "email": "user_2@user.com",
-    "username": "user_2",
-    "photo": "",
-    "phone": "+79989989898",
-    "position": "Работник",
-    "date_of_birth": null,
-    "gender": "male",
-    "country": "Армения",
-    "timezone": "Asia/Yerevan",
-    "password": "pbkdf2_sha256$600000$ApktMOgjZsLGBmVyZbWYLZ$pmQCLO5F+Hl8kxSxC8yE1CRq+3hJpHYhfmFT2azcfj8=",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "users.user",
-  "pk": 4,
-  "fields": {
-    "last_login": null,
-    "is_superuser": false,
-    "first_name": "Сергей",
-    "last_name": "Мавроди",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2023-06-29T17:36:13Z",
-    "email": "user_3@user.com",
-    "username": "mavrodi",
-    "photo": "",
-    "phone": "+79999999999",
-    "position": "Раб",
-    "date_of_birth": "2023-07-01",
-    "gender": "male",
-    "country": "Тюрьма",
-    "timezone": "Europe/Moscow",
-    "password": "pbkdf2_sha256$600000$JJzAWcOa8467rFDqkPzQSl$UZD9A2fKau0L9StNYYtpqNMC7iIpjtB9uUbya7/+yFQ=",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "users.user",
-  "pk": 5,
-  "fields": {
-    "last_login": null,
-    "is_superuser": false,
-    "first_name": "Илья",
-    "last_name": "Муромец",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2023-06-29T17:36:13Z",
-    "email": "user_4@user.com",
-    "username": "muromets",
-    "photo": "",
-    "phone": "+79111111111",
-    "position": "Богатырь",
-    "date_of_birth": "2023-07-01",
-    "gender": "male",
-    "country": "Печь",
-    "timezone": "Europe/Moscow",
-    "password": "pbkdf2_sha256$600000$JJzAWcOa8467rFDqkPzQSl$UZD9A2fKau0L9StNYYtpqNMC7iIpjtB9uUbya7/+yFQ=",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 1,
-  "fields": {
-    "title": "Рога и Копыта"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 2,
-  "fields": {
-    "title": "МММ"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 3,
-  "fields": {
-    "title": "Да здравствует мыло душистое и полотенце пушистое "
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 4,
-  "fields": {
-    "title": "Газпром"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 5,
-  "fields": {
-    "title": "Сбербанк"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 6,
-  "fields": {
-    "title": "Google"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 7,
-  "fields": {
-    "title": "Yandex"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 8,
-  "fields": {
-    "title": "Правительство российской федерации."
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 9,
-  "fields": {
-    "title": "Роскомнадзор"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 10,
-  "fields": {
-    "title": "Telegram"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 11,
-  "fields": {
-    "title": "Bing"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 12,
-  "fields": {
-    "title": "Rambler"
-  }
-},
-{
-  "model": "tasks.organization",
-  "pk": 13,
-  "fields": {
-    "title": "Риа новости"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 1,
-  "fields": {
-    "organization": 2,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 2,
-  "fields": {
-    "organization": 3,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 3,
-  "fields": {
-    "organization": 4,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 4,
-  "fields": {
-    "organization": 5,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 5,
-  "fields": {
-    "organization": 6,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 6,
-  "fields": {
-    "organization": 7,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 7,
-  "fields": {
-    "organization": 8,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 8,
-  "fields": {
-    "organization": 9,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 9,
-  "fields": {
-    "organization": 10,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 10,
-  "fields": {
-    "organization": 11,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 11,
-  "fields": {
-    "organization": 12,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 12,
-  "fields": {
-    "organization": 13,
-    "user": 1,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 16,
-  "fields": {
-    "organization": 2,
-    "user": 2,
-    "role": "наблюдатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 17,
-  "fields": {
-    "organization": 2,
-    "user": 3,
-    "role": "ПМ"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 19,
-  "fields": {
-    "organization": 5,
-    "user": 3,
-    "role": "базовый пользователь"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 22,
-  "fields": {
-    "organization": 1,
-    "user": 2,
-    "role": "создатель"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 23,
-  "fields": {
-    "organization": 1,
-    "user": 1,
-    "role": "базовый пользователь"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 24,
-  "fields": {
-    "organization": 1,
-    "user": 3,
-    "role": "ПМ"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 25,
-  "fields": {
-    "organization": 1,
-    "user": 4,
-    "role": "запрещено"
-  }
-},
-{
-  "model": "tasks.organizationuser",
-  "pk": 26,
-  "fields": {
-    "organization": 1,
-    "user": 5,
-    "role": "базовый пользователь"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 1,
-  "fields": {
-    "title": "Украсть у корейко миллион",
-    "organization": 1,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 2,
-  "fields": {
-    "title": "Жениться на Зосе",
-    "organization": 1,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 3,
-  "fields": {
-    "title": "Продать облигации с доходностью 100000%",
-    "organization": 2,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 4,
-  "fields": {
-    "title": "Выплатить дивиденды",
-    "organization": 5,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 5,
-  "fields": {
-    "title": "И зубной порошок",
-    "organization": 3,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 6,
-  "fields": {
-    "title": "И густой гребешок",
-    "organization": 3,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 7,
-  "fields": {
-    "title": "И полотенце пушистое",
-    "organization": 3,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 18,
-  "fields": {
-    "title": "Мой новый проект.",
-    "organization": 1,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 20,
-  "fields": {
-    "title": "string",
-    "organization": 1,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.project",
-  "pk": 21,
-  "fields": {
-    "title": "string",
-    "organization": 2,
-    "date_start": "2023-07-17",
-    "date_finish": "2023-07-17"
-  }
-},
-{
-  "model": "tasks.projectuser",
-  "pk": 1,
-  "fields": {
-    "project": 1,
-    "user": 3,
-    "role": "запрещено"
-  }
-},
-{
-  "model": "tasks.projectuser",
-  "pk": 2,
-  "fields": {
-    "project": 1,
-    "user": 2,
-    "role": "наблюдатель"
-  }
-},
-{
-  "model": "tasks.projectuser",
-  "pk": 3,
-  "fields": {
-    "project": 1,
-    "user": 1,
-    "role": "ПМ"
-  }
-},
-{
-  "model": "tasks.projectuser",
-  "pk": 4,
-  "fields": {
-    "project": 2,
-    "user": 5,
-    "role": "базовый пользователь"
-  }
-},
-{
-  "model": "tasks.projectuser",
-  "pk": 14,
-  "fields": {
-    "project": 18,
-    "user": 1,
-    "role": "ПМ"
-  }
-},
-{
-  "model": "tasks.projectuser",
-  "pk": 16,
-  "fields": {
-    "project": 20,
-    "user": 1,
-    "role": "ПМ"
-  }
-},
-{
-  "model": "tasks.projectuser",
-  "pk": 17,
-  "fields": {
-    "project": 21,
-    "user": 1,
-    "role": "ПМ"
-  }
-}
-]
+  {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+      "action_time": "2023-07-03T04:52:29.620Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "1",
+      "object_repr": "1",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Phone\", \"Date of birth\", \"Gender\", \"Country\", \"Timezone\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+      "action_time": "2023-07-03T04:53:28.600Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "2",
+      "object_repr": "2",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Username\", \"Phone\", \"Date of birth\", \"Gender\", \"Country\", \"Timezone\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+      "action_time": "2023-07-03T04:53:42.917Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "1",
+      "object_repr": "1",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+      "action_time": "2023-07-03T05:14:11.660Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "1",
+      "object_repr": "1",
+      "action_flag": 2,
+      "change_message": "[]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+      "action_time": "2023-07-03T05:14:35.025Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "1",
+      "object_repr": "1",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+      "action_time": "2023-07-03T05:14:51.851Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "1",
+      "object_repr": "1",
+      "action_flag": 2,
+      "change_message": "[]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+      "action_time": "2023-07-03T05:15:04.417Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "2",
+      "object_repr": "2",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+      "action_time": "2023-07-03T06:05:25.429Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "1",
+      "object_repr": "admin@admin.com(1)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"\\u0414\\u043e\\u043b\\u0436\\u043d\\u043e\\u0441\\u0442\\u044c\", \"\\u0421\\u0442\\u0440\\u0430\\u043d\\u0430\", \"\\u0427\\u0430\\u0441\\u043e\\u0432\\u043e\\u0439 \\u043f\\u043e\\u044f\\u0441\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+      "action_time": "2023-07-03T06:06:20.417Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "2",
+      "object_repr": "user@user.com(2)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"\\u0414\\u043e\\u043b\\u0436\\u043d\\u043e\\u0441\\u0442\\u044c\", \"\\u0421\\u0442\\u0440\\u0430\\u043d\\u0430\", \"\\u0427\\u0430\\u0441\\u043e\\u0432\\u043e\\u0439 \\u043f\\u043e\\u044f\\u0441\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+      "action_time": "2023-07-03T06:06:35.100Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "1",
+      "object_repr": "admin@admin.com(1)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+      "action_time": "2023-07-03T06:06:42.951Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "2",
+      "object_repr": "user@user.com(2)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Last name\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+      "action_time": "2023-07-03T06:08:09.317Z",
+      "user": 1,
+      "content_type": 6,
+      "object_id": "3",
+      "object_repr": "user_2@user.com(3)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+      "action_time": "2023-07-10T11:58:58.632Z",
+      "user": 6,
+      "content_type": 7,
+      "object_id": "13",
+      "object_repr": "Риа новости",
+      "action_flag": 2,
+      "change_message": "[{\"added\": {\"name\": \"organization user\", \"object\": \"\\u0420\\u0438\\u0430 \\u043d\\u043e\\u0432\\u043e\\u0441\\u0442\\u0438: user@user.com(2) -> \\u043d\\u0430\\u0431\\u043b\\u044e\\u0434\\u0430\\u0442\\u0435\\u043b\\u044c\"}}, {\"added\": {\"name\": \"organization user\", \"object\": \"\\u0420\\u0438\\u0430 \\u043d\\u043e\\u0432\\u043e\\u0441\\u0442\\u0438: user_3@user.com(4) -> \\u043d\\u0430\\u0431\\u043b\\u044e\\u0434\\u0430\\u0442\\u0435\\u043b\\u044c\"}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+      "action_time": "2023-07-10T11:59:51.830Z",
+      "user": 6,
+      "content_type": 7,
+      "object_id": "13",
+      "object_repr": "Риа новости",
+      "action_flag": 2,
+      "change_message": "[]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+      "action_time": "2023-07-10T12:23:57.662Z",
+      "user": 6,
+      "content_type": 6,
+      "object_id": "7",
+      "object_repr": "user_5@user.com(7)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+      "action_time": "2023-07-10T12:25:18.870Z",
+      "user": 6,
+      "content_type": 6,
+      "object_id": "8",
+      "object_repr": "user_6@user.com(8)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+      "action_time": "2023-07-10T12:26:23.831Z",
+      "user": 6,
+      "content_type": 6,
+      "object_id": "9",
+      "object_repr": "user_7@user.com(9)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+      "action_time": "2023-07-10T12:27:04.642Z",
+      "user": 6,
+      "content_type": 8,
+      "object_id": "7",
+      "object_repr": "Да здравствует мыло душистое и полотенце пушистое : И полотенце пушистое",
+      "action_flag": 2,
+      "change_message": "[{\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (5)\"}}, {\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (6)\"}}, {\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (7)\"}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+      "action_time": "2023-07-10T12:27:15.798Z",
+      "user": 6,
+      "content_type": 8,
+      "object_id": "6",
+      "object_repr": "Да здравствует мыло душистое и полотенце пушистое : И густой гребешок",
+      "action_flag": 2,
+      "change_message": "[{\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (8)\"}}, {\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (9)\"}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+      "action_time": "2023-07-10T12:27:25.291Z",
+      "user": 6,
+      "content_type": 8,
+      "object_id": "5",
+      "object_repr": "Да здравствует мыло душистое и полотенце пушистое : И зубной порошок",
+      "action_flag": 2,
+      "change_message": "[{\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (10)\"}}, {\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (11)\"}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+      "action_time": "2023-07-10T12:27:34.233Z",
+      "user": 6,
+      "content_type": 8,
+      "object_id": "4",
+      "object_repr": "Сбербанк: Выплатить дивиденды",
+      "action_flag": 2,
+      "change_message": "[{\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (12)\"}}, {\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (13)\"}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+      "action_time": "2023-07-10T12:27:42.534Z",
+      "user": 6,
+      "content_type": 8,
+      "object_id": "3",
+      "object_repr": "МММ: Продать облигации с доходностью 100000%",
+      "action_flag": 2,
+      "change_message": "[{\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (14)\"}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+      "action_time": "2023-07-10T12:27:45.663Z",
+      "user": 6,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": "Рога и Копыта: Жениться на Зосе",
+      "action_flag": 2,
+      "change_message": "[]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+      "action_time": "2023-07-10T12:29:07.183Z",
+      "user": 6,
+      "content_type": 9,
+      "object_id": "1",
+      "object_repr": "Task object (1)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+      "action_time": "2023-07-10T12:29:40.804Z",
+      "user": 6,
+      "content_type": 9,
+      "object_id": "2",
+      "object_repr": "Task object (2)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "0gb9503xw880l23bzyfqayfhgjth9xtc",
+    "fields": {
+      "session_data": ".eJxVjMsOwiAQAP-FsyELZbPUo3e_gbA8pGogKe3J-O9K0oNeZybzEs7vW3F7T6tbojgLJU6_jH14pDpEvPt6azK0uq0Ly5HIw3Z5bTE9L0f7Nyi-l7HNhDhlzRA4qKBUBkM6T4ZDjt4wEGqImLwGyjMobSzNaC3xNyZC8f4A3wo3MA:1qJcCj:N3ZfbhFn5RXXoHYqpTiImZCA_aPFAgpeW2BXEfAosKE",
+      "expire_date": "2023-07-26T15:56:37.216Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "gcoh2wumcdhsljsn9za037pw2zgvi5a8",
+    "fields": {
+      "session_data": ".eJxVjEEOwiAQRe_C2hCGFmZw6d4zNFMYbNVAUtqV8e7apAvd_vfef6mBt3UatibLMCd1Vl6dfreR40PKDtKdy63qWMu6zKPeFX3Qpq81yfNyuH8HE7fpWzMBdSg2p4gCaACyw0DRUBd67xBCb3rjMglmGdkzWEuUfMdJGB2o9wfEWzco:1qIpNQ:O18-x6THwfFXGC2tpzDlxJ7gfbkxbYyBntY9p52bLsk",
+      "expire_date": "2023-07-24T11:48:24.033Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "o5f5b6tqjukm5gbis3y9o8o9dyfx2k40",
+    "fields": {
+      "session_data": ".eJxVjMsOwiAQAP-FsyELZbPUo3e_gbA8pGogKe3J-O9K0oNeZybzEs7vW3F7T6tbojgLJU6_jH14pDpEvPt6azK0uq0Ly5HIw3Z5bTE9L0f7Nyi-l7HNhDhlzRA4qKBUBkM6T4ZDjt4wEGqImLwGyjMobSzNaC3xNyZC8f4A3wo3MA:1qGBHg:ybXRVGxDCRmWXxQzQSFEyJNTUofhkZSe0OebtJffxmc",
+      "expire_date": "2023-07-17T04:35:32.573Z"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "last_login": "2023-07-03T04:35:32Z",
+      "is_superuser": true,
+      "first_name": "Иван",
+      "last_name": "Иванов",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-29T17:35:13Z",
+      "email": "admin@admin.com",
+      "username": "admin",
+      "photo": "",
+      "phone": "+79223332233",
+      "position": "Директор",
+      "date_of_birth": "2023-07-03",
+      "gender": "male",
+      "country": "Россия",
+      "timezone": "Europe/Moscow",
+      "password": "pbkdf2_sha256$600000$JJzAWcOa8467rFDqkPzQSl$UZD9A2fKau0L9StNYYtpqNMC7iIpjtB9uUbya7/+yFQ=",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Ольга",
+      "last_name": "Петрова",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-06-30T06:56:00Z",
+      "email": "user@user.com",
+      "username": "user",
+      "photo": "",
+      "phone": "+79992233223",
+      "position": "Менеджер",
+      "date_of_birth": "2023-07-03",
+      "gender": "female",
+      "country": "Беларусь",
+      "timezone": "Europe/Minsk",
+      "password": "pbkdf2_sha256$600000$ApktMOgjZsLGBmVyZbWYLZ$pmQCLO5F+Hl8kxSxC8yE1CRq+3hJpHYhfmFT2azcfj8=",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Сергей",
+      "last_name": "Акопян",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-07-03T06:08:09.304Z",
+      "email": "user_2@user.com",
+      "username": "user_2",
+      "photo": "",
+      "phone": "+79989989898",
+      "position": "Работник",
+      "date_of_birth": null,
+      "gender": "male",
+      "country": "Армения",
+      "timezone": "Asia/Yerevan",
+      "password": "pbkdf2_sha256$600000$ApktMOgjZsLGBmVyZbWYLZ$pmQCLO5F+Hl8kxSxC8yE1CRq+3hJpHYhfmFT2azcfj8=",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Сергей",
+      "last_name": "Мавроди",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-06-29T17:36:13Z",
+      "email": "user_3@user.com",
+      "username": "mavrodi",
+      "photo": "",
+      "phone": "+79999999999",
+      "position": "Раб",
+      "date_of_birth": "2023-07-01",
+      "gender": "male",
+      "country": "Тюрьма",
+      "timezone": "Europe/Moscow",
+      "password": "pbkdf2_sha256$600000$JJzAWcOa8467rFDqkPzQSl$UZD9A2fKau0L9StNYYtpqNMC7iIpjtB9uUbya7/+yFQ=",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 5,
+    "fields": {
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Илья",
+      "last_name": "Муромец",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-06-29T17:36:13Z",
+      "email": "user_4@user.com",
+      "username": "muromets",
+      "photo": "",
+      "phone": "+79111111111",
+      "position": "Богатырь",
+      "date_of_birth": "2023-07-01",
+      "gender": "male",
+      "country": "Печь",
+      "timezone": "Europe/Moscow",
+      "password": "pbkdf2_sha256$600000$JJzAWcOa8467rFDqkPzQSl$UZD9A2fKau0L9StNYYtpqNMC7iIpjtB9uUbya7/+yFQ=",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 6,
+    "fields": {
+      "last_login": "2023-07-10T11:48:24.032Z",
+      "is_superuser": true,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-07-10T11:47:27.917Z",
+      "email": "admin2@admin.com",
+      "username": null,
+      "photo": "",
+      "phone": null,
+      "position": null,
+      "date_of_birth": null,
+      "gender": null,
+      "country": null,
+      "timezone": null,
+      "password": "pbkdf2_sha256$600000$YeXX6k6XbQ6p7K1YWSNxew$4UAkqjjXHxslJcEEWxtmoNbyd09kmXFU3OByEcRwQbc=",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 7,
+    "fields": {
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Иосиф",
+      "last_name": "Джугашвилли",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-07-10T12:23:57.653Z",
+      "email": "user_5@user.com",
+      "username": "stalin",
+      "photo": "",
+      "phone": "+79222233333",
+      "position": "Вождь народа",
+      "date_of_birth": null,
+      "gender": "male",
+      "country": "Грузия",
+      "timezone": "Asia/Tbilisi",
+      "password": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 8,
+    "fields": {
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Владимир Ильич",
+      "last_name": "Ленин",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-07-10T12:25:18.864Z",
+      "email": "user_6@user.com",
+      "username": "lenin",
+      "photo": "",
+      "phone": "+79883332211",
+      "position": "Пролетарий",
+      "date_of_birth": null,
+      "gender": "male",
+      "country": "СССР",
+      "timezone": "Europe/Moscow",
+      "password": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 9,
+    "fields": {
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Сергей",
+      "last_name": "Лукьяненко",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-07-10T12:26:23.822Z",
+      "email": "user_7@user.com",
+      "username": "lukyanenko",
+      "photo": "",
+      "phone": "+79887776655",
+      "position": "Писатель",
+      "date_of_birth": null,
+      "gender": "male",
+      "country": "Россия",
+      "timezone": "Europe/Moscow",
+      "password": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 1,
+    "fields": {
+      "title": "Рога и Копыта"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 2,
+    "fields": {
+      "title": "МММ"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 3,
+    "fields": {
+      "title": "Да здравствует мыло душистое и полотенце пушистое "
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 4,
+    "fields": {
+      "title": "Газпром"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 5,
+    "fields": {
+      "title": "Сбербанк"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 6,
+    "fields": {
+      "title": "Google"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 7,
+    "fields": {
+      "title": "Yandex"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 8,
+    "fields": {
+      "title": "Правительство российской федерации."
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 9,
+    "fields": {
+      "title": "Роскомнадзор"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 10,
+    "fields": {
+      "title": "Telegram"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 11,
+    "fields": {
+      "title": "Bing"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 12,
+    "fields": {
+      "title": "Rambler"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 13,
+    "fields": {
+      "title": "Риа новости"
+    }
+  },
+  {
+    "model": "tasks.organization",
+    "pk": 14,
+    "fields": {
+      "title": "string"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 1,
+    "fields": {
+      "organization": 2,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 2,
+    "fields": {
+      "organization": 3,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 3,
+    "fields": {
+      "organization": 4,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 4,
+    "fields": {
+      "organization": 5,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 5,
+    "fields": {
+      "organization": 6,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 6,
+    "fields": {
+      "organization": 7,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 7,
+    "fields": {
+      "organization": 8,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 8,
+    "fields": {
+      "organization": 9,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 9,
+    "fields": {
+      "organization": 10,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 10,
+    "fields": {
+      "organization": 11,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 11,
+    "fields": {
+      "organization": 12,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 12,
+    "fields": {
+      "organization": 13,
+      "user": 1,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 16,
+    "fields": {
+      "organization": 2,
+      "user": 2,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 17,
+    "fields": {
+      "organization": 2,
+      "user": 3,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 19,
+    "fields": {
+      "organization": 5,
+      "user": 3,
+      "role": "базовый пользователь"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 22,
+    "fields": {
+      "organization": 1,
+      "user": 2,
+      "role": "создатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 23,
+    "fields": {
+      "organization": 1,
+      "user": 1,
+      "role": "базовый пользователь"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 24,
+    "fields": {
+      "organization": 1,
+      "user": 3,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 25,
+    "fields": {
+      "organization": 1,
+      "user": 4,
+      "role": "запрещено"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 26,
+    "fields": {
+      "organization": 1,
+      "user": 5,
+      "role": "базовый пользователь"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 27,
+    "fields": {
+      "organization": 13,
+      "user": 2,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.organizationuser",
+    "pk": 28,
+    "fields": {
+      "organization": 13,
+      "user": 4,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.project",
+    "pk": 1,
+    "fields": {
+      "title": "Украсть у корейко миллион",
+      "date_start": "2023-07-17",
+      "date_finish": "2023-07-17",
+      "organization": 1
+    }
+  },
+  {
+    "model": "tasks.project",
+    "pk": 2,
+    "fields": {
+      "title": "Жениться на Зосе",
+      "date_start": "2023-07-17",
+      "date_finish": "2023-07-17",
+      "organization": 1
+    }
+  },
+  {
+    "model": "tasks.project",
+    "pk": 3,
+    "fields": {
+      "title": "Продать облигации с доходностью 100000%",
+      "date_start": "2023-07-17",
+      "date_finish": "2023-07-17",
+      "organization": 2
+    }
+  },
+  {
+    "model": "tasks.project",
+    "pk": 4,
+    "fields": {
+      "title": "Выплатить дивиденды",
+      "date_start": "2023-07-17",
+      "date_finish": "2023-07-17",
+      "organization": 5
+    }
+  },
+  {
+    "model": "tasks.project",
+    "pk": 5,
+    "fields": {
+      "title": "И зубной порошок",
+      "date_start": "2023-07-17",
+      "date_finish": "2023-07-17",
+      "organization": 3
+    }
+  },
+  {
+    "model": "tasks.project",
+    "pk": 6,
+    "fields": {
+      "title": "И густой гребешок",
+      "date_start": "2023-07-17",
+      "date_finish": "2023-07-17",
+      "organization": 3
+    }
+  },
+  {
+    "model": "tasks.project",
+    "pk": 7,
+    "fields": {
+      "title": "И полотенце пушистое",
+      "date_start": "2023-07-17",
+      "date_finish": "2023-07-17",
+      "organization": 3
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 1,
+    "fields": {
+      "project": 1,
+      "user": 3,
+      "role": "запрещено"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 2,
+    "fields": {
+      "project": 1,
+      "user": 2,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 3,
+    "fields": {
+      "project": 1,
+      "user": 1,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 4,
+    "fields": {
+      "project": 2,
+      "user": 5,
+      "role": "базовый пользователь"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 5,
+    "fields": {
+      "project": 7,
+      "user": 1,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 6,
+    "fields": {
+      "project": 7,
+      "user": 4,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 7,
+    "fields": {
+      "project": 7,
+      "user": 5,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 8,
+    "fields": {
+      "project": 6,
+      "user": 2,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 9,
+    "fields": {
+      "project": 6,
+      "user": 6,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 10,
+    "fields": {
+      "project": 5,
+      "user": 6,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 11,
+    "fields": {
+      "project": 5,
+      "user": 7,
+      "role": "базовый пользователь"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 12,
+    "fields": {
+      "project": 4,
+      "user": 1,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 13,
+    "fields": {
+      "project": 4,
+      "user": 5,
+      "role": "базовый пользователь"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 14,
+    "fields": {
+      "project": 3,
+      "user": 8,
+      "role": "ПМ"
+    }
+  },
+  {
+    "model": "tasks.projectuser",
+    "pk": 32,
+    "fields": {
+      "project": 1,
+      "user": 4,
+      "role": "наблюдатель"
+    }
+  },
+  {
+    "model": "tasks.task",
+    "pk": 1,
+    "fields": {
+      "title": "Заполнить базу тестовыми данными",
+      "description": "Надо заполнить БД тестовыми данными",
+      "column": "Беклог",
+      "project": 1,
+      "author": 1,
+      "status": "Несрочно",
+      "deadline": "2023-07-10T12:28:24Z",
+      "users": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "tasks.task",
+    "pk": 2,
+    "fields": {
+      "title": "Решить что будем кушать вечером",
+      "description": "Надо порешать...",
+      "column": "В работе",
+      "project": 1,
+      "author": 1,
+      "status": "Срочно",
+      "deadline": "2023-07-10T12:29:38Z",
+      "users": [
+        7,
+        8,
+        9
+      ]
+    }
+  },
+  {
+    "model": "tasks.comment",
+    "pk": 1,
+    "fields": {
+      "task": 1,
+      "description": "тестовый коммент",
+      "image": "",
+      "author": 1
+    }
+  },
+  {
+    "model": "tasks.comment",
+    "pk": 2,
+    "fields": {
+      "task": 1,
+      "description": "второй тестовый коммент",
+      "image": "",
+      "author": 2
+    }
+  },
+  {
+    "model": "tasks.comment",
+    "pk": 3,
+    "fields": {
+      "task": 2,
+      "description": "третий тестовый коммент",
+      "image": "",
+      "author": 1
+    }
+  }
+  ]
