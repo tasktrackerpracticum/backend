@@ -154,4 +154,6 @@ DJOSER = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://45.86.183.34:3000",
+    "https://pages.github.com",
+    "https://vallugovaia.github.io",
 ]

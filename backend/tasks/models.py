@@ -59,6 +59,7 @@ class Project(models.Model):
     users = models.ManyToManyField(User, through='ProjectUser')
     date_start = models.DateField('Дата начала', blank=True)
     date_finish = models.DateField('Дата завершения', blank=True)
+    is_active = models.BooleanField('Статус', default=True)
 
     class Meta:
         verbose_name = 'Проект'
