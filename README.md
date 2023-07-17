@@ -1,17 +1,25 @@
 # Tracker
 
-## Пререквизиты
+
+## Запуск в докере
+
+```
+git clone https://github.com/Konstantin8891/Tracker.git
+cd Tracker
+docker build -t tasktracker .
+docker run -it -p 8000:8000 tasktracker
+```
+
+## Запуск локально
 
 Необходим python.
 
 Можно скачать https://www.python.org/downloads/release/python-3107/
 
-## Запуск
-
 ```
 git clone https://github.com/Konstantin8891/Tracker.git
 
-cd backend
+cd Tracker/backend
 ```
 
 Windows:
