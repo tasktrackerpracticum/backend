@@ -11,8 +11,8 @@ schema_view = get_schema_view(
         default_version="v1",
         description="""API documentation for Task Tracker project.
         Made by graduates of Yandex Practikum school.
-        <a href="https://t.me/catstyle1101" target="_blank">Anton Masyuk</a> and \
-        <a href="https://t.me/K0nstantin8891" target="_blank">\
+        <a href="https://t.me/catstyle1101" target="_blank">Anton Masyuk</a>\
+        and <a href="https://t.me/K0nstantin8891" target="_blank">\
         Konstantin Vasilyev</a>""",
         license=openapi.License(name="MIT License"),
     ),
