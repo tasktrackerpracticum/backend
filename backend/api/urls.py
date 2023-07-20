@@ -1,11 +1,8 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from .views import (
-    UserViewSet, OrganizationViewSet, ProjectViewSet, SimpleProjectViewSet,
-    ProjectCreateViewSet, AddUserToProjectViewSet, TasksViewSet, CommentViewSet
-)
-
+from .views import (CommentViewSet, OrganizationViewSet, ProjectViewSet,
+                    TasksViewSet, UserViewSet)
 
 app_name = 'api'
 
@@ -13,44 +10,56 @@ router = SimpleRouter()
 
 router.register('users', UserViewSet, basename='users')
 router.register('tasks', TasksViewSet, basename='tasks')
-router.register('comments', CommentViewSet, basename='comments')
+router.register('organizations', OrganizationViewSet, basename='organizations')
 
 urlpatterns = [
-    path('', include(router.urls)),
     path(
-        'organizations',
-        OrganizationViewSet.as_view({'get': 'list', 'post': 'create'}),
+        'tasks/<int:task_id>/comments/',
+        CommentViewSet.as_view({
+            'get': 'list', 'post': 'create'
+        })
     ),
     path(
-        'organizations/<int:pk>/', OrganizationViewSet.as_view(
-            {'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'}
-        ),
+        'comments/<int:pk>/',
+        CommentViewSet.as_view({
+            'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'
+        })
     ),
     path(
         'organizations/<int:pk>/users/<int:user_id>/',
-        OrganizationViewSet.as_view({'delete': 'destroy', 'put': 'update'})
+        OrganizationViewSet.as_view(
+            {'delete': 'delete_user'}
+        )
     ),
     path(
-        'users/<int:id>/projects/',
-        ProjectViewSet.as_view({'get': 'list'}),
+        'projects/<int:project_id>/users/<int:user_id>/',
+        ProjectViewSet.as_view(
+            {'delete': 'delete_user'}
+        )
     ),
     path(
-        'organizations/<int:organization_id>/projects/',
-        ProjectCreateViewSet.as_view(
+        'projects/',
+        ProjectViewSet.as_view(
+            {'get': 'list'}
+        )
+    ),
+    path(
+        'projects/<int:project_id>/',
+        ProjectViewSet.as_view(
+            {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'}
+        )
+    ),
+    path(
+        'organizations/<int:organization_id>/projects',
+        ProjectViewSet.as_view(
             {'post': 'create'}
         )
     ),
     path(
-        'projects/<int:project_id>',
-        SimpleProjectViewSet.as_view(
-            {'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'}
-        ),
+        'tasks/<int:task_id>/users/<int:user_id>/',
+        TasksViewSet.as_view(
+            {'delete': 'user_delete'}
+        )
     ),
-    path(
-        ('projects/<int:project_id>'
-            '/users/<int:user_id>/'),
-        AddUserToProjectViewSet.as_view(
-            {'put': 'update'}
-        ),
-    ),
+    path('', include(router.urls)),
 ]

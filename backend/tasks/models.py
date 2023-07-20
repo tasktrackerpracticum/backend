@@ -7,6 +7,10 @@ class Organization(models.Model):
     title = models.CharField(max_length=200, unique=True)
     users = models.ManyToManyField(User, through='OrganizationUser')
 
+    class Meta:
+        verbose_name = 'Организация'
+        verbose_name_plural = 'Организации'
+
     def __str__(self):
         return self.title
 
@@ -53,6 +57,16 @@ class Project(models.Model):
         related_name='projects'
     )
     users = models.ManyToManyField(User, through='ProjectUser')
+    date_start = models.DateField('Дата начала', blank=True)
+    date_finish = models.DateField('Дата завершения', blank=True)
+    is_active = models.BooleanField('Статус', default=True)
+
+    class Meta:
+        verbose_name = 'Проект'
+        verbose_name_plural = 'Проекты'
+
+    def __str__(self):
+        return f"{self.organization}: {self.title}"
 
 
 class ProjectUser(models.Model):
@@ -109,10 +123,12 @@ class Task(models.Model):
     status = models.CharField(max_length=15, choices=STATUSES)
     deadline = models.DateTimeField()
 
+    class Meta:
+        verbose_name = 'Задача'
+        verbose_name_plural = 'Задачи'
 
-# class TaskUser(models.Model):
-#     task_id = models.ForeignKey(Task, on_delete=models.CASCADE)
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.project} ({self.title})"
 
 
 class TaskFile(models.Model):
@@ -133,7 +149,8 @@ class Comment(models.Model):
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, related_name='comments')
     description = models.TextField()
-    image = models.ImageField(upload_to='media/comments', null=True, blank=True)
+    image = models.ImageField(
+        upload_to='media/comments', null=True, blank=True)
     author = models.ForeignKey(
         User, related_name='comments', on_delete=models.CASCADE)
 
@@ -143,3 +160,10 @@ class Subtask(models.Model):
         Task, on_delete=models.CASCADE, related_name='task')
     subtask = models.ForeignKey(
         Task, on_delete=models.CASCADE, related_name='subtask')
+
+    class Meta:
+        verbose_name = 'Подзадача'
+        verbose_name_plural = 'Подзадачи'
+
+    def __str__(self):
+        return f"{self.task} -> {self.subtask}"

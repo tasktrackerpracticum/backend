@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -19,7 +20,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'drf_yasg',
-    "phonenumber_field",
+    'django_filters',
+    'phonenumber_field',
+    'rest_framework.authtoken',
+    'corsheaders',
     'users.apps.UsersConfig',
     'tasks.apps.TasksConfig',
 ]
@@ -27,6 +31,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -55,9 +60,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.getenv("DB_NAME", BASE_DIR / "db.sqlite3"),
+        "USER": os.getenv("POSTGRES_USER", "user"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "password"),
+        "HOST": os.getenv("DB_HOST", "0.0.0.0"),
+        "PORT": os.getenv("DB_PORT", "8000"),
     }
 }
 
@@ -88,7 +97,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static/"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -137,3 +150,10 @@ DJOSER = {
     },
     'HIDE_USERS': False,
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://45.86.183.34:3000",
+    "https://pages.github.com",
+    "https://vallugovaia.github.io",
+]

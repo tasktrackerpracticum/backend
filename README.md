@@ -1,17 +1,25 @@
 # Tracker
 
-## Пререквизиты
+
+## Запуск в докере
+
+```
+git clone https://github.com/Konstantin8891/Tracker.git
+cd Tracker
+docker build -t tasktracker .
+docker run -it -p 8000:8000 tasktracker
+```
+
+## Запуск локально
 
 Необходим python.
 
 Можно скачать https://www.python.org/downloads/release/python-3107/
 
-## Запуск
-
 ```
 git clone https://github.com/Konstantin8891/Tracker.git
 
-cd backend
+cd Tracker/backend
 ```
 
 Windows:
@@ -51,22 +59,20 @@ http://localhost:8000/api/docs
 
 Bearer {token}
 
-Также работает авторизация Django - нажать кнопку Django Login
+Также работает авторизация Django - нажать кнопку Django Login (только пока тестовый режим)
 
 ### Токен
 
-Выдаёт конечная точка jwt/create
+Выдаёт конечная точка http//localhost:8000/jwt/create/
 
 ```
 {
 
 "email": "admin@admin.com",
-
 "password": "admin"
 
 }
 ```
-
 ## Сделать дамп базы на Windows
 
 ```
