@@ -35,8 +35,10 @@ from users.models import User
 
 class UserViewSet(DjoserUserViewSet):
     permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('username',)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filterset_class = UserFilter
+    search_fields = ('email', 'username', 'phone', 'position', 'position',
+                     'country', 'first_name', 'last_name')
     queryset = User.objects.all()
 
     @action(["get", "patch", "delete"], detail=False)
@@ -281,8 +283,9 @@ class TasksViewSet(ModelViewSet):
         IsProjectManagerTask | IsObserverTask | IsBaseUserTask,
     )
     serializer_class = TaskSerializer
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filterset_class = TaskFilter
+    search_fields = ('title',)
     action_serializers = {
         'create': TaskAddSerializer,
         'partial_update': TaskAddSerializer,
