@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from api.filters import TaskFilter
+from api.filters import TaskFilter, UserFilter
 from api.permissions import (
     IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
     IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
@@ -35,6 +35,8 @@ from users.models import User
 
 class UserViewSet(DjoserUserViewSet):
     permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('username',)
     queryset = User.objects.all()
 
     @action(["get", "patch", "delete"], detail=False)
@@ -62,6 +64,8 @@ class UserViewSet(DjoserUserViewSet):
 
 class OrganizationViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('title',)
     update_permision_classes = (IsOrganizationCreator,)
     serializer_class = OrganizationViewSerializer
     action_serializers = {
