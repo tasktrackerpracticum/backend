@@ -1,7 +1,6 @@
 from django_filters import rest_framework as filters
 
-from tasks.models import Task
-from users.models import User
+from tasks.models import Task, User, Project
 
 
 class TaskFilter(filters.FilterSet):
@@ -18,3 +17,11 @@ class UserFilter(filters.FilterSet):
         model = User
         fields = '__all__'
         exclude = ('photo',)
+
+
+class ProjectFilter(filters.FilterSet):
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+        exclude = ('deadline',)

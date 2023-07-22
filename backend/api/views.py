@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from api.filters import TaskFilter, UserFilter
+from api.filters import TaskFilter, UserFilter, ProjectFilter
 from api.permissions import (
     IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
     IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
@@ -183,6 +183,11 @@ class ProjectViewSet(ModelViewSet):
     lookup_field = 'id'
     lookup_url_kwarg = 'project_id'
     queryset = Project.objects.all()
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,
+                       filters.OrderingFilter)
+    filterset_class = ProjectFilter
+    search_fields = ('title',)
+    ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[project_id_param])
@@ -283,9 +288,12 @@ class TasksViewSet(ModelViewSet):
         IsProjectManagerTask | IsObserverTask | IsBaseUserTask,
     )
     serializer_class = TaskSerializer
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,
+                       filters.OrderingFilter)
     filterset_class = TaskFilter
     search_fields = ('title',)
+    ordering_fields = ('deadline', )
+    ordering = ('deadline',)
     action_serializers = {
         'create': TaskAddSerializer,
         'partial_update': TaskAddSerializer,
