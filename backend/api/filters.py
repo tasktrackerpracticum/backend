@@ -1,3 +1,4 @@
+from django.db.models import QuerySet, Q, Case, IntegerField, Value, When
 from django_filters import rest_framework as filters
 
 from tasks.models import Task, User, Project
@@ -20,8 +21,18 @@ class UserFilter(filters.FilterSet):
 
 
 class ProjectFilter(filters.FilterSet):
+    search = filters.CharFilter(method='custom_search')
 
     class Meta:
         model = Project
         fields = '__all__'
         exclude = ('deadline',)
+
+    def custom_search(self, queryset: QuerySet, _, value: str):
+        q1 = Q(title__istartswith=value)
+        user = User.objects.filter(Q(first_name__istartswith=value)
+                                   | Q(last_name__istartswith=value))
+        q2 = Q(users__in=user)
+        return queryset.filter(
+            q1 | q2
+        )

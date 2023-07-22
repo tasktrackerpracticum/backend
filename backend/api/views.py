@@ -183,10 +183,10 @@ class ProjectViewSet(ModelViewSet):
     lookup_field = 'id'
     lookup_url_kwarg = 'project_id'
     queryset = Project.objects.all()
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter,
+    filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter)
     filterset_class = ProjectFilter
-    search_fields = ('title',)
+    
     ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
 
     @swagger_auto_schema(
