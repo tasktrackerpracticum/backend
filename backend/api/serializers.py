@@ -123,12 +123,13 @@ class TaskSerializer(serializers.ModelSerializer):
     users = ShortUserSerializer(many=True)
     author = ShortUserSerializer()
     comments = serializers.SerializerMethodField()
+    project = ProjectSerializer(read_only=True)
 
     class Meta:
         model = Task
         fields = (
-            'title', 'description', 'column', 'users', 'author',
-            'status', 'deadline', 'comments'
+            'id', 'title', 'description', 'column', 'users', 'author',
+            'status', 'deadline', 'comments', 'project',
         )
 
     def get_comments(self, obj):
