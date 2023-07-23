@@ -186,7 +186,6 @@ class ProjectViewSet(ModelViewSet):
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter)
     filterset_class = ProjectFilter
-    
     ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
 
     @swagger_auto_schema(
@@ -288,10 +287,9 @@ class TasksViewSet(ModelViewSet):
         IsProjectManagerTask | IsObserverTask | IsBaseUserTask,
     )
     serializer_class = TaskSerializer
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter,
+    filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter)
     filterset_class = TaskFilter
-    search_fields = ('title',)
     ordering_fields = ('deadline', )
     ordering = ('deadline',)
     action_serializers = {
