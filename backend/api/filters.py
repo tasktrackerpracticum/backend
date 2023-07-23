@@ -14,11 +14,11 @@ class TaskFilter(filters.FilterSet):
 
     def custom_search(self, queryset: QuerySet, _, value: str):
         q1 = Q(title__istartswith=value)
-        user = User.objects.filter(Q(first_name__istartswith=value)
-                                   | Q(last_name__istartswith=value))
-        q2 = Q(users__in=user)
+        users = User.objects.filter(Q(first_name__istartswith=value)
+                                    | Q(last_name__istartswith=value))
+        q2 = Q(users__in=users)
         q3 = Q(column__istartswith=value)
-        q4 = Q(author__in=user)
+        q4 = Q(author__in=users)
         q5 = Q(description__istartswith=value)
         return queryset.filter(
             q1 | q2 | q3 | q4 | q5
@@ -43,9 +43,9 @@ class ProjectFilter(filters.FilterSet):
 
     def custom_search(self, queryset: QuerySet, _, value: str):
         q1 = Q(title__istartswith=value)
-        user = User.objects.filter(Q(first_name__istartswith=value)
+        users = User.objects.filter(Q(first_name__istartswith=value)
                                    | Q(last_name__istartswith=value))
-        q2 = Q(users__in=user)
+        q2 = Q(users__in=users)
         return queryset.filter(
             q1 | q2
         )

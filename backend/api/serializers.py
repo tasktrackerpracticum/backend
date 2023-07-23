@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from tasks.models import (Comment, Organization, OrganizationUser, Project,
@@ -111,16 +110,6 @@ class ProjectSerializer(serializers.ModelSerializer):
     def get_users(self, obj):
         users = ProjectUser.objects.filter(project=obj)
         return ProjectUserSerializer(users, many=True).data
-
-    def create(self, validated_data):
-        request = self.context.get('request', None)
-        title = validated_data.pop('title')
-        org_id = request.get_full_path().split("/")[2]
-        org = Organization.objects.get(
-            pk=org_id)
-        project = Project.objects.create(title=title, organization=org)
-        project.users.add(request.user)
-        return project
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
