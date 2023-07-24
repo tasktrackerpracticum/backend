@@ -75,6 +75,7 @@ class ProjectViewSet(ModelViewSet):
 
         ---
         """
+        return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[schemas.project_id_param])
