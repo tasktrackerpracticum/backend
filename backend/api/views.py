@@ -10,35 +10,16 @@ from rest_framework.viewsets import ModelViewSet
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from api.filters import TaskFilter, UserFilter, ProjectFilter
-from api.permissions import (
-    IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
-    IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
-    IsProjectManagerComment, IsObserverComment, IsBaseUserComment
-)
-from api.serializers import (
-    AddCommentSerializer, OrganizationViewSerializer,
-    OrganizationCreateSerializer, ProjectSerializer,
-    OrganizationUserAddSerializer, ProjectCreateSerializer,
-    ProjectUserAddSerializer, TaskAddSerializer, TaskSerializer,
-    TaskUserAddSerializer, CommentSerializer
-)
-from api.schemas import (
-    user_id_param, pk_param, project_id_param, project_id_in_query,
-    task_id_param, organization_id_param
-    )
-from tasks.models import (
-    Organization, OrganizationUser, Project, ProjectUser, Task, Comment
-)
+from api import filters as f
+from api import permissions as p
+from api import serializers as s
+from api import schemas as schemas
+from tasks.models import Project, ProjectUser, Task, Comment
 from users.models import User
 
 
 class UserViewSet(DjoserUserViewSet):
-    permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filterset_class = UserFilter
-    search_fields = ('email', 'username', 'phone', 'position', 'position',
-                     'country', 'first_name', 'last_name')
+    permission_classes = (p.IsAuthenticated | p.IsAdminUser | p.IsSelf,)
     queryset = User.objects.all()
 
     @action(["get", "patch", "delete"], detail=False)
@@ -61,86 +42,114 @@ class UserViewSet(DjoserUserViewSet):
             ),
         )
     def destroy(self, request, *args, **kwargs):
+        """
+        В этом эндпоинте можно удалить пользователя.
+
+        ---
+        """
         return super().destroy(request, *args, **kwargs)
 
 
-class OrganizationViewSet(ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filterset_fields = ('title',)
-    search_fields = ('title',)
-    update_permision_classes = (IsOrganizationCreator,)
-    serializer_class = OrganizationViewSerializer
+class ProjectViewSet(ModelViewSet):
+    permission_classes = (p.IsProjectManager | p.IsAdminUser,)
+    serializer_class = s.ProjectSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'project_id'
+    queryset = Project.objects.all()
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    filterset_class = f.ProjectFilter
+    ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
     action_serializers = {
-        'update': OrganizationUserAddSerializer,
+        'list': s.ShortProjectSerializer,
     }
 
-    def get_queryset(self):
-        """Возвращает только те Организации, в которых участвует авторизованный
-        пользователь, для администратора - все организации"""
-        if self.request.user.is_authenticated:
-            return Organization.objects.filter(users=self.request.user).all()
-        return Organization.objects.all()
-
-    def get_permissions(self):
-        if self.action in ('patch', 'put', 'destroy', 'delete_user'):
-            permission_classes = self.update_permision_classes
-        else:
-            permission_classes = self.permission_classes
-        return [permission() for permission in permission_classes]
-
     def get_serializer_class(self):
-        if hasattr(self, 'action_serializers'):
-            return self.action_serializers.get(
-                self.action, self.serializer_class)
-        return super(OrganizationViewSet, self).get_serializer_class()
-
-    @transaction.atomic
-    def create(self, request, *args, **kwargs):
-        """В этом эндпоинте создается организация, статус владельца
-        автоматически получает авторизованный пользователь."""
-        serializer = OrganizationCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        organization = Organization.objects.get(title=request.data['title'])
-        OrganizationUser.objects.create(
-            organization=organization,
-            user=request.user,
-            role=OrganizationUser.CREATOR,
-        )
-        serializer = OrganizationViewSerializer(instance=organization)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    @swagger_auto_schema(manual_parameters=[pk_param])
-    def retrieve(self, request, *args, **kwargs):
-        """В этом эндпоинте можно посмотреть конкретную
-        организацию и ее пользователей."""
-        return super().retrieve(request, *args, **kwargs)
+        return self.action_serializers.get(self.action, self.serializer_class)
 
     def list(self, request, *args, **kwargs):
-        """В этом эндпоинте можно получить весь список
-        организаций авторизованного пользователя."""
-        return super().list(request, *args, **kwargs)
+        """
+        В этом эндпоинте можно посмотреть все проекты.
 
-    @swagger_auto_schema(manual_parameters=[pk_param])
+        ---
+        """
+
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[schemas.project_id_param])
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        """
+        В этом эндпоинте можно удалить проект.
+
+        ---
+        """
+        return super().destroy(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[schemas.project_id_param])
+    def retrieve(self, request, *args, **kwargs):
+        """
+        В этом энпоинте можно посмотреть конкретный проект.
+
+        ---
+        """
+        return super().retrieve(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[schemas.project_id_param])
+    def partial_update(self, request, *args, **kwargs):
+        """
+        В этом эндпоинте можно частично обновить проект.
+
+        ---
+        """
+        return super().partial_update(request, *args, **kwargs)
+
+
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[schemas.project_id_param])
+    def update(self, request, *args, **kwargs):
+        """
+        В этом эндпоинте можно обновить проект.
+
+        ---
+        """
+        return super(ProjectViewSet, self).update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[schemas.project_id_param])
+    def create(self, request, *args, **kwargs):
+        """
+        В этом эндпоинте можно создать проект.
+
+        ---
+        """
+        return super(ProjectViewSet, self).create(request, *args, **kwargs)
+
+    @swagger_auto_schema(manual_parameters=[schemas.project_id_param])
     @action(
         methods=['POST'],
         detail=True,
-        serializer_class=OrganizationUserAddSerializer
+        serializer_class=s.ProjectUserAddSerializer,
     )
     def users(self, request, *args, **kwargs):
-        """В этом эндпоинте можно добавить пользователя или изменить его роль в
-        огранизации.
+        """
+        В этом эндпоинте можно добавить пользователя или изменить его роль в
+        проекте.
+
+        ---
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
-        organization = self.get_object()
-        self.check_object_permissions(organization, request)
-        user = User.objects.get(email=serializer.data.get('email'))
-        obj, _ = OrganizationUser.objects.update_or_create(
-            organization=organization,
+        project = self.get_object()
+        try:
+            user = User.objects.get(email=serializer.data.get('email'))
+        except ObjectDoesNotExist:
+            raise NotFound('пользователя с таким email не существует')
+        obj, _ = ProjectUser.objects.update_or_create(
+            project=project,
             user=user,
             defaults={'role': serializer.data.get('role')}
         )
@@ -149,69 +158,16 @@ class OrganizationViewSet(ModelViewSet):
             serializer.data, status=status.HTTP_200_OK
         )
 
-    @swagger_auto_schema(manual_parameters=[pk_param])
-    def partial_update(self, request, *args, **kwargs):
-        """В этом эндпоинте можно переименовать организацию."""
-        return super().partial_update(request, *args, **kwargs)
-
-    @swagger_auto_schema(manual_parameters=[pk_param])
-    @transaction.atomic
-    def destroy(self, request, *args, **kwargs):
-        """В этом эндпоинте можно удалить организацию."""
-        return super().destroy(request, *args, **kwargs)
-
-    @swagger_auto_schema(manual_parameters=[pk_param, user_id_param])
+    @swagger_auto_schema(
+        tags=["projects"], manual_parameters=[
+            schemas.project_id_param, schemas.user_id_param])
     @transaction.atomic
     def delete_user(self, request, *args, **kwargs):
-        """В этом эндпоинте можно удалить пользователя из организации."""
-        user_id = self.kwargs.get('user_id')
-        user = User.objects.get(id=user_id)
-        organization = self.get_object()
-        org_user = OrganizationUser.objects.get(
-            user=user, organization=organization)
-        org_user.delete()
-        if not OrganizationUser.objects.filter(
-            organization=organization
-        ).exists():
-            organization.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        """
+        В этом эндпоинте можно удалить пользователя из проекта.
 
-
-class ProjectViewSet(ModelViewSet):
-    permission_classes = (IsProjectManager | IsAdminUser,)
-    serializer_class = ProjectSerializer
-    lookup_field = 'id'
-    lookup_url_kwarg = 'project_id'
-    queryset = Project.objects.all()
-    filter_backends = (DjangoFilterBackend,
-                       filters.OrderingFilter)
-    filterset_class = ProjectFilter
-    ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
-
-    @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[project_id_param])
-    @transaction.atomic
-    def destroy(self, request, *args, **kwargs):
-        """В этом эндпоинте можно удалить проект."""
-        return super().destroy(request, *args, **kwargs)
-
-    @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[project_id_param])
-    def retrieve(self, request, *args, **kwargs):
-        """В этом энпоинте можно посмотреть конкретный проект."""
-        return super().retrieve(request, *args, **kwargs)
-
-    @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[project_id_param])
-    def partial_update(self, request, *args, **kwargs):
-        """В этом эндпоинте можно переименовать проект."""
-        return super().partial_update(request, *args, **kwargs)
-
-    @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[project_id_param, user_id_param])
-    @transaction.atomic
-    def delete_user(self, request, *args, **kwargs):
-        """В этом эндпоинте можно удалить пользователя в проекте."""
+        ---
+        """
         user_id = self.kwargs.get('user_id')
         user = User.objects.get(id=user_id)
         project = self.get_object()
@@ -224,103 +180,82 @@ class ProjectViewSet(ModelViewSet):
             project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @transaction.atomic
-    @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[organization_id_param])
-    def create(self, request, *args, **kwargs):
-        """В этом эндпоинте можно создать новый проект у организации."""
-        serializer = ProjectCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            organization = Organization.objects.get(
-                pk=kwargs.get('organization_id'))
-        except ObjectDoesNotExist:
-            raise NotFound('Организации с таким id не существует')
-        project = Project.objects.create(
-            organization=organization,
-            title=serializer.data.get('title'),
-        )
-        project.save()
-        project_user = ProjectUser.objects.create(
-            project=project,
-            user=self.request.user,
-            role=ProjectUser.PROJECT_MANAGER,
-        )
-        response = serializer.data
-        response.update({'id': project.pk})
-        project_user.save()
-        return Response(
-            response, status=status.HTTP_201_CREATED,
-        )
-
-    @swagger_auto_schema(manual_parameters=[project_id_param])
-    @action(
-        methods=['POST'],
-        detail=True,
-        serializer_class=ProjectUserAddSerializer,
-    )
-    def users(self, request, *args, **kwargs):
-        """В этом эндпоинте можно добавить пользователя или изменить его роль в
-        проекте.
-        """
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid()
-        project = self.get_object()
-        try:
-            user = User.objects.get(email=serializer.data.get('email'))
-        except ObjectDoesNotExist:
-            raise NotFound('пользователя с таким id не существует')
-        obj, _ = ProjectUser.objects.update_or_create(
-            project=project,
-            user=user,
-            defaults={'role': serializer.data.get('role')}
-        )
-        obj.save()
-        return Response(
-            serializer.data, status=status.HTTP_200_OK
-        )
-
 
 class TasksViewSet(ModelViewSet):
     queryset = Task.objects.all()
+    lookup_url_kwarg = 'task_id'
     permission_classes = (
-        IsProjectManagerTask | IsObserverTask | IsBaseUserTask,
+        p.IsProjectManagerTask | p.IsObserverTask | p.IsBaseUserTask,
     )
-    serializer_class = TaskSerializer
+    serializer_class = s.TaskSerializer
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter)
-    filterset_class = TaskFilter
+    filterset_class = f.TaskFilter
     ordering_fields = ('deadline', )
     ordering = ('deadline',)
     action_serializers = {
-        'create': TaskAddSerializer,
-        'partial_update': TaskAddSerializer,
+        'create': s.TaskAddSerializer,
+        'partial_update': s.TaskAddSerializer,
+        'update': s.TaskAddSerializer,
     }
+
+    def get_queryset(self):
+        project_id = self.request.query_params.get('project_id')
+        if self.request.method == 'GET' and project_id:
+            return Task.objects.filter(
+                project_id=project_id,
+            ).all()
+        return super().get_queryset()
 
     def get_serializer_class(self):
         if hasattr(self, 'action_serializers'):
             return self.action_serializers.get(
                 self.action, self.serializer_class)
-        return super(OrganizationViewSet, self).get_serializer_class()
+        return super().get_serializer_class()
 
-    @swagger_auto_schema(manual_parameters=[project_id_in_query])
+    @swagger_auto_schema(manual_parameters=[schemas.project_id_in_query])
     def list(self, request):
-        """Отображает список задач конкретного проекта."""
+        """
+        Отображает список задач конкретного проекта.
+
+        ---
+        """
         return super().list(request)
 
-    @swagger_auto_schema(manual_parameters=[pk_param])
-    def partial_update(self, request, **kwargs):
-        """Позволяет изменить основные параметры задачи."""
+    @swagger_auto_schema(manual_parameters=[
+        schemas.project_id_param, schemas.task_id_param])
+    def partial_update(self, request, *args, **kwargs):
+        """
+        Этот эндпоинт позволяет изменить основные параметры задачи.
+
+        ---
+        """
+        return super().partial_update(request, *args, **kwargs)
+
+    @swagger_auto_schema(manual_parameters=[
+        schemas.project_id_param, schemas.task_id_param])
+    def update(self, request, *args, **kwargs):
+        """
+        В этом эндпоинте можно обновить параметры задачи.
+
+        ---
+        """
+        partial = kwargs.pop('partial', False)
         task = self.get_object()
-        serializer = self.get_serializer(task, data=request.data, partial=True)
+        serializer = self.get_serializer(
+            task, data=request.data, partial=partial)
         serializer.is_valid()
         self.perform_update(serializer)
         return Response(serializer.data)
 
+    @swagger_auto_schema(manual_parameters=[schemas.project_id_param])
     def create(self, request, *args, **kwargs):
-        """Создает задачу."""
+        """
+        Этот эндпоинт позволяет создать задачу.
+
+        ---
+        """
         data = request.data
-        data.update({'author': self.request.user})
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -328,14 +263,19 @@ class TasksViewSet(ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    @swagger_auto_schema(manual_parameters=[pk_param])
+    @swagger_auto_schema(manual_parameters=[
+        schemas.project_id_param, schemas.task_id_param])
     @action(
         methods=['POST'],
         detail=True,
-        serializer_class=TaskUserAddSerializer,
+        serializer_class=s.TaskUserAddSerializer,
     )
     def users(self, request, **kwargs):
-        """Добавляет пользователей в задачу."""
+        """
+        Этот эндпоинт добавляет пользователей в задачу.
+
+        ---
+        """
         try:
             task = Task.objects.get(pk=kwargs.get('pk'))
         except ObjectDoesNotExist:
@@ -350,15 +290,8 @@ class TasksViewSet(ModelViewSet):
         task.users.add(user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def get_queryset(self):
-        project_id = self.request.query_params.get('project_id')
-        if self.request.method == 'GET' and project_id:
-            return Task.objects.filter(
-                project_id=project_id,
-            ).all()
-        return super().get_queryset()
-
-    @swagger_auto_schema(manual_parameters=[pk_param])
+    @swagger_auto_schema(manual_parameters=[
+        schemas.task_id_param, schemas.project_id_param])
     def destroy(self, request, pk):
         """Удаляет задачу."""
         instance = self.get_object()
@@ -366,7 +299,8 @@ class TasksViewSet(ModelViewSet):
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(manual_parameters=[task_id_param, user_id_param])
+    @swagger_auto_schema(manual_parameters=[
+        schemas.task_id_param, schemas.user_id_param])
     def user_delete(self, *args, **kwargs):
         """Удаляет пользователя из задачи."""
         user_id = self.kwargs.get('user_id')
@@ -377,62 +311,62 @@ class TasksViewSet(ModelViewSet):
         task = self.get_object()
         task.users.remove(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CommentViewSet(ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = AddCommentSerializer
-    permission_classes = (
-        IsProjectManagerComment | IsObserverComment | IsBaseUserComment,
-    )
-    action_serializers = {
-        'list': CommentSerializer,
-    }
-
-    def get_serializer_class(self):
-        if hasattr(self, 'action_serializers'):
-            return self.action_serializers.get(
-                self.action, self.serializer_class)
-        return super().get_serializer_class()
-
-    def get_queryset(self):
-        if not self.kwargs.get('task_id'):
-            return super().get_queryset()
-        try:
-            return Task.objects.get(
-                pk=self.kwargs.get('task_id')).comments.all()
-        except ObjectDoesNotExist as e:
-            raise NotFound(detail='Задачи с таким id не существует') from e
-
-    @swagger_auto_schema(manual_parameters=[task_id_param])
-    def list(self, request, *args, **kwargs):
-        """Выдает все комментарии определенной задачи."""
-        return super().list(request, *args, **kwargs)
-
-    @swagger_auto_schema(manual_parameters=[task_id_param])
-    def create(self, request, *args, **kwargs):
-        """Создает новый комментарий к задаче."""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        task = Task.objects.get(pk=kwargs.get('task_id'))
-        comment = Comment.objects.create(
-            author=request.user, task=task, **serializer.data)
-        comment.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    @swagger_auto_schema(tags=['tasks'])
-    def destroy(self, request, *args, **kwargs):
-        """Удаляет комментарий."""
-        return super().destroy(request, *args, **kwargs)
-
-    @swagger_auto_schema(tags=['tasks'])
-    def update(self, request, *args, **kwargs):
-        """Изменяет комментарий."""
-        return super().update(request, *args, **kwargs)
-
-    @swagger_auto_schema(tags=['tasks'])
-    def partial_update(self, request, *args, **kwargs):
-        """Позволяет частично изменить комментарий."""
-        return super().partial_update(request, *args, **kwargs)
+#
+#
+# class CommentViewSet(ModelViewSet):
+#     queryset = Comment.objects.all()
+#     serializer_class = AddCommentSerializer
+#     permission_classes = (
+#         IsProjectManagerComment | IsObserverComment | IsBaseUserComment,
+#     )
+#     action_serializers = {
+#         'list': CommentSerializer,
+#     }
+#
+#     def get_serializer_class(self):
+#         if hasattr(self, 'action_serializers'):
+#             return self.action_serializers.get(
+#                 self.action, self.serializer_class)
+#         return super().get_serializer_class()
+#
+#     def get_queryset(self):
+#         if not self.kwargs.get('task_id'):
+#             return super().get_queryset()
+#         try:
+#             return Task.objects.get(
+#                 pk=self.kwargs.get('task_id')).comments.all()
+#         except ObjectDoesNotExist as e:
+#             raise NotFound(detail='Задачи с таким id не существует') from e
+#
+#     @swagger_auto_schema(manual_parameters=[task_id_param])
+#     def list(self, request, *args, **kwargs):
+#         """Выдает все комментарии определенной задачи."""
+#         return super().list(request, *args, **kwargs)
+#
+#     @swagger_auto_schema(manual_parameters=[task_id_param])
+#     def create(self, request, *args, **kwargs):
+#         """Создает новый комментарий к задаче."""
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         task = Task.objects.get(pk=kwargs.get('task_id'))
+#         comment = Comment.objects.create(
+#             author=request.user, task=task, **serializer.data)
+#         comment.save()
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(
+#             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+#
+#     @swagger_auto_schema(tags=['tasks'])
+#     def destroy(self, request, *args, **kwargs):
+#         """Удаляет комментарий."""
+#         return super().destroy(request, *args, **kwargs)
+#
+#     @swagger_auto_schema(tags=['tasks'])
+#     def update(self, request, *args, **kwargs):
+#         """Изменяет комментарий."""
+#         return super().update(request, *args, **kwargs)
+#
+#     @swagger_auto_schema(tags=['tasks'])
+#     def partial_update(self, request, *args, **kwargs):
+#         """Позволяет частично изменить комментарий."""
+#         return super().partial_update(request, *args, **kwargs)

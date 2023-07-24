@@ -1,7 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import NotFound
 
-from tasks.models import (Comment, Organization, OrganizationUser, Project,
-                          ProjectUser, Task)
+from tasks.models import Comment, Project, ProjectUser, Task
 from users.models import User
 
 
@@ -13,21 +15,19 @@ class ShortUserSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email', 'phone', 'photo')
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    author = ShortUserSerializer()
+class ProjectUserAddSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
 
     class Meta:
-        model = Comment
-        fields = ('task', 'description', 'image', 'author')
+        model = ProjectUser
+        fields = ('email', 'role')
 
 
-class AddCommentSerializer(serializers.ModelSerializer):
-    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    image = serializers.ImageField()
+class UserCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Comment
-        fields = ('description', 'image', 'author')
+        model = User
+        fields = ('id', 'email', 'first_name', 'last_name', 'photo')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -41,56 +41,6 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
-class OrganizationUserSerializer(serializers.ModelSerializer):
-    user = ShortUserSerializer()
-
-    class Meta:
-        model = OrganizationUser
-        fields = ('role', 'user')
-
-
-class OrganizationUserAddSerializer(serializers.ModelSerializer):
-    role = serializers.ChoiceField(choices=OrganizationUser.ROLES)
-
-    class Meta:
-        model = User
-        fields = ('email', 'role')
-
-
-class OrganizationUserDeleteSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('email',)
-
-
-class ProjectUserAddSerializer(serializers.ModelSerializer):
-    role = serializers.ChoiceField(choices=ProjectUser.ROLES)
-
-    class Meta:
-        model = User
-        fields = ('email', 'role')
-
-
-class OrganizationCreateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Organization
-        fields = ('title',)
-
-
-class OrganizationViewSerializer(serializers.ModelSerializer):
-    users = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Organization
-        fields = ('id', 'title', 'users')
-
-    def get_users(self, obj):
-        users = OrganizationUser.objects.filter(organization=obj)
-        return OrganizationUserSerializer(users, many=True).data
-
-
 class ProjectUserSerializer(serializers.ModelSerializer):
     user = ShortUserSerializer()
 
@@ -99,43 +49,78 @@ class ProjectUserSerializer(serializers.ModelSerializer):
         fields = ('user', 'role')
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
+    author = UserCommentSerializer()
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ('text', 'author', 'created_at', 'updated_at')
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    users = ShortUserSerializer(many=True, read_only=True)
+    author = ShortUserSerializer()
+    comments = CommentSerializer(many=True, read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = Task
+        fields = (
+            'id', 'title', 'description', 'column', 'users', 'author',
+            'status', 'deadline', 'comments', 'created_at', 'updated_at',
+        )
+
+
+class ShortProjectSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Project
         fields = (
-            'id', 'title', 'date_start', 'date_finish', 'is_active', 'users')
+            'id', 'title', 'date_start', 'date_finish', 'is_active', 'users',
+            'created_at', 'updated_at',
+        )
 
     def get_users(self, obj):
         users = ProjectUser.objects.filter(project=obj)
         return ProjectUserSerializer(users, many=True).data
 
 
-class ProjectCreateSerializer(serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField()
+    tasks = TaskSerializer(many=True, read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Project
-        fields = ('id', 'title', 'date_start', 'date_finish')
-
-
-class TaskSerializer(serializers.ModelSerializer):
-    users = ShortUserSerializer(many=True)
-    author = ShortUserSerializer()
-    comments = serializers.SerializerMethodField()
-    project = ProjectSerializer(read_only=True)
-
-    class Meta:
-        model = Task
         fields = (
-            'id', 'title', 'description', 'column', 'users', 'author',
-            'status', 'deadline', 'comments', 'project',
+            'id', 'title', 'date_start', 'date_finish', 'is_active', 'users',
+            'tasks', 'created_at', 'updated_at',
+    )
+
+    def get_users(self, obj):
+        users = ProjectUser.objects.filter(project=obj)
+        return ProjectUserSerializer(users, many=True).data
+
+    @transaction.atomic
+    def create(self, validated_data):
+        author = self.context.get('request').user
+        project = Project.objects.create(**validated_data)
+        user_project = ProjectUser.objects.create(
+            user=author,
+            project=project,
+            role=ProjectUser.PROJECT_MANAGER
         )
+        user_project.save()
+        return project
 
-    def get_comments(self, obj):
-        return CommentSerializer(obj.comments, many=True).data
-
-
+######!!!!
 class TaskAddSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -143,8 +128,16 @@ class TaskAddSerializer(serializers.ModelSerializer):
         model = Task
         fields = (
             'title', 'description', 'column', 'status', 'deadline', 'author',
-            'project'
         )
+
+    def create(self, validated_data):
+        try:
+            project = Project.objects.get(
+                pk=self.context['view'].kwargs.get('project_id'))
+        except ObjectDoesNotExist:
+            raise NotFound('Проекта с таким id не существует')
+        instance = Task.objects.create(**validated_data, project=project)
+        return instance
 
 
 class TaskEditSerializer(serializers.ModelSerializer):
@@ -153,7 +146,6 @@ class TaskEditSerializer(serializers.ModelSerializer):
         model = Task
         fields = (
             'title', 'description', 'column', 'status', 'deadline',
-            'project'
         )
 
 

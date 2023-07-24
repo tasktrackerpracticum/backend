@@ -2,22 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from tasks.models import Comment, OrganizationUser, ProjectUser
-
-
-class BaseRoleOrganizationPermission(IsAuthenticated):
-    role = None
-
-    def has_object_permission(self, request, view, obj):
-        if obj.users.filter(id=request.user.id).exists():
-            role = OrganizationUser.objects.get(
-                user=request.user,
-                organization=obj
-            ).role
-            return (False
-                    if role == OrganizationUser.FORBIDDEN
-                    else role == self.role)
-        return False
+from tasks.models import Comment, ProjectUser
 
 
 class BaseProjectPermission(IsAuthenticated):
@@ -39,10 +24,6 @@ class BaseProjectPermission(IsAuthenticated):
 
 class IsProjectManager(BaseProjectPermission):
     role = ProjectUser.PROJECT_MANAGER
-
-
-class IsOrganizationCreator(BaseRoleOrganizationPermission):
-    role = OrganizationUser.CREATOR
 
 
 class IsSelf(permissions.BasePermission):
@@ -119,21 +100,3 @@ class IsBaseUserComment(BaseCommentPermission):
 
 class IsObserverComment(BaseCommentPermission):
     role = ProjectUser.OBSERVER
-
-    # def has_permission(self, request, view):
-    #     if request.method == 'POST':
-    #         return False
-    #     return request.user.is_authenticated
-
-    # def has_object_permission(self, request, view, obj):
-    #     project_id = self.request.query_params.get('project_id')
-    #     try:
-    #         project_user = ProjectUser.objects.get(
-    #             project_id=project_id,
-    #             user=request.user,
-    #         )
-    #     except ObjectDoesNotExist:
-    #         return False
-    #     if request.method == 'GET':
-    #         return project_user.role == self.role
-    #     return False
