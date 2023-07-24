@@ -2,7 +2,7 @@ from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework import status
+from rest_framework import status, filters
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from api.filters import TaskFilter
+from api.filters import TaskFilter, UserFilter, ProjectFilter
 from api.permissions import (
     IsOrganizationCreator, IsAuthenticated, IsAdminUser, IsSelf,
     IsProjectManager, IsObserverTask, IsBaseUserTask, IsProjectManagerTask,
@@ -35,6 +35,10 @@ from users.models import User
 
 class UserViewSet(DjoserUserViewSet):
     permission_classes = (IsAuthenticated | IsAdminUser | IsSelf,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filterset_class = UserFilter
+    search_fields = ('email', 'username', 'phone', 'position', 'position',
+                     'country', 'first_name', 'last_name')
     queryset = User.objects.all()
 
     @action(["get", "patch", "delete"], detail=False)
@@ -62,6 +66,9 @@ class UserViewSet(DjoserUserViewSet):
 
 class OrganizationViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filterset_fields = ('title',)
+    search_fields = ('title',)
     update_permision_classes = (IsOrganizationCreator,)
     serializer_class = OrganizationViewSerializer
     action_serializers = {
@@ -176,6 +183,10 @@ class ProjectViewSet(ModelViewSet):
     lookup_field = 'id'
     lookup_url_kwarg = 'project_id'
     queryset = Project.objects.all()
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter)
+    filterset_class = ProjectFilter
+    ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[project_id_param])
@@ -276,8 +287,11 @@ class TasksViewSet(ModelViewSet):
         IsProjectManagerTask | IsObserverTask | IsBaseUserTask,
     )
     serializer_class = TaskSerializer
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter)
     filterset_class = TaskFilter
+    ordering_fields = ('deadline', )
+    ordering = ('deadline',)
     action_serializers = {
         'create': TaskAddSerializer,
         'partial_update': TaskAddSerializer,
