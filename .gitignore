@@ -160,3 +160,4 @@ cython_debug/
 
 *.sqlite3
 .vscode/
+.DS_Store

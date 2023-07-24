@@ -59,6 +59,13 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('text', 'author', 'created_at', 'updated_at')
 
 
+class AddCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('text',)
+
+
 class TaskSerializer(serializers.ModelSerializer):
     users = ShortUserSerializer(many=True, read_only=True)
     author = ShortUserSerializer()

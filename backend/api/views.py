@@ -107,7 +107,6 @@ class ProjectViewSet(ModelViewSet):
         """
         return super().partial_update(request, *args, **kwargs)
 
-
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[schemas.project_id_param])
     def update(self, request, *args, **kwargs):
@@ -188,8 +187,10 @@ class TasksViewSet(ModelViewSet):
         p.IsProjectManagerTask | p.IsObserverTask | p.IsBaseUserTask,
     )
     serializer_class = s.TaskSerializer
-    filter_backends = (DjangoFilterBackend,
-                       filters.OrderingFilter)
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
     filterset_class = f.TaskFilter
     ordering_fields = ('deadline', )
     ordering = ('deadline',)
@@ -200,7 +201,11 @@ class TasksViewSet(ModelViewSet):
     }
 
     def get_queryset(self):
-        project_id = self.request.query_params.get('project_id')
+        if project_id := self.kwargs.get('project_id'):
+            try:
+                project = Project.objects.get(pk=project_id)
+            except ObjectDoesNotExist:
+                raise NotFound('Проекта с таким id не существует')
         if self.request.method == 'GET' and project_id:
             return Task.objects.filter(
                 project_id=project_id,
@@ -213,17 +218,18 @@ class TasksViewSet(ModelViewSet):
                 self.action, self.serializer_class)
         return super().get_serializer_class()
 
-    @swagger_auto_schema(manual_parameters=[schemas.project_id_in_query])
-    def list(self, request):
+    @swagger_auto_schema(
+        manual_parameters=[schemas.project_id_param], tags=['tasks'])
+    def list(self, *args, **kwargs):
         """
         Отображает список задач конкретного проекта.
 
         ---
         """
-        return super().list(request)
+        return super().list(*args, **kwargs)
 
     @swagger_auto_schema(manual_parameters=[
-        schemas.project_id_param, schemas.task_id_param])
+        schemas.project_id_param, schemas.task_id_param], tags=['tasks'])
     def partial_update(self, request, *args, **kwargs):
         """
         Этот эндпоинт позволяет изменить основные параметры задачи.
@@ -233,7 +239,7 @@ class TasksViewSet(ModelViewSet):
         return super().partial_update(request, *args, **kwargs)
 
     @swagger_auto_schema(manual_parameters=[
-        schemas.project_id_param, schemas.task_id_param])
+        schemas.project_id_param, schemas.task_id_param], tags=['tasks'])
     def update(self, request, *args, **kwargs):
         """
         В этом эндпоинте можно обновить параметры задачи.
@@ -248,7 +254,8 @@ class TasksViewSet(ModelViewSet):
         self.perform_update(serializer)
         return Response(serializer.data)
 
-    @swagger_auto_schema(manual_parameters=[schemas.project_id_param])
+    @swagger_auto_schema(
+        manual_parameters=[schemas.project_id_param], tags=['tasks'])
     def create(self, request, *args, **kwargs):
         """
         Этот эндпоинт позволяет создать задачу.
@@ -264,7 +271,7 @@ class TasksViewSet(ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @swagger_auto_schema(manual_parameters=[
-        schemas.project_id_param, schemas.task_id_param])
+        schemas.project_id_param, schemas.task_id_param], tags=['tasks'])
     @action(
         methods=['POST'],
         detail=True,
@@ -291,18 +298,26 @@ class TasksViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(manual_parameters=[
-        schemas.task_id_param, schemas.project_id_param])
-    def destroy(self, request, pk):
-        """Удаляет задачу."""
+        schemas.task_id_param, schemas.project_id_param], tags=['tasks'])
+    def destroy(self, *args, **kwargs):
+        """
+        Этот эндпоинт удаляет задачу.
+
+        ---
+        """
         instance = self.get_object()
         instance.column = 'Удалено'
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(manual_parameters=[
-        schemas.task_id_param, schemas.user_id_param])
-    def user_delete(self, *args, **kwargs):
-        """Удаляет пользователя из задачи."""
+        schemas.task_id_param, schemas.user_id_param], tags=['tasks'])
+    def delete_user(self, *args, **kwargs):
+        """
+        Этот эндпоинт удаляет пользователя из задачи.
+
+        ---
+        """
         user_id = self.kwargs.get('user_id')
         try:
             user = User.objects.get(id=user_id)
@@ -311,62 +326,84 @@ class TasksViewSet(ModelViewSet):
         task = self.get_object()
         task.users.remove(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
-#
-#
-# class CommentViewSet(ModelViewSet):
-#     queryset = Comment.objects.all()
-#     serializer_class = AddCommentSerializer
-#     permission_classes = (
-#         IsProjectManagerComment | IsObserverComment | IsBaseUserComment,
-#     )
-#     action_serializers = {
-#         'list': CommentSerializer,
-#     }
-#
-#     def get_serializer_class(self):
-#         if hasattr(self, 'action_serializers'):
-#             return self.action_serializers.get(
-#                 self.action, self.serializer_class)
-#         return super().get_serializer_class()
-#
-#     def get_queryset(self):
-#         if not self.kwargs.get('task_id'):
-#             return super().get_queryset()
-#         try:
-#             return Task.objects.get(
-#                 pk=self.kwargs.get('task_id')).comments.all()
-#         except ObjectDoesNotExist as e:
-#             raise NotFound(detail='Задачи с таким id не существует') from e
-#
-#     @swagger_auto_schema(manual_parameters=[task_id_param])
-#     def list(self, request, *args, **kwargs):
-#         """Выдает все комментарии определенной задачи."""
-#         return super().list(request, *args, **kwargs)
-#
-#     @swagger_auto_schema(manual_parameters=[task_id_param])
-#     def create(self, request, *args, **kwargs):
-#         """Создает новый комментарий к задаче."""
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         task = Task.objects.get(pk=kwargs.get('task_id'))
-#         comment = Comment.objects.create(
-#             author=request.user, task=task, **serializer.data)
-#         comment.save()
-#         headers = self.get_success_headers(serializer.data)
-#         return Response(
-#             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-#
-#     @swagger_auto_schema(tags=['tasks'])
-#     def destroy(self, request, *args, **kwargs):
-#         """Удаляет комментарий."""
-#         return super().destroy(request, *args, **kwargs)
-#
-#     @swagger_auto_schema(tags=['tasks'])
-#     def update(self, request, *args, **kwargs):
-#         """Изменяет комментарий."""
-#         return super().update(request, *args, **kwargs)
-#
-#     @swagger_auto_schema(tags=['tasks'])
-#     def partial_update(self, request, *args, **kwargs):
-#         """Позволяет частично изменить комментарий."""
-#         return super().partial_update(request, *args, **kwargs)
+
+
+class CommentViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = s.AddCommentSerializer
+    permission_classes = (
+        p.IsProjectManagerComment | p.IsObserverComment | p.IsBaseUserComment,
+    )
+    action_serializers = {
+        'list': s.CommentSerializer,
+    }
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action_serializers'):
+            return self.action_serializers.get(
+                self.action, self.serializer_class)
+        return super().get_serializer_class()
+
+    def get_queryset(self):
+        if not self.kwargs.get('task_id'):
+            return super().get_queryset()
+        try:
+            return Task.objects.get(
+                pk=self.kwargs.get('task_id')).comments.all()
+        except ObjectDoesNotExist as e:
+            raise NotFound(detail='Задачи с таким id не существует') from e
+
+    @swagger_auto_schema(
+        manual_parameters=[schemas.task_id_param], tags=['comments'])
+    def list(self, request, *args, **kwargs):
+        """
+        Этот эндпоинт отображает все комментарии задачи.
+
+        ---
+        """
+        return super().list(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        manual_parameters=[schemas.task_id_param], tags=['comments'])
+    def create(self, request, *args, **kwargs):
+        """
+        Этот эндпоинт создает новый комментарий к задаче.
+
+        ---
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        task = Task.objects.get(pk=kwargs.get('task_id'))
+        comment = Comment.objects.create(
+            author=request.user, task=task, **serializer.data)
+        comment.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @swagger_auto_schema(tags=['comments'])
+    def destroy(self, request, *args, **kwargs):
+        """
+        Этот эндпоинт удаляет комментарий.
+
+        ---
+        """
+        return super().destroy(request, *args, **kwargs)
+
+    @swagger_auto_schema(tags=['comments'])
+    def update(self, request, *args, **kwargs):
+        """
+        Этот эндпоинт изменяет комментарий.
+
+        ---
+        """
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(tags=['comments'])
+    def partial_update(self, request, *args, **kwargs):
+        """
+        Этот эндпоинт позволяет частично изменить комментарий.
+
+        ---
+        """
+        return super().partial_update(request, *args, **kwargs)
