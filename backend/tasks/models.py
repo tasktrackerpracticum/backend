@@ -3,62 +3,19 @@ from django.db import models
 from users.models import User
 
 
-class Organization(models.Model):
-    title = models.CharField(max_length=200, unique=True)
-    users = models.ManyToManyField(User, through='OrganizationUser')
+class CreatedAtUpdatedAt(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Организация'
-        verbose_name_plural = 'Организации'
-
-    def __str__(self):
-        return self.title
+        abstract = True
 
 
-class OrganizationUser(models.Model):
-
-    OBSERVER = 'наблюдатель'
-    BASE_USER = 'базовый пользователь'
-    PROJECT_MANAGER = 'ПМ'
-    CREATOR = 'создатель'
-    FORBIDDEN = 'запрещено'
-
-    ROLES = (
-        (OBSERVER, 'наблюдатель'),
-        (BASE_USER, 'базовый пользователь'),
-        (PROJECT_MANAGER, 'ПМ'),
-        (CREATOR, 'создатель'),
-        (FORBIDDEN, 'запрещено')
-    )
-
-    organization = models.ForeignKey(
-        Organization,
-        on_delete=models.CASCADE,
-        related_name='organization_users'
-    )
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        related_name='user_organizations'
-    )
-    role = models.CharField(max_length=20, choices=ROLES)
-
-    class Meta:
-        unique_together = ('organization', 'user',)
-
-    def __str__(self):
-        return f"{self.organization}: {self.user} -> {self.role}"
-
-
-class Project(models.Model):
+class Project(CreatedAtUpdatedAt):
     title = models.CharField(max_length=200)
-    organization = models.ForeignKey(
-        Organization,
-        on_delete=models.CASCADE,
-        related_name='projects'
-    )
     users = models.ManyToManyField(User, through='ProjectUser')
-    date_start = models.DateField('Дата начала', blank=True)
-    date_finish = models.DateField('Дата завершения', blank=True)
+    date_start = models.DateField('Дата начала', blank=True, null=True)
+    date_finish = models.DateField('Дата завершения', blank=True, null=True)
     is_active = models.BooleanField('Статус', default=True)
 
     class Meta:
@@ -66,15 +23,15 @@ class Project(models.Model):
         verbose_name_plural = 'Проекты'
 
     def __str__(self):
-        return f"{self.organization}: {self.title}"
+        return f"{self.title}"
 
 
 class ProjectUser(models.Model):
 
-    OBSERVER = 'наблюдатель'
-    BASE_USER = 'базовый пользователь'
-    PROJECT_MANAGER = 'ПМ'
-    FORBIDDEN = 'запрещено'
+    OBSERVER = 'observer'
+    BASE_USER = 'user'
+    PROJECT_MANAGER = 'pm'
+    FORBIDDEN = 'forbidden'
 
     ROLES = (
         (OBSERVER, 'наблюдатель'),
@@ -88,13 +45,13 @@ class ProjectUser(models.Model):
     role = models.CharField(max_length=20, choices=ROLES)
 
 
-class Task(models.Model):
+class Task(CreatedAtUpdatedAt):
 
-    BACKLOG = 'Беклог'
-    TODO = 'В работе'
-    TEST = 'Тестирование'
-    DONE = 'Завершено'
-    DELETED = 'Удалено'
+    BACKLOG = 'backlog'
+    TODO = 'todo'
+    TEST = 'testing'
+    DONE = 'done'
+    DELETED = 'deleted'
 
     COLUMNS = (
         (BACKLOG, 'Беклог'),
@@ -104,8 +61,8 @@ class Task(models.Model):
         (DELETED, 'Удалено'),
     )
 
-    URGENTLY = 'Срочно'
-    NONURGENTLY = 'Несрочно'
+    URGENTLY = 'urgent'
+    NONURGENTLY = 'nonurgent'
 
     STATUSES = (
         (URGENTLY, 'Срочно'),
@@ -113,7 +70,7 @@ class Task(models.Model):
     )
 
     title = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     column = models.CharField(max_length=15, choices=COLUMNS)
     users = models.ManyToManyField(User, related_name='tasks')
     project = models.ForeignKey(
@@ -121,7 +78,8 @@ class Task(models.Model):
     author = models.ForeignKey(
         User, related_name='tasks_author', on_delete=models.CASCADE)
     status = models.CharField(max_length=15, choices=STATUSES)
-    deadline = models.DateTimeField()
+    deadline = models.DateTimeField(blank=True, null=True)
+    ordering = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = 'Задача'
@@ -145,25 +103,9 @@ class TaskImage(models.Model):
         Task, on_delete=models.CASCADE, related_name='images')
 
 
-class Comment(models.Model):
+class Comment(CreatedAtUpdatedAt):
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, related_name='comments')
-    description = models.TextField()
-    image = models.ImageField(
-        upload_to='media/comments', null=True, blank=True)
+    text = models.TextField()
     author = models.ForeignKey(
         User, related_name='comments', on_delete=models.CASCADE)
-
-
-class Subtask(models.Model):
-    task = models.ForeignKey(
-        Task, on_delete=models.CASCADE, related_name='task')
-    subtask = models.ForeignKey(
-        Task, on_delete=models.CASCADE, related_name='subtask')
-
-    class Meta:
-        verbose_name = 'Подзадача'
-        verbose_name_plural = 'Подзадачи'
-
-    def __str__(self):
-        return f"{self.task} -> {self.subtask}"
