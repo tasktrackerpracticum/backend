@@ -14,6 +14,7 @@ class CreatedAtUpdatedAt(models.Model):
 class Project(CreatedAtUpdatedAt):
     title = models.CharField(max_length=200)
     users = models.ManyToManyField(User, through='ProjectUser')
+    description = models.TextField('Описание проекта', blank=True, null=True)
     date_start = models.DateField('Дата начала', blank=True, null=True)
     date_finish = models.DateField('Дата завершения', blank=True, null=True)
     is_active = models.BooleanField('Статус', default=True)
