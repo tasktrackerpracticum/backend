@@ -69,6 +69,11 @@ class AddCommentSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     users = ShortUserSerializer(many=True, read_only=True)
     author = ShortUserSerializer()
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    users = ShortUserSerializer(many=True, read_only=True)
+    author = ShortUserSerializer()
     comments = CommentSerializer(many=True, read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
@@ -89,8 +94,8 @@ class ShortProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
-            'id', 'title', 'date_start', 'date_finish', 'is_active', 'users',
-            'created_at', 'updated_at',
+            'id', 'title', 'description', 'date_start', 'date_finish',
+            'is_active', 'users', 'created_at', 'updated_at',
         )
 
     def get_users(self, obj):
@@ -107,8 +112,8 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
-            'id', 'title', 'date_start', 'date_finish', 'is_active', 'users',
-            'tasks', 'created_at', 'updated_at',
+            'id', 'title', 'description', 'date_start', 'date_finish',
+            'is_active', 'users', 'tasks', 'created_at', 'updated_at',
     )
 
     def get_users(self, obj):
