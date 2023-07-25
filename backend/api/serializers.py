@@ -12,7 +12,9 @@ class ShortUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'email', 'phone', 'photo')
+            'id', 'first_name', 'last_name', 'email', 'phone', 'photo',
+            'last_login',
+        )
 
 
 class ProjectUserAddSerializer(serializers.ModelSerializer):
@@ -37,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'username', 'first_name', 'last_name', 'email', 'photo',
             'phone', 'position', 'date_of_birth', 'gender',
-            'country', 'timezone',
+            'country', 'timezone', 'last_login',
         )
 
 
