@@ -51,6 +51,12 @@ python manage.py runserver
 
 ```
 
+## Админка
+
+http://localhost:8000/admin/
+Логин admin@admin.com
+Пароль admin
+
 ## Документация
 
 http://localhost:8000/api/docs
