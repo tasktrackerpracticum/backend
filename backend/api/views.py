@@ -58,10 +58,11 @@ class ProjectViewSet(ModelViewSet):
     queryset = Project.objects.all()
     filter_backends = (
         DjangoFilterBackend,
-        filters.OrderingFilter,
+        f.CustomProjectOrderingFilter,
     )
     filterset_class = f.ProjectFilter
     ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
+    ordering = ('is_active', 'date_finish', 'title')
     action_serializers = {
         'list': s.ShortProjectSerializer,
     }
@@ -86,7 +87,10 @@ class ProjectViewSet(ModelViewSet):
 
         ---
         """
-        return super().destroy(request, *args, **kwargs)
+        instance: Project = self.get_object()
+        instance.is_active = False
+        instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[schemas.project_id_param])
@@ -190,11 +194,9 @@ class TasksViewSet(ModelViewSet):
     serializer_class = s.TaskSerializer
     filter_backends = (
         DjangoFilterBackend,
-        filters.OrderingFilter,
     )
     filterset_class = f.TaskFilter
-    ordering_fields = ('deadline', )
-    ordering = ('deadline',)
+    ordering = ('column', 'ordering',)
     action_serializers = {
         'create': s.TaskAddSerializer,
         'partial_update': s.TaskAddSerializer,
@@ -306,8 +308,8 @@ class TasksViewSet(ModelViewSet):
 
         ---
         """
-        instance = self.get_object()
-        instance.column = 'Удалено'
+        instance: Task = self.get_object()
+        instance.column = Task.DELETED
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

@@ -182,6 +182,188 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2023-07-24T08:49:53.745Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "5",
+    "object_repr": "Социальная сеть \"Мама, я социопат\" (Создать социальную сеть)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (6)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2023-07-26T05:58:10.367Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "10",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (strifddfdfng)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2023-07-26T05:58:16.578Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "4",
+    "object_repr": "string",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2023-07-26T05:58:20.379Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "3",
+    "object_repr": "string",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2023-07-26T06:02:17.031Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "11",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Приготовить покушать)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (8)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2023-07-26T06:02:58.470Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "12",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Скушать приготовленное)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2023-07-26T06:05:17.569Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "13",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Стать суперпрограммистом)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (9)\"}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (10)\"}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (11)\"}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (12)\"}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (13)\"}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (14)\"}}, {\"added\": {\"name\": \"comment\", \"object\": \"Comment object (15)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2023-07-26T06:06:14.091Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "14",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Съездить на море)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2023-07-26T06:07:40.044Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "15",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Получить паспорт Аргентины)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2023-07-26T06:08:19.835Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "16",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Написать валидацию полей в модели Item)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2023-07-26T06:09:02.977Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "17",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Написать Pre-Commit)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2023-07-26T06:09:56.959Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "18",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Зарегистрировать домен)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2023-07-26T06:10:22.516Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "19",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Настроить автодеплой)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2023-07-26T06:12:06.843Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "20",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Получить зарплату)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "ov01omkgs1htnar5mhhvr5chyn2fyvj2",
   "fields": {
@@ -218,7 +400,7 @@
   "model": "users.user",
   "pk": 2,
   "fields": {
-    "last_login": null,
+    "last_login": "2023-07-24T07:26:58.542Z",
     "is_superuser": false,
     "first_name": "Иван",
     "last_name": "Иванов",
@@ -243,7 +425,7 @@
   "model": "users.user",
   "pk": 3,
   "fields": {
-    "last_login": null,
+    "last_login": "2023-07-24T07:26:58.542Z",
     "is_superuser": false,
     "first_name": "Петр",
     "last_name": "Петров",
@@ -268,7 +450,7 @@
   "model": "users.user",
   "pk": 4,
   "fields": {
-    "last_login": null,
+    "last_login": "2023-07-24T07:26:58.542Z",
     "is_superuser": false,
     "first_name": "Николай",
     "last_name": "Николаев",
@@ -293,7 +475,7 @@
   "model": "users.user",
   "pk": 5,
   "fields": {
-    "last_login": null,
+    "last_login": "2023-07-24T07:26:58.542Z",
     "is_superuser": false,
     "first_name": "Василий",
     "last_name": "Васильев",
@@ -321,6 +503,7 @@
     "created_at": "2023-07-24T07:47:00.010Z",
     "updated_at": "2023-07-24T07:47:48.020Z",
     "title": "Интернет магазин \"Очумелые Ручки\"",
+    "description": null,
     "date_start": "2023-07-24",
     "date_finish": "2023-09-30",
     "is_active": true
@@ -333,6 +516,7 @@
     "created_at": "2023-07-24T07:47:36.941Z",
     "updated_at": "2023-07-24T07:47:36.941Z",
     "title": "Социальная сеть \"Мама, я социопат\"",
+    "description": null,
     "date_start": "2023-07-24",
     "date_finish": "2023-07-24",
     "is_active": true
@@ -461,6 +645,221 @@
   }
 },
 {
+  "model": "tasks.task",
+  "pk": 5,
+  "fields": {
+    "created_at": "2023-07-24T08:49:53.727Z",
+    "updated_at": "2023-07-24T08:49:53.727Z",
+    "title": "Создать социальную сеть",
+    "description": "описание задачи",
+    "column": "backlog",
+    "project": 2,
+    "author": 4,
+    "status": "urgent",
+    "deadline": "2023-07-24T08:49:34Z",
+    "ordering": 0,
+    "users": [
+      5
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 11,
+  "fields": {
+    "created_at": "2023-07-26T06:02:17.019Z",
+    "updated_at": "2023-07-26T06:02:17.019Z",
+    "title": "Приготовить покушать",
+    "description": "Картошечки бы жареной, а не вот это вот все.\r\n \r\nСписок покупок:\r\n\r\n- Картошка\r\n- Масло растительное\r\n- Лук зеленый\r\n- Соль",
+    "column": "backlog",
+    "project": 1,
+    "author": 1,
+    "status": "urgent",
+    "deadline": "2023-07-26T06:01:52Z",
+    "ordering": 0,
+    "users": [
+      1
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 12,
+  "fields": {
+    "created_at": "2023-07-26T06:02:58.458Z",
+    "updated_at": "2023-07-26T06:02:58.459Z",
+    "title": "Скушать приготовленное",
+    "description": "Берешь и кушаешь. что еще писать то тут",
+    "column": "testing",
+    "project": 1,
+    "author": 1,
+    "status": "nonurgent",
+    "deadline": "2023-07-26T06:02:50Z",
+    "ordering": 20,
+    "users": [
+      1
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 13,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.548Z",
+    "updated_at": "2023-07-26T06:05:17.548Z",
+    "title": "Стать суперпрограммистом",
+    "description": "Ну это вообще изи - берешь, учишься 10 лет, потом фжух у тебя 40 лет опыта и ты синьер-помидор",
+    "column": "done",
+    "project": 1,
+    "author": 1,
+    "status": "nonurgent",
+    "deadline": "2023-07-26T06:03:56Z",
+    "ordering": 150,
+    "users": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 14,
+  "fields": {
+    "created_at": "2023-07-26T06:06:14.081Z",
+    "updated_at": "2023-07-26T06:06:14.081Z",
+    "title": "Съездить на море",
+    "description": "Морюшко меня ждет",
+    "column": "deleted",
+    "project": 1,
+    "author": 1,
+    "status": "nonurgent",
+    "deadline": "2023-07-26T06:06:08Z",
+    "ordering": 0,
+    "users": [
+      1
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 15,
+  "fields": {
+    "created_at": "2023-07-26T06:07:40.032Z",
+    "updated_at": "2023-07-26T06:07:40.032Z",
+    "title": "Получить паспорт Аргентины",
+    "description": "это же самый лучший паспорт! \r\n\r\n\r\nЧто нужно сделать:\r\n\r\n1. Берешь, беременеешь и едешь рожать в Аргентину.\r\n2. Получаешь ребенку гражданство Аргентины, а потом и себе.\r\n3. PROFIT!",
+    "column": "testing",
+    "project": 1,
+    "author": 2,
+    "status": "nonurgent",
+    "deadline": "2023-07-26T06:07:35Z",
+    "ordering": 210,
+    "users": [
+      2
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 16,
+  "fields": {
+    "created_at": "2023-07-26T06:08:19.825Z",
+    "updated_at": "2023-07-26T06:08:19.825Z",
+    "title": "Написать валидацию полей в модели Item",
+    "description": "",
+    "column": "todo",
+    "project": 1,
+    "author": 1,
+    "status": "nonurgent",
+    "deadline": "2023-07-26T06:08:16Z",
+    "ordering": 30,
+    "users": [
+      3
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 17,
+  "fields": {
+    "created_at": "2023-07-26T06:09:02.964Z",
+    "updated_at": "2023-07-26T06:09:02.964Z",
+    "title": "Написать Pre-Commit",
+    "description": "",
+    "column": "backlog",
+    "project": 1,
+    "author": 1,
+    "status": "nonurgent",
+    "deadline": "2023-07-26T06:08:57Z",
+    "ordering": 40,
+    "users": [
+      1
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 18,
+  "fields": {
+    "created_at": "2023-07-26T06:09:56.941Z",
+    "updated_at": "2023-07-26T06:09:56.941Z",
+    "title": "Зарегистрировать домен",
+    "description": "nic.ru там можно купить домен.",
+    "column": "todo",
+    "project": 1,
+    "author": 1,
+    "status": "nonurgent",
+    "deadline": "2023-07-26T06:09:53Z",
+    "ordering": 0,
+    "users": [
+      1
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 19,
+  "fields": {
+    "created_at": "2023-07-26T06:10:22.505Z",
+    "updated_at": "2023-07-26T06:10:22.505Z",
+    "title": "Настроить автодеплой",
+    "description": "",
+    "column": "backlog",
+    "project": 1,
+    "author": 1,
+    "status": "urgent",
+    "deadline": "2023-07-26T06:10:19Z",
+    "ordering": 45,
+    "users": [
+      1
+    ]
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 20,
+  "fields": {
+    "created_at": "2023-07-26T06:12:06.832Z",
+    "updated_at": "2023-07-26T06:12:06.832Z",
+    "title": "Получить зарплату",
+    "description": "В бухгалтерии! Рабочее время с 9:00 до 17:00, Технические перерывы с 15:07 до 16:59 с 9:15 до 11:49, обед с 12:00 до 12:45. Учет с 13:30 до 14:59",
+    "column": "todo",
+    "project": 1,
+    "author": 1,
+    "status": "urgent",
+    "deadline": "2023-07-26T06:12:01Z",
+    "ordering": 165,
+    "users": [
+      1,
+      2,
+      3
+    ]
+  }
+},
+{
   "model": "tasks.comment",
   "pk": 1,
   "fields": {
@@ -513,6 +912,116 @@
     "task": 2,
     "text": "а почему опять я должен это писать? пусть вон коля пишет!",
     "author": 2
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 6,
+  "fields": {
+    "created_at": "2023-07-24T08:49:53.740Z",
+    "updated_at": "2023-07-24T08:49:53.740Z",
+    "task": 5,
+    "text": "вот тут комент второго проекта",
+    "author": 4
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 7,
+  "fields": {
+    "created_at": "2023-07-25T06:51:22.531Z",
+    "updated_at": "2023-07-25T06:51:22.562Z",
+    "task": 1,
+    "text": "sdfdsfsdf",
+    "author": 1
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 8,
+  "fields": {
+    "created_at": "2023-07-26T06:02:17.028Z",
+    "updated_at": "2023-07-26T06:02:17.028Z",
+    "task": 11,
+    "text": "О, да! Картошечка! Ура-ура",
+    "author": 2
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 9,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.560Z",
+    "updated_at": "2023-07-26T06:05:17.560Z",
+    "task": 13,
+    "text": "Так я и знал! Везде вранье!",
+    "author": 1
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 10,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.562Z",
+    "updated_at": "2023-07-26T06:05:17.562Z",
+    "task": 13,
+    "text": "Согласен! Как можно за 10 лет 30 лет опыта набрать?",
+    "author": 2
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 11,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.563Z",
+    "updated_at": "2023-07-26T06:05:17.563Z",
+    "task": 13,
+    "text": "Да легко, я так и сделал.",
+    "author": 3
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 12,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.564Z",
+    "updated_at": "2023-07-26T06:05:17.564Z",
+    "task": 13,
+    "text": "И как ты это сделал?",
+    "author": 2
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 13,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.565Z",
+    "updated_at": "2023-07-26T06:05:17.566Z",
+    "task": 13,
+    "text": "Соврал в резюме и всего делов",
+    "author": 3
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 14,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.567Z",
+    "updated_at": "2023-07-26T06:05:17.567Z",
+    "task": 13,
+    "text": "Ну ты даешь!",
+    "author": 4
+  }
+},
+{
+  "model": "tasks.comment",
+  "pk": 15,
+  "fields": {
+    "created_at": "2023-07-26T06:05:17.567Z",
+    "updated_at": "2023-07-26T06:05:17.568Z",
+    "task": 13,
+    "text": "Не уважаю.",
+    "author": 5
   }
 }
 ]
