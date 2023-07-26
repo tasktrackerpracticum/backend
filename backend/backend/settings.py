@@ -4,7 +4,7 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ryu15^4&je_#o-ti-xux7dz)u#*bi=eucbhe_fdcuw!ek_f@pk')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-ryu15^4&je_#o-ti-xux7dz)u#*bi=eucbhe_fdcuw!ek_f@pk')
 
 DEBUG = True
 
