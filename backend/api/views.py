@@ -86,7 +86,10 @@ class ProjectViewSet(ModelViewSet):
 
         ---
         """
-        return super().destroy(request, *args, **kwargs)
+        instance: Project = self.get_object()
+        instance.is_active = False
+        instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(
         tags=["projects"], manual_parameters=[schemas.project_id_param])
@@ -306,8 +309,8 @@ class TasksViewSet(ModelViewSet):
 
         ---
         """
-        instance = self.get_object()
-        instance.column = 'Удалено'
+        instance: Task = self.get_object()
+        instance.column = Task.DELETED
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
