@@ -1,30 +1,24 @@
 """Команды бота."""
 
-
 import contextlib
 import json
-import requests
 from typing import Any
+
+import requests
+from django.conf import settings
 
 
 class Bot():
 
     def __init__(
             self,
-            token: str,
             **kwargs,
     ):
-        self.token = token
+        self.token = settings.BOT_TOKEN
         self.url = f'https://api.telegram.org/bot{self.token}/'
 
     def user_id(self, data: dict[str, Any]) -> int:
-        """Получение chat id пользователя в Telegram.
-
-        Args:
-            data (dict): обновление, поступившее на вебхук.
-        Returns:
-            int: chat id пользователя в Telegram.
-        """
+        """Получение chat id пользователя в Telegram."""
         message_object = self.get_message(data)
         if 'chat' in message_object:
             return message_object['chat'].get('id', 0)
@@ -82,7 +76,7 @@ class Bot():
 
     @staticmethod
     def get_data_type(data: dict[str, Any]) -> str | None:
-        """Получение типа обновления, поступвшего на вебхук."""
+        """Получение типа обновления, поступившего на вебхук."""
         if 'callback_query' in data:
             return 'callback_query'
         if 'message' in data and 'text' in data['message']:

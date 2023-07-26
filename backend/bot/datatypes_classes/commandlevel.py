@@ -3,7 +3,7 @@
     Идет перенаправление в зависимости от полученной комманды бота.
 """
 
-from classes import Bot
+from bot.classes import Bot
 
 from .datatypesclass import Observer, Subject
 

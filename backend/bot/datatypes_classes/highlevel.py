@@ -7,7 +7,8 @@
     - Текст.
 """
 
-from classes import Bot
+from bot.classes import Bot
+
 from .datatypesclass import Observer, Road, Subject
 
 
