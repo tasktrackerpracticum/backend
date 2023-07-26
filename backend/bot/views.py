@@ -10,7 +10,7 @@ from .datatypes_classes import HighLevelCommand
 
 
 @csrf_exempt
-def webhook(request, bot_tg):
+def webhook(request):
 
     # Получаем словарь из тела полученного вебхука
     try:
