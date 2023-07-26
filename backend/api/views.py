@@ -58,10 +58,11 @@ class ProjectViewSet(ModelViewSet):
     queryset = Project.objects.all()
     filter_backends = (
         DjangoFilterBackend,
-        filters.OrderingFilter,
+        f.CustomProjectOrderingFilter,
     )
     filterset_class = f.ProjectFilter
     ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
+    ordering = ('is_active', 'date_finish', 'title')
     action_serializers = {
         'list': s.ShortProjectSerializer,
     }
@@ -193,11 +194,9 @@ class TasksViewSet(ModelViewSet):
     serializer_class = s.TaskSerializer
     filter_backends = (
         DjangoFilterBackend,
-        filters.OrderingFilter,
     )
     filterset_class = f.TaskFilter
-    ordering_fields = ('deadline', )
-    ordering = ('deadline',)
+    ordering = ('column', 'ordering',)
     action_serializers = {
         'create': s.TaskAddSerializer,
         'partial_update': s.TaskAddSerializer,
