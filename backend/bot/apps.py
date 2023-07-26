@@ -14,10 +14,3 @@ class BotConfig(AppConfig):
             'url': f'{settings.BASE_URL}{url}'
         }
         bot.set_webhook(data)
-        bot.commands = [
-            {
-                'command': 'cancel',
-                'description': 'Отменить текущую операцию'
-            },
-        ]
-        bot.set_commands()
