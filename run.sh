@@ -1,10 +1,5 @@
 #!/bin/sh
-while ! nc -z db 5432;
-    do sleep .5;
-    echo "wait database";
-done;
-    echo "connected to the database";
-
+sleep 5
 python manage.py migrate;
 python manage.py collectstatic --noinput;
 python manage.py loaddata db.json

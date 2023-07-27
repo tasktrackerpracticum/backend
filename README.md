@@ -6,7 +6,7 @@
 ```
 git clone https://github.com/Konstantin8891/Tracker.git
 cd Tracker
-docker build -t tasktracker .
+docker build -t tasktracker -t dev_frontend .
 docker run -it -p 8000:8000 tasktracker
 ```
 
