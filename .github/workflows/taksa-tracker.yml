@@ -21,7 +21,7 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "infra/*"
-        target: /home/${{ secrets.USER }}/taksa/
+        target: /root/taksa/
         strip_components: 1
 
   build_and_push_backend_to_DockerHub:
