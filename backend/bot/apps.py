@@ -14,3 +14,10 @@ class BotConfig(AppConfig):
             'url': f'{settings.BASE_URL}{url}'
         }
         bot.set_webhook(data)
+        bot.commands = [
+            {
+                'command': 'setpassword',
+                'description': 'Сменить пароль к TaskTracker'
+            },
+        ]
+        bot.set_commands()

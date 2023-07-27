@@ -17,11 +17,11 @@ class HighLevelCommand(Observer):
             self, subject: Subject, bot: Bot, chat_id: int, **kwargs
     ) -> None:
         """Направления при получении комманды."""
-        from .commandlevel import CommandStart
+        from .commandlevel import CommandSetPassword, CommandStart
         if subject._state == 'command':
             command = kwargs['message']['text'][1:]
             road = Road()
-            pathes = (CommandStart(),)
+            pathes = (CommandStart(), CommandSetPassword())
             for path in pathes:
                 road.attach(path)
             road.go(command, bot, chat_id)

@@ -3,13 +3,10 @@ import json
 from django.conf import settings
 
 
-def set_password_kbrd(uid: str, token: int) -> str:
-    """Кнопка Восстановления пароля."""
+def to_tasktracker_kbrd() -> str:
+    """Кнопка Перейти в TaskTracker."""
     inline_button = [{
-        'text': 'Создать пароль',
-        'url': (
-            f'{settings.BASE_URL}{settings.PASSWORD_RESET_CONFIRM_URL}'
-            f'/{uid}/{token}/'
-        )
+        'text': 'Перейти в TaskTracker',
+        'url': settings.BASE_URL
     }]
     return json.dumps({'inline_keyboard': [inline_button]})
