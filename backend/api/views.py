@@ -50,21 +50,6 @@ class UserViewSet(DjoserUserViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
-@swagger_auto_schema(method='get', responses={200: s.UIDTokenSerializer()})
-@api_view(('GET',))
-@permission_classes([AllowAny])
-def user_reset_password(request, uid, token):
-    """
-    Этот эндпойнт для обновления пароля новым пользователем.
-
-    ---
-    """
-    return Response(
-        s.UIDTokenSerializer({'uid': uid, 'token': token}).data,
-        status=status.HTTP_200_OK
-    )
-
-
 class ProjectViewSet(ModelViewSet):
     permission_classes = (p.IsProjectManager | p.IsAdminUser,)
     serializer_class = s.ProjectSerializer

@@ -12,11 +12,6 @@ router.register('projects', views.ProjectViewSet, basename='projects')
 
 
 urlpatterns = [
-    path(
-        'users/password_reset/<str:uid>/<str:token>/',
-        views.user_reset_password,
-        name='user_reset_password'
-    ),
     path('', include(router.urls)),
     path(
         'projects/<int:project_id>/users/<int:user_id>/',
