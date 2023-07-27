@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y libpq-dev gcc
+RUN apt-get update && apt-get upgrade -y && apt-get install -y libpq-dev gcc && pip install psycopg2
 WORKDIR /app
 COPY run.sh .
 COPY ./backend/ .
