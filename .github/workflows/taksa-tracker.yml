@@ -1,5 +1,8 @@
 name: Taksa Tracker deploy workflow
-on: [push]
+on:
+  push:
+    branches:
+      - main
 jobs:
   copy_project_on_server:
     name: Copy docs and infra folders
