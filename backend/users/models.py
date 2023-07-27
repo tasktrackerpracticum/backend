@@ -24,6 +24,11 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
+    chat_id = models.BigIntegerField(
+        'Telegram user id',
+        null=True,
+        blank=True,
+    )
     photo = models.ImageField(
         'Фотография',
         upload_to='media/users',
