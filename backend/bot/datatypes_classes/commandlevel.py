@@ -8,6 +8,7 @@ from backend.bot.classes.bot import Bot
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from djoser.utils import encode_uid
+from bot.utils import texts as t
 
 from bot.classes.tguser import TgUser
 from bot.keyboards.inline import to_tasktracker_kbrd
@@ -22,13 +23,9 @@ class CommandStart(Observer):
     ) -> None:
         if subject._state == 'start':
             tguser = TgUser(chat_id)
-            answer = {'chat_id': chat_id, 'text': 'Вы кто такой?'}
+            answer = {'chat_id': chat_id, 'text': t.UNKNOWN}
             if tguser.user_obj():
-                answer['text'] = (
-                    'Сейчас надо установить пароль к TaskTracker. Для этого'
-                    ' отправьте команду /setpassword с вашим паролем через '
-                    'пробел, например, /setpassword Mygreatepassword123'
-                )
+                answer['text'] = t.START_TEXT
             bot.send_answer(answer)
 
 
@@ -46,16 +43,13 @@ class CommandSetPassword(Observer):
                     "token": default_token_generator.make_token(user),
                     "new_password": subject._state.split(' ')[1]
                 }
-                url = f'{settings.BASE_URL}users/reset_password_confirm/'
+                url = (
+                    f'{settings.BASE_URL}{settings.PASSWORD_RESET_CONFIRM_URL}'
+                )
                 response = requests.post(url, data)
                 if response.status_code == 201:
-                    answer['text'] = (
-                        'Ваш пароль изменён. Можете зайти в TaskTracker'
-                    )
+                    answer['text'] = t.SET_PASSWORD_DONE
                     answer['reply_markup'] = to_tasktracker_kbrd
                 else:
-                    answer['text'] = (
-                        'Что-то пошло не так. '
-                        'Попробуйте снова с другим паролем'
-                    )
+                    answer['text'] = t.SET_PASSWORD_ERROR
             bot.send_answer(answer)

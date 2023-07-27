@@ -6,8 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-ryu15^4&je_#o-ti-xux7dz)u#*bi=eucbhe_fdcuw!ek_f@pk')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-BASE_URL = 'https://наш_домен.ру/'
-PASSWORD_RESET_CONFIRM_URL = 'users/password_reset/'
+BASE_URL = 'https://taksa-tracker.ru/'
+PASSWORD_RESET_CONFIRM_URL = 'users/reset_password_confirm/'
 
 DEBUG = True
 
@@ -114,16 +114,6 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'mail@gmail.com'
-# # EMAIL_HOST_PASSWORD = ''
-# DEFAULT_FROM_EMAIL = 'mail@gmail.com'
-# SERVER_EMAIL = 'mail@gmail.com'
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

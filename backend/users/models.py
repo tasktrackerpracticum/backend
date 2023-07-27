@@ -25,7 +25,7 @@ class User(AbstractUser):
         blank=True,
     )
     chat_id = models.BigIntegerField(
-        'Telegram ID',
+        'Telegram user id',
         null=True,
         blank=True,
     )
