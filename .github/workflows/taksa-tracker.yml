@@ -4,7 +4,6 @@ jobs:
   copy_project_on_server:
     name: Copy docs and infra folders
     runs-on: ubuntu-latest
-    needs: tests
     steps:
     - uses: actions/checkout@v2
     - name: create app folder
