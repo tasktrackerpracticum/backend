@@ -3,7 +3,7 @@ import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from bot.classes.bot import Bot
+from bot.classes.bot import bot
 from bot.datatypes_classes import Road
 
 from .datatypes_classes import HighLevelCommand
@@ -15,7 +15,6 @@ def webhook(request):
         from_tg = json.loads(request.body)
     except Exception:
         from_tg = {}
-    bot = Bot()
     chat_id = bot.chat_id(from_tg)
     message = bot.get_message(from_tg)
     if data_type := bot.get_data_type(from_tg):

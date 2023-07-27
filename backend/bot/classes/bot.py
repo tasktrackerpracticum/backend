@@ -76,3 +76,6 @@ class Bot():
                 else 'text'
             )
         return ''
+
+
+bot = Bot()
