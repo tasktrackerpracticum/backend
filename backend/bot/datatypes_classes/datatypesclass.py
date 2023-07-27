@@ -5,7 +5,7 @@
 
 from abc import ABC, abstractmethod
 
-from bot.classes import Bot
+from bot.classes.bot import Bot
 
 
 class Subject(ABC):

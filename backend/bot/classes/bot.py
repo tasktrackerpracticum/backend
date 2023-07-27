@@ -10,14 +10,11 @@ from django.conf import settings
 
 class Bot():
 
-    def __init__(
-            self,
-            **kwargs,
-    ):
+    def __init__(self):
         self.token = settings.BOT_TOKEN
         self.url = f'https://api.telegram.org/bot{self.token}/'
 
-    def user_id(self, data: dict[str, Any]) -> int:
+    def chat_id(self, data: dict[str, Any]) -> int:
         """Получение chat id пользователя в Telegram."""
         message_object = self.get_message(data)
         if 'chat' in message_object:

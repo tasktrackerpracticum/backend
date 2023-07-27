@@ -7,8 +7,8 @@ class BotConfig(AppConfig):
     name = 'bot'
 
     def ready(self):
-        from bot.classes import Bot
-        bot = Bot(settings.BOT_TOKEN)
+        from bot.classes.bot import Bot
+        bot = Bot()
         url = f'/webhook/{settings.BOT_TOKEN}/'
         data = {
             'url': f'{settings.BASE_URL}{url}'
