@@ -38,12 +38,6 @@ class Bot():
         with contextlib.suppress(Exception):
             requests.post(method, data=answer)
 
-    def send_photo(self, data: dict[str, Any]) -> None:
-        """Отправка изображения в бот."""
-        method = f'{self.url}sendPhoto'
-        with contextlib.suppress(Exception):
-            requests.post(method, data=data)
-
     def delete_webhook(self) -> None:
         """Удаление вебхука бота."""
         method = f'{self.url}deleteWebhook'
