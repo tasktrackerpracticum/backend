@@ -2,14 +2,13 @@ from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework import status, filters
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework.permissions import AllowAny
 from api import filters as f
 from api import permissions as p
 from api import serializers as s
