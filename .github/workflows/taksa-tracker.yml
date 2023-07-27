@@ -43,7 +43,8 @@ jobs:
           with:
             push: true
             tags: ${{ secrets.DOCKER_USERNAME }}/tasktracker_backend
-            context: backend/
+            context: backend
+            file: backend/Dockerfile
   deploy:
     runs-on: ubuntu-latest
     needs:
