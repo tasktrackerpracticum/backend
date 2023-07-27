@@ -15,6 +15,7 @@ from api import serializers as s
 from api import schemas as schemas
 from tasks.models import Project, ProjectUser, Task, Comment
 from users.models import User
+from bot.classes.notifications import notification
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -297,6 +298,7 @@ class TasksViewSet(ModelViewSet):
         except ObjectDoesNotExist:
             raise NotFound('пользователь с таким email не существует.')
         task.users.add(user)
+        notification.send(type='new_task', user=user, task=task)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(manual_parameters=[
