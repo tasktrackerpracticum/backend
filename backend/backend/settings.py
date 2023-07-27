@@ -161,3 +161,5 @@ CORS_ALLOWED_ORIGINS = [
     'http://taksa-tracker.ru',
     'https://taksa-tracker.ru',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
