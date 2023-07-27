@@ -1,6 +1,8 @@
 FROM python:3.11-slim-buster
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y libpq-dev gcc
+RUN apt-get update &&\
+    apt-get upgrade -y &&\
+    apt-get install -y libpq-dev gcc netcat-traditional
 RUN python -m pip install --upgrade pip
 WORKDIR /app
 COPY run.sh .
