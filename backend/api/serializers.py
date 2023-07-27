@@ -17,6 +17,11 @@ class ShortUserSerializer(serializers.ModelSerializer):
         )
 
 
+class UIDTokenSerializer(serializers.Serializer):
+    uid = serializers.CharField(max_length=200)
+    token = serializers.CharField(max_length=200)
+
+
 class ProjectUserAddSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
 
