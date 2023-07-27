@@ -5,7 +5,7 @@ RUN python -m pip install --upgrade pip
 WORKDIR /app
 COPY run.sh .
 COPY backend/requirements.txt .
-RUN pip install -r requirements.txt --no-cache-dir && pip install gunicorn && python -m pip install psycopg2
+RUN pip install -r requirements.txt --no-cache-dir && pip install gunicorn
 COPY ./backend/ .
 RUN chmod +x run.sh
 ENTRYPOINT ["/app/run.sh"]
