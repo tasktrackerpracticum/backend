@@ -9,17 +9,16 @@ class Notification():
         match type:
             case 'new_task':
                 user = kwargs.get('user')
-                if user and task:
+                if task and user:
                     self._send_to_user(type, user, task, None)
             case 'mention':
-                comment = kwargs.get('comment')
-                if comment:
-                    usernames = self._get_all_mentions(comment.text)
-                    if usernames:
+                if comment := kwargs.get('comment'):
+                    if usernames := self._get_all_mentions(comment.text)
                         self._send_to_usernames(type, usernames, comment):
             case 'change_task':
-                if users := task.users.all():
-                        self._send_to_users(type, users, task):
+                users = task.users.all()
+                if task and users:
+                    self._send_to_users(type, users, task):
             case 'deadline':
                 pass
 
