@@ -239,6 +239,7 @@ class TasksViewSet(ModelViewSet):
 
         ---
         """
+        notification.send(type='change_task', task=self.get_object())
         return super().partial_update(request, *args, **kwargs)
 
     @swagger_auto_schema(manual_parameters=[
@@ -255,6 +256,7 @@ class TasksViewSet(ModelViewSet):
             task, data=request.data, partial=partial)
         serializer.is_valid()
         self.perform_update(serializer)
+        notification.send(type='change_task', task=task)
         return Response(serializer.data)
 
     @swagger_auto_schema(
