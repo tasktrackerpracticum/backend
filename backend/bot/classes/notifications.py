@@ -23,10 +23,11 @@ class Notification():
                 pass
 
     def _send_to_user(self, type, user, task, comment):
-        bot.send_answer({
-            'chat_id': user.chat_id,
-            'text': self._get_text(type, task, comment)
-        })
+        if user.chat_id:
+            bot.send_answer({
+                'chat_id': user.chat_id,
+                'text': self._get_text(type, task, comment)
+            })
 
     def _send_to_usernames(self, type, usernames, comment):
         for username in usernames:
