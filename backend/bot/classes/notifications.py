@@ -14,11 +14,12 @@ class Notification():
             case 'mention':
                 comment = kwargs.get('comment')
                 if comment:
-                    usernames = _get_all_mentions(comment.text)
+                    usernames = self._get_all_mentions(comment.text)
                     if usernames:
-                        _send_to_users(type, usernames, comment):
+                        self._send_to_usernames(type, usernames, comment):
             case 'change_task':
-                pass
+                if users := task.users.all():
+                        self._send_to_users(type, users, task):
             case 'deadline':
                 pass
 
@@ -28,13 +29,17 @@ class Notification():
             'text': self._get_text(type, task, comment)
         })
 
-    def _send_to_users(self, type, usernames, comment):
+    def _send_to_usernames(self, type, usernames, comment):
         for username in usernames:
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 pass
-            self._send_to_user(type, user, comment.task, comment)
+            self._send_to_user(type, user, None, comment)
+
+    def _send_to_users(self, type, users, task):
+        for user in users:
+            self._send_to_user(type, user, task, None)
 
     def _get_text(self, type, task, comment):
         if not type:
