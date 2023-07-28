@@ -298,7 +298,7 @@ class TasksViewSet(ModelViewSet):
         except ObjectDoesNotExist:
             raise NotFound('пользователь с таким email не существует.')
         task.users.add(user)
-        notification.send(type='new_task', user=user, task=task)
+        notification.send(type='new_task', task=task, user=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(manual_parameters=[
@@ -381,6 +381,7 @@ class CommentViewSet(ModelViewSet):
         comment = Comment.objects.create(
             author=request.user, task=task, **serializer.data)
         comment.save()
+        notification.send(type='mention', task=task, comment=comment)
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
