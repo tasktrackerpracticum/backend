@@ -1,7 +1,6 @@
+import api.views as views
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
-
-import api.views as views
 
 app_name = 'api'
 

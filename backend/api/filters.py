@@ -1,8 +1,8 @@
-from django.db.models import QuerySet, Q, Case, IntegerField, Value, When
+from django.db.models import Case, IntegerField, Q, QuerySet, Value, When
 from django_filters import rest_framework as filters
 from rest_framework import filters as f
 
-from tasks.models import Task, User, Project
+from tasks.models import Project, User
 
 
 class CustomProjectOrderingFilter(f.OrderingFilter):
@@ -17,7 +17,6 @@ class TaskFilter(filters.FilterSet):
     а также по названию задачи и ее описанию.
     """
     search = filters.CharFilter(method='custom_search', help_text=search_doc)
-
 
     def custom_search(self, queryset: QuerySet, _, value: str):
         users = User.objects.filter(

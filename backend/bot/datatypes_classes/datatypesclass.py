@@ -4,9 +4,9 @@
 """
 
 from abc import ABC, abstractmethod
-from bot.classes.tguser import TgUser
 
 from bot.classes.bot import Bot
+from bot.classes.tguser import TgUser
 
 
 class Subject(ABC):

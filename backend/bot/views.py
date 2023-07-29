@@ -3,9 +3,9 @@ from typing import Any
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from bot.classes.tguser import TgUser
 
 from bot.classes.bot import tgbot
+from bot.classes.tguser import TgUser
 from bot.datatypes_classes import Road
 
 from .datatypes_classes import HighLevelCommand

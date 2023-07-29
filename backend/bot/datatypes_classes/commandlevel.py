@@ -4,11 +4,11 @@
 """
 
 import requests
-from bot.classes.bot import Bot
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from djoser.utils import encode_uid
 
+from bot.classes.bot import Bot
 from bot.classes.tguser import TgUser
 from bot.keyboards.inline import to_tasktracker_kbrd
 from bot.utils import texts as t

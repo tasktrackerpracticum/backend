@@ -1,6 +1,5 @@
 from drf_yasg import openapi
 
-
 pk_param = openapi.Parameter(
     'id', openapi.IN_PATH, type=openapi.TYPE_INTEGER)
 user_id_param = openapi.Parameter(
