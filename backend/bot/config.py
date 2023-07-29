@@ -3,7 +3,7 @@ import os
 from django.conf import settings
 
 
-class Conf:
+class Conf():
     BOT_TOKEN = os.getenv('BOT_TOKEN')
     BASE_URL = 'https://taksa-tracker.ru/'
     WEBHOOK_URL = f'webhook/{BOT_TOKEN}/'
