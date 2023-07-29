@@ -8,4 +8,5 @@ class TgUser():
         self.obj = User.objects.filter(chat_id=self.chat_id)
 
     def user_obj(self) -> int:
+        """Получаем объект User из БД."""
         return self.obj[0] if self.obj else None

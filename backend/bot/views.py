@@ -14,7 +14,7 @@ def webhook(request):
     try:
         from_tg = json.loads(request.body)
     except Exception:
-        from_tg = {}
+        return HttpResponse('Hello', status=200)
     chat_id = bot.chat_id(from_tg)
     message = bot.get_message(from_tg)
     if data_type := bot.get_data_type(from_tg):
