@@ -78,4 +78,4 @@ class Bot():
         return ''
 
 
-bot = Bot()
+tgbot = Bot()

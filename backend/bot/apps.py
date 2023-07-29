@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from django.conf import settings
 
 
 class BotConfig(AppConfig):
@@ -8,15 +7,8 @@ class BotConfig(AppConfig):
 
     def ready(self):
         from bot.classes.bot import bot
-        url = f'/webhook/{settings.BOT_TOKEN}/'
-        data = {
-            'url': f'{settings.BASE_URL}{url}'
-        }
+        from bot.config import config
+        data = {'url': f'{config.BASE_URL}{config.WEBHOOK_URL}'}
         bot.set_webhook(data)
-        bot.commands = [
-            {
-                'command': 'setpassword',
-                'description': 'Сменить пароль к TaskTracker'
-            },
-        ]
+        bot.commands = config.COMMANDS
         bot.set_commands()

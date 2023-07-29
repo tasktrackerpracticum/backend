@@ -1,14 +1,15 @@
 import contextlib
-from bot.utils.templates import TEMPLATES
-from bot.classes.bot import bot
+import jinja2
 from users.models import User
+from bot.config import config
+from bot.classes.bot import tgbot
 
 
 class Notification():
 
     def send(self, type=None, task=None, **kwargs):
         match type:
-            case 'new_task':
+            case 'new_task' | 'deadline':
                 user = kwargs.get('user')
                 if task and user:
                     self._send_to_user(type, user, task, None)
@@ -17,17 +18,16 @@ class Notification():
                     if usernames := self._get_all_mentions(comment.text):
                         self._send_to_usernames(type, usernames, comment)
             case 'change_task':
-                users = task.users.all()
-                if task and users:
-                    self._send_to_users(type, users, task)
-            case 'deadline':
-                pass
+                if task:
+                    if users := task.users.all():
+                        self._send_to_users(type, users, task)
 
     def _send_to_user(self, type, user, task, comment):
         if user.chat_id:
-            bot.send_answer({
+            text = self._get_text(type, {'task': task, 'comment': comment})
+            tgbot.send_answer({
                 'chat_id': user.chat_id,
-                'text': self._get_text(type, task, comment)
+                'text': text
             })
 
     def _send_to_usernames(self, type, usernames, comment):
@@ -40,20 +40,26 @@ class Notification():
         for user in users:
             self._send_to_user(type, user, task, None)
 
-    def _get_text(self, type, task, comment):
-        if not type:
+    def _get_template_env(self):
+        if not getattr(self._get_template_env, "template_env", None):
+            template_loader = jinja2.FileSystemLoader(
+                searchpath=config.TEMPLATES_DIR)
+            env = jinja2.Environment(
+                loader=template_loader,
+                trim_blocks=True,
+                lstrip_blocks=True,
+                autoescape=True,
+            )
+
+            self._get_template_env.template_env = env
+
+        return self._get_template_env.template_env
+
+    def _get_text(self, type: str, data: dict):
+        if not type or not data:
             return
-        text = TEMPLATES.get('type')
-        if task:
-            text.replace('{task_project}', task.project)
-            text.replace('{task_column}', task.column)
-            text.replace('{task_title}', task.title)
-            text.replace('{task_description}', task.description)
-        if comment:
-            text.replace('{comment_task}', comment.task)
-            text.replace('{comment_author}', comment.author)
-            text.replace('{comment_text}', comment.text)
-        return text
+        template = self._get_template_env().get_template(type)
+        return template.render(**data)
 
     def _get_all_mentions(self, text):
         mentions = list(filter(lambda x: x.startswith('@'), text.split()))

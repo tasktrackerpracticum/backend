@@ -6,9 +6,6 @@ from celery.schedules import crontab
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-ryu15^4&je_#o-ti-xux7dz)u#*bi=eucbhe_fdcuw!ek_f@pk')
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-BASE_URL = 'https://taksa-tracker.ru/'
-PASSWORD_RESET_CONFIRM_URL = 'users/reset_password_confirm/'
 
 DEBUG = True
 
