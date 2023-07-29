@@ -7,6 +7,7 @@
     - Текст.
 """
 
+from bot.classes.tguser import TgUser
 from bot.classes.bot import Bot
 
 from .datatypesclass import Observer, Road, Subject
@@ -14,7 +15,7 @@ from .datatypesclass import Observer, Road, Subject
 
 class HighLevelCommand(Observer):
     def update(
-            self, subject: Subject, bot: Bot, chat_id: int, **kwargs
+            self, subject: Subject, tgbot: Bot, tguser: TgUser, **kwargs
     ) -> None:
         """Направления при получении комманды."""
         from .commandlevel import CommandSetPassword, CommandStart
@@ -24,4 +25,4 @@ class HighLevelCommand(Observer):
             pathes = (CommandStart(), CommandSetPassword())
             for path in pathes:
                 road.attach(path)
-            road.go(command, bot, chat_id)
+            road.go(command, tgbot, tguser)

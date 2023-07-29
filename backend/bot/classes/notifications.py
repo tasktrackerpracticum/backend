@@ -1,6 +1,7 @@
 import contextlib
 
 import jinja2
+from backend.tasks.models import Comment, Task
 from users.models import User
 
 from bot.classes.bot import tgbot
@@ -9,7 +10,9 @@ from bot.config import config
 
 class Notification():
 
-    def send(self, type=None, task=None, **kwargs):
+    def send(
+        self, type: str | None = None, task: Task | None = None, **kwargs
+    ) -> None:
         """Рассылаем оповещения разных типов."""
         match type:
             case 'new_task' | 'deadline':
@@ -23,7 +26,9 @@ class Notification():
                 if task:
                     self._send_to_users(type, task)
 
-    def _send_to_user(self, type, user, task, comment):
+    def _send_to_user(
+        self, type: str, user: User, task: Task, comment: Comment
+    ) -> None:
         """Посылаем сообщение юзеру в бот."""
         if user.chat_id:
             text = self._get_text(type, {'task': task, 'comment': comment})
@@ -32,7 +37,7 @@ class Notification():
                 'text': text
             })
 
-    def _send_to_usernames(self, type, comment):
+    def _send_to_usernames(self, type: str, comment: Comment) -> None:
         """Получаем пользователей по username и отсылаем им сообщения."""
         if usernames := self._get_all_mentions(comment.text):
             for username in usernames:
@@ -40,14 +45,14 @@ class Notification():
                     user = User.objects.get(username=username)
                 self._send_to_user(type, user, None, comment)
 
-    def _get_all_mentions(self, text):
+    def _get_all_mentions(self, text: str) -> list[str]:
         """Получаем упоминания в тексте комментария."""
         mentions = list(filter(lambda x: x.startswith('@'), text.split()))
         for count in range(len(mentions)):
             mentions[count] = mentions[count][1:]
         return mentions
 
-    def _send_to_users(self, type, task):
+    def _send_to_users(self, type: str, task: Task) -> None:
         """Рассылаем сообщения всем участникам задачи."""
         if users := task.users.all():
             for user in users:
@@ -69,7 +74,7 @@ class Notification():
 
         return self._get_template_env.template_env
 
-    def _get_text(self, type: str, data: dict):
+    def _get_text(self, type: str, data: dict[str, Task | Comment]):
         """Рендерим шаблон сообщения."""
         if not type or not data:
             return
