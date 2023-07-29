@@ -1,3 +1,4 @@
+import contextlib
 from bot.utils.templates import TEMPLATES
 from bot.classes.bot import bot
 from users.models import User
@@ -13,12 +14,12 @@ class Notification():
                     self._send_to_user(type, user, task, None)
             case 'mention':
                 if comment := kwargs.get('comment'):
-                    if usernames := self._get_all_mentions(comment.text)
-                        self._send_to_usernames(type, usernames, comment):
+                    if usernames := self._get_all_mentions(comment.text):
+                        self._send_to_usernames(type, usernames, comment)
             case 'change_task':
                 users = task.users.all()
                 if task and users:
-                    self._send_to_users(type, users, task):
+                    self._send_to_users(type, users, task)
             case 'deadline':
                 pass
 
@@ -31,10 +32,8 @@ class Notification():
 
     def _send_to_usernames(self, type, usernames, comment):
         for username in usernames:
-            try:
+            with contextlib.suppress(User.DoesNotExist):
                 user = User.objects.get(username=username)
-            except User.DoesNotExist:
-                pass
             self._send_to_user(type, user, None, comment)
 
     def _send_to_users(self, type, users, task):
@@ -56,7 +55,7 @@ class Notification():
             text.replace('{comment_text}', comment.text)
         return text
 
-    def _get_all_mentions(text):
+    def _get_all_mentions(self, text):
         mentions = list(filter(lambda x: x.startswith('@'), text.split()))
         for count in range(len(mentions)):
             mentions[count] = mentions[count][1:]

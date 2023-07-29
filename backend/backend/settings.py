@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -161,3 +162,13 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/2'
+
+CELERY_BEAT_SCHEDULE = {
+   'deadline_task': {
+       'task': 'bot.tasks.deadline_task',
+       'schedule': crontab(hour='*/1', minute=1),
+   },
+}
