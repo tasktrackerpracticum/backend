@@ -1,18 +1,17 @@
 """Команды бота."""
-
 import contextlib
 import json
 from typing import Any
 
 import requests
-from django.conf import settings
+from bot.config import config
 
 
 class Bot():
 
     def __init__(self):
-        self.token = settings.BOT_TOKEN
-        self.url = f'https://api.telegram.org/bot{self.token}/'
+        self.url = config.TELEGRAM_URL
+        self.commands = config.COMMANDS
 
     def chat_id(self, data: dict[str, Any]) -> int:
         """Получение chat id пользователя в Telegram."""

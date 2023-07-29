@@ -8,7 +8,5 @@ class BotConfig(AppConfig):
     def ready(self):
         from bot.classes.bot import bot
         from bot.config import config
-        data = {'url': f'{config.BASE_URL}{config.WEBHOOK_URL}'}
-        bot.set_webhook(data)
-        bot.commands = config.COMMANDS
+        bot.set_webhook({'url': config.WEBHOOK_URL})
         bot.set_commands()
