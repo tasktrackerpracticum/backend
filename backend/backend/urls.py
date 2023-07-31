@@ -32,7 +32,7 @@ urlpatterns = [
         template_name='admin/logout.html',
     )),
     path('', include('djoser.urls.jwt')),
-    path('', include("api.urls", namespace="api")),
+    path('api/v1/', include("api.urls", namespace="api")),
     path(
         'api/docs/',
         schema_view.with_ui('swagger', cache_timeout=0),
