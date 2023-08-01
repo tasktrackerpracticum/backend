@@ -30,6 +30,7 @@ services:
       - ./docs/:/usr/share/nginx/html/api/docs/
       - static_volume:/etc/nginx/html/static/
       - media_volume:/etc/nginx/html/media/
+      - /etc/cert/:/etc/cert/
     depends_on:
       - backend
 volumes:
