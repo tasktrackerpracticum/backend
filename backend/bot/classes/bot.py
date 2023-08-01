@@ -1,18 +1,17 @@
 """Команды бота."""
-
 import contextlib
 import json
 from typing import Any
 
 import requests
-from django.conf import settings
+from bot.config import config
 
 
 class Bot():
 
     def __init__(self):
-        self.token = settings.BOT_TOKEN
-        self.url = f'https://api.telegram.org/bot{self.token}/'
+        self.url = config.TELEGRAM_URL
+        self.commands = config.COMMANDS
 
     def chat_id(self, data: dict[str, Any]) -> int:
         """Получение chat id пользователя в Telegram."""
@@ -37,12 +36,6 @@ class Bot():
         method = f'{self.url}sendMessage'
         with contextlib.suppress(Exception):
             requests.post(method, data=answer)
-
-    def send_photo(self, data: dict[str, Any]) -> None:
-        """Отправка изображения в бот."""
-        method = f'{self.url}sendPhoto'
-        with contextlib.suppress(Exception):
-            requests.post(method, data=data)
 
     def delete_webhook(self) -> None:
         """Удаление вебхука бота."""
@@ -82,3 +75,6 @@ class Bot():
                 else 'text'
             )
         return ''
+
+
+tgbot = Bot()

@@ -1,20 +1,21 @@
-from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
+
+from api import filters as f
+from api import permissions as p
+from api import schemas as schemas
+from api import serializers as s
+from bot.classes.notifications import notification
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework import status, filters
-from rest_framework.decorators import action, api_view, permission_classes
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-from rest_framework.permissions import AllowAny
-from api import filters as f
-from api import permissions as p
-from api import serializers as s
-from api import schemas as schemas
-from tasks.models import Project, ProjectUser, Task, Comment
+from tasks.models import Comment, Project, ProjectUser, Task
 from users.models import User
 
 
@@ -239,6 +240,7 @@ class TasksViewSet(ModelViewSet):
 
         ---
         """
+        notification.send(type='change_task', task=self.get_object())
         return super().partial_update(request, *args, **kwargs)
 
     @swagger_auto_schema(manual_parameters=[
@@ -255,6 +257,7 @@ class TasksViewSet(ModelViewSet):
             task, data=request.data, partial=partial)
         serializer.is_valid()
         self.perform_update(serializer)
+        notification.send(type='change_task', task=task)
         return Response(serializer.data)
 
     @swagger_auto_schema(
@@ -298,6 +301,7 @@ class TasksViewSet(ModelViewSet):
         except ObjectDoesNotExist:
             raise NotFound('пользователь с таким email не существует.')
         task.users.add(user)
+        notification.send(type='new_task', task=task, user=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(manual_parameters=[
@@ -380,6 +384,7 @@ class CommentViewSet(ModelViewSet):
         comment = Comment.objects.create(
             author=request.user, task=task, **serializer.data)
         comment.save()
+        notification.send(type='mention', task=task, comment=comment)
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)

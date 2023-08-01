@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import permissions
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-
 from tasks.models import Comment, ProjectUser
 
 

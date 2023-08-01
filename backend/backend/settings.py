@@ -1,13 +1,12 @@
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
+
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-ryu15^4&je_#o-ti-xux7dz)u#*bi=eucbhe_fdcuw!ek_f@pk')
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-BASE_URL = 'https://taksa-tracker.ru/'
-PASSWORD_RESET_CONFIRM_URL = 'users/reset_password_confirm/'
 
 DEBUG = True
 
@@ -164,3 +163,13 @@ USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/2'
+
+CELERY_BEAT_SCHEDULE = {
+   'deadline_task': {
+       'task': 'bot.tasks.deadline_task',
+       'schedule': crontab(hour='*/1', minute=1),
+   },
+}

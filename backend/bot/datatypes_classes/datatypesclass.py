@@ -6,6 +6,7 @@
 from abc import ABC, abstractmethod
 
 from bot.classes.bot import Bot
+from bot.classes.tguser import TgUser
 
 
 class Subject(ABC):
@@ -55,15 +56,15 @@ class Road(Subject):
     def clean(self, observer: Observer) -> None:
         self._observers.clear()
 
-    def notify(self, bot: Bot, chat_id: int, **kwargs) -> None:
+    def notify(self, tgbot: Bot, tguser: TgUser, **kwargs) -> None:
         """Запуск обновления в каждом подписчике."""
         for observer in self._observers:
-            observer.update(self, bot, chat_id, **kwargs)
+            observer.update(self, tgbot, tguser, **kwargs)
 
         self.clean(observer)
 
-    def go(self, state: str, bot: Bot, chat_id: int, **kwargs) -> None:
+    def go(self, state: str, tgbot: Bot, tguser: TgUser, **kwargs) -> None:
         """Получаем состояние state и запускаем оповещение всех
         прикреплённых на данный момент подписчиков."""
         self._state = state
-        self.notify(bot, chat_id, **kwargs)
+        self.notify(tgbot, tguser, **kwargs)

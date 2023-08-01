@@ -34,6 +34,13 @@ services:
       - /etc/cert/:/etc/cert/
     depends_on:
       - backend
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
 volumes:
   static_volume:
   media_volume:
