@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta
 
-from celery import shared_task
-
 from bot.classes.notifications import notification
+from celery import shared_task
 from tasks.models import Task
 
 

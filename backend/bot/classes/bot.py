@@ -4,7 +4,6 @@ import json
 from typing import Any
 
 import requests
-
 from bot.config import config
 
 

@@ -1,10 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
-from users.models import User
-
 from tasks.models import Comment, Project, ProjectUser, Task
+from users.models import User
 
 
 class ShortUserSerializer(serializers.ModelSerializer):

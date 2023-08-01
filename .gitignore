@@ -1,5 +1,6 @@
 инфа.txt
 sent_emails/
+setup.cfg
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

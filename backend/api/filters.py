@@ -1,7 +1,7 @@
 from django.db.models import Case, IntegerField, Q, QuerySet, Value, When
+
 from django_filters import rest_framework as filters
 from rest_framework import filters as f
-
 from tasks.models import Project, User
 
 
