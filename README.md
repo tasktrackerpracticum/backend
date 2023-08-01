@@ -1,3 +1,4 @@
+![workflow status](https://github.com/tasktrackerpracticum/backend/actions/workflows/taksa-tracker.yml/badge.svg)
 # Tracker
 
 ## Проект доступен по адресу
@@ -7,7 +8,7 @@
 ## Запуск в докере
 
 ```
-git clone https://github.com/Konstantin8891/Tracker.git
+git clone git@github.com:tasktrackerpracticum/backend.git
 cd Tracker
 docker build -t tasktracker -t dev_frontend .
 docker run -it -p 8000:8000 tasktracker
@@ -20,7 +21,7 @@ docker run -it -p 8000:8000 tasktracker
 Можно скачать https://www.python.org/downloads/release/python-3107/
 
 ```
-git clone https://github.com/Konstantin8891/Tracker.git
+git clone git@github.com:tasktrackerpracticum/backend.git
 
 cd Tracker/backend
 ```
@@ -73,7 +74,7 @@ Bearer {token}
 
 ### Токен
 
-Выдаёт конечная точка http//localhost:8000/jwt/create/
+Выдаёт конечная точка http://localhost:8000/jwt/create/
 
 ```
 {
