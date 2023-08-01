@@ -12,19 +12,21 @@ from rest_framework import permissions
 class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
     def get_schema(self, request=None, public=False):
         schema = super().get_schema(request, public)
-        schema.schemes = ["http", "https"]
+        schema.schemes = ['https', 'http']
         return schema
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Task Tracker",
-        default_version="v1",
-        description="""API documentation for Task Tracker project.
+        title='Task Tracker',
+        default_version='v1',
+        description='''API documentation for Task Tracker project.
         Made by graduates of Yandex Practikum school.
-        <a href="https://t.me/catstyle1101" target="_blank">Anton Masyuk</a>\
+        <a href="https://t.me/catstyle1101" target="_blank">Anton Masyuk,</a>\
+        <a href="https://t.me/afoninsb" target="_blank">Sergey Afonin,</a>\
+        <a href="https://t.me/Duglov" target="_blank">Dmitriy Uglov,</a>\
         and <a href="https://t.me/K0nstantin8891" target="_blank">\
-        Konstantin Vasilyev</a>""",
-        license=openapi.License(name="MIT License"),
+        Konstantin Vasilyev</a>''',
+        license=openapi.License(name='MIT License'),
     ),
     public=True,
     generator_class=BothHttpAndHttpsSchemaGenerator,
@@ -41,7 +43,7 @@ urlpatterns = [
         template_name='admin/logout.html',
     )),
     path('', include('djoser.urls.jwt')),
-    path('api/v1/', include("api.urls", namespace="api")),
+    path('api/v1/', include('api.urls', namespace='api')),
     path(
         'api/docs/',
         schema_view.with_ui('swagger', cache_timeout=0),
