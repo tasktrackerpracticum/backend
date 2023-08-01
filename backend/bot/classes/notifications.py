@@ -5,7 +5,7 @@ from bot.classes.bot import tgbot
 from bot.config import config
 from users.models import User
 
-from backend.tasks.models import Comment, Task
+from tasks.models import Comment, Task
 
 
 class Notification():
