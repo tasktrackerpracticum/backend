@@ -2,7 +2,7 @@
 
 ## Проект доступен по адресу
 
- http://taksa-tracker.ru
+ https://taksa-tracker.ru
 
 ## Запуск в докере
 
