@@ -2,8 +2,6 @@ import os
 
 from django.conf import settings
 
-load_dotenv()
-
 
 class Conf():
     BOT_TOKEN: str = os.getenv("BOT_TOKEN")
