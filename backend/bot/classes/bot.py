@@ -46,7 +46,6 @@ class Bot():
     def set_webhook(self, data: dict[str, Any]) -> None:
         """Установка веб-хука бота."""
         method = f'{self.url}setWebhook'
-        print(method)
         with contextlib.suppress(Exception):
             requests.post(method, data=data)
 

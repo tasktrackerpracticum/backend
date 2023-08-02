@@ -3,10 +3,10 @@
     Идет перенаправление в зависимости от полученной комманды бота.
 """
 
-from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 
 import requests
+from bot.config import config
 from bot.classes.bot import Bot
 from bot.classes.tguser import TgUser
 from bot.keyboards.inline import to_tasktracker_kbrd
@@ -41,13 +41,11 @@ class CommandSetPassword(Observer):
                     "token": default_token_generator.make_token(user),
                     "new_password": subject._state.split(' ')[1]
                 }
-                url = (
-                    f'{settings.BASE_URL}{settings.PASSWORD_RESET_CONFIRM_URL}'
-                )
+                url = config.PASSWORD_RESET_CONFIRM_URL
                 response = requests.post(url, data)
-                if response.status_code == 201:
+                if response.status_code in {201, 204}:
                     answer['text'] = t.SET_PASSWORD_DONE
-                    answer['reply_markup'] = to_tasktracker_kbrd
+                    answer['reply_markup'] = to_tasktracker_kbrd()
                 else:
                     answer['text'] = t.SET_PASSWORD_ERROR
-            tgbot.send_answer(answer)
+                tgbot.send_answer(answer)
