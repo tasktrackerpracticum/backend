@@ -277,7 +277,7 @@ class TasksViewSet(ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @swagger_auto_schema(manual_parameters=[
-        schemas.project_id_param, schemas.task_id_param], tags=['tasks'])
+        schemas.task_id_param], tags=['tasks'])
     @action(
         methods=['POST'],
         detail=True,
@@ -290,7 +290,7 @@ class TasksViewSet(ModelViewSet):
         ---
         """
         try:
-            task = Task.objects.get(pk=kwargs.get('pk'))
+            task = Task.objects.get(pk=kwargs.get('task_id'))
         except ObjectDoesNotExist:
             raise NotFound('задачи с таким id не существует')
         serializer = self.get_serializer(
