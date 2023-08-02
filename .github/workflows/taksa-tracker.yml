@@ -69,6 +69,7 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+            echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
             
             sudo docker-compose down
             sudo docker image prune -f
