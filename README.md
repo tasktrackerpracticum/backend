@@ -9,8 +9,8 @@
 
 ```
 git clone git@github.com:tasktrackerpracticum/backend.git
-cd Tracker
-docker build -t tasktracker -t dev_frontend .
+cd backend
+docker build -t tasktracker .
 docker run -it -p 8000:8000 tasktracker
 ```
 
@@ -22,37 +22,14 @@ docker run -it -p 8000:8000 tasktracker
 
 ```
 git clone git@github.com:tasktrackerpracticum/backend.git
-
-cd Tracker/backend
+cd backend
+make setup
 ```
 
-Windows:
+Запустить сервер:
 
 ```
-python -m venv venv
-
-source venv/Scripts/activate
-```
-
-Mac, Linux:
-
-```
-python3 -m venv venv
-
-. venv/bin/activate
-```
-
-Далее:
-
-```
-pip install -r requirements.txt
-
-python manage.py migrate
-
-python manage.py loaddata db.json
-
-python manage.py runserver
-
+make run
 ```
 
 ## Админка
