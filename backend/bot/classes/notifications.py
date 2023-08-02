@@ -8,6 +8,21 @@ from users.models import User
 from tasks.models import Comment, Task
 
 
+def _get_template_env():
+    """Получаем шаблон сообщения."""
+    if not getattr(_get_template_env, 'template_env', None):
+        template_loader = jinja2.FileSystemLoader(
+            searchpath=config.TEMPLATES_DIR)
+        env = jinja2.Environment(
+            loader=template_loader,
+            trim_blocks=True,
+            lstrip_blocks=True,
+            autoescape=True,
+        )
+        _get_template_env.template_env = env
+    return _get_template_env.template_env
+
+
 class Notification():
 
     def send(
@@ -58,27 +73,11 @@ class Notification():
             for user in users:
                 self._send_to_user(type, user, task, None)
 
-    def _get_template_env(self):
-        """Получаем шаблон сообщения."""
-        if not getattr(self._get_template_env, 'template_env', None):
-            template_loader = jinja2.FileSystemLoader(
-                searchpath=config.TEMPLATES_DIR)
-            env = jinja2.Environment(
-                loader=template_loader,
-                trim_blocks=True,
-                lstrip_blocks=True,
-                autoescape=True,
-            )
-
-            self._get_template_env.template_env = env
-
-        return self._get_template_env.template_env
-
     def _get_text(self, type: str, data: dict[str, Task | Comment]):
         """Рендерим шаблон сообщения."""
         if not type or not data:
             return
-        template = self._get_template_env().get_template(type)
+        template = _get_template_env().get_template(f'{type}.j2')
         return template.render(**data)
 
 
