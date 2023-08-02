@@ -9,6 +9,7 @@ router = SimpleRouter()
 
 router.register('users', views.UserViewSet, basename='users')
 router.register('projects', views.ProjectViewSet, basename='projects')
+router.register('tasks', views.TasksViewSet, basename='tasks')
 
 
 urlpatterns = [

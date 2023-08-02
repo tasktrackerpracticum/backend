@@ -24,6 +24,7 @@ run:
 db:
 	$(PYTHON_PATH) $(BASE_DIR)/manage.py makemigrations
 	$(PYTHON_PATH) $(BASE_DIR)/manage.py migrate
+	$(PYTHON_PATH) $(BASE_DIR)/manage.py loaddata $(BASE_DIR)/db.json
 
 install:
 	@echo "installing requirements.txt..."
@@ -32,7 +33,7 @@ install:
 static:
 	$(PYTHON_PATH) $(BASE_DIR)/manage.py collectstatic
 
-setup: venv install db static
+setup: venv install db
 
 showdb:
 	$(PYTHON_PATH) $(BASE_DIR)/manage.py showmigrations
