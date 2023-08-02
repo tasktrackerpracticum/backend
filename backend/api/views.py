@@ -290,7 +290,7 @@ class TasksViewSet(ModelViewSet):
         ---
         """
         try:
-            task = Task.objects.get(pk=kwargs.get('pk'))
+            task = Task.objects.get(pk=kwargs.get('task_id'))
         except ObjectDoesNotExist:
             raise NotFound('задачи с таким id не существует')
         serializer = self.get_serializer(
