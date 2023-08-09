@@ -13,7 +13,7 @@ class ShortUserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'email', 'chat_id', 'phone',
-            'photo', 'last_login',
+            'photo', 'last_login', 'chat_id'
         )
 
 
@@ -39,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'username', 'first_name', 'last_name', 'email', 'photo',
             'phone', 'position', 'date_of_birth', 'gender',
-            'country', 'timezone', 'last_login',
+            'country', 'timezone', 'last_login', 'chat_id'
         )
 
 
