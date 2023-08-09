@@ -23,6 +23,10 @@ class Tag(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        self.name = self.title.capitalize()
+        super().save(*args, **kwargs)
+
 
 class Project(CreatedAtUpdatedAt):
     title = models.CharField(max_length=200)
