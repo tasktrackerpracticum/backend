@@ -85,3 +85,19 @@ class ProjectFilter(filters.FilterSet):
             title__iexact=value).values_list('project')
         tag_projects = Project.objects.filter(pk__in=project_ids)
         return queryset & tag_projects
+
+class TagFilter(filters.FilterSet):
+    project = filters.NumberFilter(
+        method='project_filter', help_text='Фильтрует теги по id проекта.')
+    all = filters.CharFilter(
+        method='all_filter',
+        help_text='Выводит все теги пользователя. Варианты: true',
+    )
+
+    def project_filter(self, queryset: QuerySet, _, value):
+        return queryset.filter(project_id=value)
+
+    def all_filter(self, queryset: QuerySet, _, value):
+        if value != 'true':
+            return queryset.distinct('title')
+        return queryset

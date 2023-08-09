@@ -441,11 +441,13 @@ class TagViewSet(
     serializer_class = s.TagSerializer
     lookup_url_kwarg = 'tag_id'
     permission_classes = (p.TagPermission,)
+    filter_backends = (
+        DjangoFilterBackend,
+    )
+    filterset_class = f.TagFilter
 
     def get_queryset(self):
-        # НА sqlite не работает, в локальной разработке не запустится
-        return Tag.objects.filter(user=self.request.user).distinct('title')
-        # return tag.objects.filter(user=self.request.user)
+        return Tag.objects.filter(user=self.request.user)
 
     @swagger_auto_schema(tags=['tags'])
     def list(self, request, *args, **kwargs):

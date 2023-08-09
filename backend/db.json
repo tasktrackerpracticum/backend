@@ -468,6 +468,19 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2023-08-09T10:10:53.090Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "4",
+    "object_repr": "Еще один тег",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041d\\u0430\\u0437\\u0432\\u0430\\u043d\\u0438\\u0435 \\u0442\\u0435\\u0433\\u0430\"]}}]"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "98eqpuhlhxbhfw7x8bzckclqebbdngru",
   "fields": {
@@ -495,7 +508,7 @@
   "model": "users.user",
   "pk": 1,
   "fields": {
-    "last_login": "2023-08-09T08:01:56.505Z",
+    "last_login": "2023-08-09T10:10:53.300Z",
     "is_superuser": true,
     "first_name": "Admin",
     "last_name": "Adminov",
@@ -653,8 +666,17 @@
   "pk": 4,
   "fields": {
     "user": 1,
-    "title": "еще один тег",
+    "title": "Еще один тег",
     "project": 1
+  }
+},
+{
+  "model": "tasks.tag",
+  "pk": 8,
+  "fields": {
+    "user": 1,
+    "title": "Магазин",
+    "project": 2
   }
 },
 {
