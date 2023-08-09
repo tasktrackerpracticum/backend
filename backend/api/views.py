@@ -444,8 +444,8 @@ class TagViewSet(
 
     def get_queryset(self):
         # НА sqlite не работает, в локальной разработке не запустится
-        # return Tag.objects.filter(user=self.request.user).distinct('title')
-        return Tag.objects.filter(user=self.request.user)
+        return Tag.objects.filter(user=self.request.user).distinct('title')
+        # return tag.objects.filter(user=self.request.user)
 
     @swagger_auto_schema(tags=['tags'])
     def list(self, request, *args, **kwargs):
