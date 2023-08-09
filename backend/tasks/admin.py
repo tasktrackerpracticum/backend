@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from tasks.models import Comment, Project, ProjectUser, Task
+from tasks.models import Comment, Project, ProjectUser, Tag, Task
 
 
 class CommentInline(admin.TabularInline):
@@ -12,13 +12,17 @@ class ProjectUserInline(admin.TabularInline):
     ordering = ('role', 'user')
 
 
+class TagInline(admin.TabularInline):
+    model = Tag
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title',)
     list_filter = ('title',)
     search_fields = ('title', 'users__username')
     inlines = [
-        ProjectUserInline,
+        ProjectUserInline, TagInline
     ]
 
 
@@ -31,3 +35,8 @@ class TaskAdmin(admin.ModelAdmin):
     inlines = [
         CommentInline,
     ]
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('title', 'user', 'project')

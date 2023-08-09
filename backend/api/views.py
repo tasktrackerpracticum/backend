@@ -10,12 +10,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import mixins
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
-from tasks.models import Comment, Project, ProjectUser, Task
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from tasks.models import Comment, Project, ProjectUser, Task, Tag
 from users.models import User
 
 
@@ -23,14 +24,14 @@ class UserViewSet(DjoserUserViewSet):
     permission_classes = (p.IsAuthenticated | p.IsAdminUser | p.IsSelf,)
     queryset = User.objects.all()
 
-    @action(["get", "patch", "delete"], detail=False)
+    @action(['get', 'patch', 'delete'], detail=False)
     def me(self, request, *args, **kwargs):
         self.get_object = self.get_instance
-        if request.method == "GET":
+        if request.method == 'GET':
             return self.retrieve(request, *args, **kwargs)
-        elif request.method == "PATCH":
+        elif request.method == 'PATCH':
             return self.partial_update(request, *args, **kwargs)
-        elif request.method == "DELETE":
+        elif request.method == 'DELETE':
             return self.destroy(request, *args, **kwargs)
 
     @swagger_auto_schema(
@@ -71,6 +72,7 @@ class ProjectViewSet(ModelViewSet):
     def get_serializer_class(self):
         return self.action_serializers.get(self.action, self.serializer_class)
 
+    @swagger_auto_schema(tags=['projects'])
     def list(self, request, *args, **kwargs):
         """
         В этом эндпоинте можно посмотреть все проекты.
@@ -80,7 +82,7 @@ class ProjectViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[schemas.project_id_param])
+        tags=['projects'], manual_parameters=[schemas.project_id_param])
     @transaction.atomic
     def destroy(self, request, *args, **kwargs):
         """
@@ -94,7 +96,7 @@ class ProjectViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[schemas.project_id_param])
+        tags=['projects'], manual_parameters=[schemas.project_id_param])
     def retrieve(self, request, *args, **kwargs):
         """
         В этом энпоинте можно посмотреть конкретный проект.
@@ -104,7 +106,7 @@ class ProjectViewSet(ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[schemas.project_id_param])
+        tags=['projects'], manual_parameters=[schemas.project_id_param])
     def partial_update(self, request, *args, **kwargs):
         """
         В этом эндпоинте можно частично обновить проект.
@@ -114,7 +116,7 @@ class ProjectViewSet(ModelViewSet):
         return super().partial_update(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[schemas.project_id_param])
+        tags=['projects'], manual_parameters=[schemas.project_id_param])
     def update(self, request, *args, **kwargs):
         """
         В этом эндпоинте можно обновить проект.
@@ -124,7 +126,7 @@ class ProjectViewSet(ModelViewSet):
         return super(ProjectViewSet, self).update(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[schemas.project_id_param])
+        tags=['projects'], manual_parameters=[schemas.project_id_param])
     def create(self, request, *args, **kwargs):
         """
         В этом эндпоинте можно создать проект.
@@ -133,7 +135,8 @@ class ProjectViewSet(ModelViewSet):
         """
         return super(ProjectViewSet, self).create(request, *args, **kwargs)
 
-    @swagger_auto_schema(manual_parameters=[schemas.project_id_param])
+    @swagger_auto_schema(
+        tags=['projects'], manual_parameters=[schemas.project_id_param])
     @action(
         methods=['POST'],
         detail=True,
@@ -164,7 +167,7 @@ class ProjectViewSet(ModelViewSet):
         )
 
     @swagger_auto_schema(
-        tags=["projects"], manual_parameters=[
+        tags=['projects'], manual_parameters=[
             schemas.project_id_param, schemas.user_id_param])
     @transaction.atomic
     def delete_user(self, request, *args, **kwargs):
@@ -221,6 +224,15 @@ class TasksViewSet(ModelViewSet):
             return self.action_serializers.get(
                 self.action, self.serializer_class)
         return super().get_serializer_class()
+
+    @swagger_auto_schema(tags=['tasks'])
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Отображает конкретную задачу.
+
+        ---
+        """
+        return super().retrieve(self, request, *args, **kwargs)
 
     @swagger_auto_schema(
         manual_parameters=[schemas.project_id_param], tags=['tasks'])
@@ -380,7 +392,10 @@ class CommentViewSet(ModelViewSet):
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        task = Task.objects.get(pk=kwargs.get('task_id'))
+        try:
+            task = Task.objects.get(pk=kwargs.get('task_id'))
+        except ObjectDoesNotExist:
+            raise NotFound(detail='Задачи с таким id не существует')
         comment = Comment.objects.create(
             author=request.user, task=task, **serializer.data)
         comment.save()
@@ -415,3 +430,61 @@ class CommentViewSet(ModelViewSet):
         ---
         """
         return super().partial_update(request, *args, **kwargs)
+
+
+class TagViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
+    GenericViewSet,
+):
+    serializer_class = s.TagSerializer
+    lookup_url_kwarg = 'tag_id'
+    permission_classes = (p.TagPermission,)
+
+    def get_queryset(self):
+        # НА sqlite не работает, в локальной разработке не запустится
+        # return Tag.objects.filter(user=self.request.user).distinct('title')
+        return Tag.objects.filter(user=self.request.user)
+
+    @swagger_auto_schema(tags=['tags'])
+    def list(self, request, *args, **kwargs):
+        """
+        Посмотреть все теги авторизованного пользователя.
+
+        ---
+        """
+        return super().list(self, request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=['tags'], manual_parameters=[schemas.project_id_param])
+    def create(self, request, *args, **kwargs):
+        """
+        Создать тег для проекта для авторизованного пользователя.
+
+        ---
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            project = Project.objects.get(pk=kwargs.get('project_id'))
+        except ObjectDoesNotExist:
+            raise NotFound(detail='Проекта с таким id не существует')
+        tag = Tag.objects.create(
+            title=serializer.validated_data.get('title'),
+            project=project,
+            user=self.request.user,
+        )
+        tag.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @swagger_auto_schema(tags=['tags'])
+    def destroy(self, request, *args, **kwargs):
+        """
+        Удалить тег.
+
+        ---
+        """
+        return super().destroy(self, request, *args, **kwargs)
