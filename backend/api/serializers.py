@@ -93,6 +93,7 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'title', 'project')
+        read_only_fields = ('project',)
 
     def validate(self, attrs):
         project = self.context['view'].kwargs.get('project_id')
