@@ -91,7 +91,7 @@ class TagFilter(filters.FilterSet):
         method='project_filter', help_text='Фильтрует теги по id проекта.')
     distinct = filters.CharFilter(
         method='distinct_filter',
-        help_text='Выводит все теги пользователя. Варианты: true',
+        help_text='Выводит теги без повторений в названии. Варианты: true',
     )
 
     def project_filter(self, queryset: QuerySet, _, value):
