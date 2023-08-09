@@ -89,15 +89,15 @@ class ProjectFilter(filters.FilterSet):
 class TagFilter(filters.FilterSet):
     project = filters.NumberFilter(
         method='project_filter', help_text='Фильтрует теги по id проекта.')
-    all = filters.CharFilter(
-        method='all_filter',
+    distinct = filters.CharFilter(
+        method='distinct_filter',
         help_text='Выводит все теги пользователя. Варианты: true',
     )
 
     def project_filter(self, queryset: QuerySet, _, value):
         return queryset.filter(project_id=value)
 
-    def all_filter(self, queryset: QuerySet, _, value):
+    def distinct_filter(self, queryset: QuerySet, _, value):
         if value == 'true':
-            return queryset
-        return queryset.distinct('title')
+            return queryset.distinct('title')
+        return queryset
