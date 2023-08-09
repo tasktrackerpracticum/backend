@@ -98,6 +98,6 @@ class TagFilter(filters.FilterSet):
         return queryset.filter(project_id=value)
 
     def all_filter(self, queryset: QuerySet, _, value):
-        if value != 'true':
-            return queryset.distinct('title')
-        return queryset
+        if value == 'true':
+            return queryset
+        return queryset.distinct('title')
