@@ -2,8 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
 from rest_framework import serializers
-from rest_framework.exceptions import NotFound
-from tasks.models import Comment, Project, ProjectUser, Task
+from rest_framework.exceptions import NotFound, ValidationError
+from tasks.models import Comment, Project, ProjectUser, Task, Tag
 from users.models import User
 
 
@@ -88,27 +88,50 @@ class TaskSerializer(serializers.ModelSerializer):
             'ordering'
         )
 
+class TagSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tag
+        fields = ('id', 'title')
+
+    def validate(self, attrs):
+        project = self.context['view'].kwargs.get('project_id')
+        user = self.context['request'].user
+        tag = Tag.objects.filter(
+            title=attrs.get('title'), user=user, project=project)
+        if tag.exists():
+            raise ValidationError(detail='Такой тег уже существует')
+        return attrs
+
+
 
 class ShortProjectSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
         fields = (
             'id', 'title', 'description', 'date_start', 'date_finish',
-            'is_active', 'users', 'created_at', 'updated_at',
+            'is_active', 'users', 'created_at', 'updated_at', 'tags'
         )
 
     def get_users(self, obj):
         users = ProjectUser.objects.filter(project=obj)
         return ProjectUserSerializer(users, many=True).data
 
+    def get_tags(self, obj):
+        tags = Tag.objects.filter(
+            project=obj, user=self.context['request'].user)
+        return TagSerializer(tags, many=True).data
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
     tasks = TaskSerializer(many=True, read_only=True)
+    tags = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
 
@@ -116,12 +139,17 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = (
             'id', 'title', 'description', 'date_start', 'date_finish',
-            'is_active', 'users', 'tasks', 'created_at', 'updated_at',
+            'is_active', 'users', 'tasks', 'created_at', 'updated_at', 'tags'
     )
 
     def get_users(self, obj):
         users = ProjectUser.objects.filter(project=obj)
         return ProjectUserSerializer(users, many=True).data
+
+    def get_tags(self, obj):
+        tags = Tag.objects.filter(
+            project=obj, user=self.context['request'].user)
+        return TagSerializer(tags, many=True).data
 
     @transaction.atomic
     def create(self, validated_data):
