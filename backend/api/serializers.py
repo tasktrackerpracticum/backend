@@ -18,11 +18,11 @@ class ShortUserSerializer(serializers.ModelSerializer):
         )
 
 
-class ProjectUserAddSerializer(serializers.ModelSerializer):
+class ProjectUserAddSerializer(serializers.Serializer):
     email = serializers.EmailField()
+    role = serializers.ChoiceField(choices=ProjectUser.ROLES)
 
     class Meta:
-        model = ProjectUser
         fields = ('email', 'role')
 
 
@@ -154,9 +154,19 @@ class ProjectSerializer(serializers.ModelSerializer):
             project=obj, user=self.context['request'].user)
         return TagSerializer(tags, many=True).data
 
+class ProjectCreateSerializer(serializers.ModelSerializer):
+    users = ProjectUserAddSerializer(many=True)
+
+    class Meta:
+        model = Project
+        fields = (
+            'title', 'description', 'date_start', 'date_finish',
+            'users'
+        )
     @transaction.atomic
     def create(self, validated_data):
         author = self.context.get('request').user
+        users = validated_data.pop('users')
         project = Project.objects.create(**validated_data)
         user_project = ProjectUser.objects.create(
             user=author,
@@ -164,6 +174,16 @@ class ProjectSerializer(serializers.ModelSerializer):
             role=ProjectUser.PROJECT_MANAGER
         )
         user_project.save()
+        for user in users:
+            try:
+                user_instance = User.objects.get(email=user.get('email'))
+                ProjectUser.objects.create(
+                    user=user_instance,
+                    project=project,
+                    role=user.get('role')
+                )
+            except ObjectDoesNotExist:
+                pass
         return project
 
 ######!!!!

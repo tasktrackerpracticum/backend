@@ -14,7 +14,6 @@ router.register('tasks', views.TasksViewSet, basename='tasks')
 
 
 urlpatterns = [
-    path('', include(router.urls)),
     path(
         'projects/<int:project_id>/users/<int:user_id>/',
         views.ProjectViewSet.as_view(
@@ -62,4 +61,5 @@ urlpatterns = [
         'tags/<int:tag_id>/',
         views.TagViewSet.as_view({'delete': 'destroy'})
     ),
+    path('', include(router.urls)),
 ]

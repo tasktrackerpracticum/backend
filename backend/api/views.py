@@ -67,6 +67,7 @@ class ProjectViewSet(ModelViewSet):
     ordering = ('is_active', 'date_finish', 'title')
     action_serializers = {
         'list': s.ShortProjectSerializer,
+        'create': s.ProjectCreateSerializer,
     }
 
     def get_serializer_class(self):
@@ -125,15 +126,18 @@ class ProjectViewSet(ModelViewSet):
         """
         return super(ProjectViewSet, self).update(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        tags=['projects'], manual_parameters=[schemas.project_id_param])
+    @transaction.atomic
+    @swagger_auto_schema(tags=['projects'])
     def create(self, request, *args, **kwargs):
         """
         В этом эндпоинте можно создать проект.
 
         ---
         """
-        return super(ProjectViewSet, self).create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(request.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(
         tags=['projects'], manual_parameters=[schemas.project_id_param])
