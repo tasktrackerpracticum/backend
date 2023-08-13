@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from drf_extra_fields.fields import Base64ImageField
 
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
@@ -33,6 +34,7 @@ class UserCommentSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    photo = Base64ImageField()
 
     class Meta:
         model = User
