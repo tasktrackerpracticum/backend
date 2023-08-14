@@ -9,6 +9,7 @@ from users.models import User
 
 
 class ShortUserSerializer(serializers.ModelSerializer):
+    photo = Base64ImageField()
 
     class Meta:
         model = User
@@ -27,6 +28,7 @@ class ProjectUserAddSerializer(serializers.Serializer):
 
 
 class UserCommentSerializer(serializers.ModelSerializer):
+    photo = Base64ImageField()
 
     class Meta:
         model = User
