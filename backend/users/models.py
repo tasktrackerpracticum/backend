@@ -30,6 +30,10 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
+    notify_in_chat = models.BooleanField(
+        'Уведомлять в телеграмм',
+        default=False,
+    )
     photo = models.ImageField(
         'Фотография',
         upload_to='users',
