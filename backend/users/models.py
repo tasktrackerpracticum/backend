@@ -32,7 +32,7 @@ class User(AbstractUser):
     )
     photo = models.ImageField(
         'Фотография',
-        upload_to='media/users',
+        upload_to='users',
         null=True, blank=True,
     )
     phone = PhoneNumberField(
