@@ -9,7 +9,6 @@ from users.models import User
 
 
 class ShortUserSerializer(serializers.ModelSerializer):
-    photo = Base64ImageField()
 
     class Meta:
         model = User
@@ -125,7 +124,9 @@ class ShortProjectSerializer(serializers.ModelSerializer):
 
     def get_users(self, obj):
         users = ProjectUser.objects.filter(project=obj)
-        return ProjectUserSerializer(users, many=True).data
+        serializer = ProjectUserSerializer(
+            users, many=True, context=self.context)
+        return serializer.data
 
     def get_tags(self, obj):
         tags = Tag.objects.filter(
@@ -149,12 +150,12 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     def get_users(self, obj):
         users = ProjectUser.objects.filter(project=obj)
-        return ProjectUserSerializer(users, many=True).data
+        return ProjectUserSerializer(users, many=True, context=self.context).data
 
     def get_tags(self, obj):
         tags = Tag.objects.filter(
             project=obj, user=self.context['request'].user)
-        return TagSerializer(tags, many=True).data
+        return TagSerializer(tags, many=True, context=self.context).data
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
     users = ProjectUserAddSerializer(many=True)
