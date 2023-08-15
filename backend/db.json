@@ -364,6 +364,131 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2023-07-26T06:21:01.342Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "1",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\" (Написать модель Item)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Ordering\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2023-07-26T06:54:14.185Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "5",
+    "object_repr": "Сделать фейсбук",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"project user\", \"object\": \"ProjectUser object (7)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2023-07-26T06:54:38.265Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "5",
+    "object_repr": "Сделать фейсбук",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0414\\u0430\\u0442\\u0430 \\u0437\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043d\\u0438\\u044f\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2023-07-26T06:54:56.371Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "5",
+    "object_repr": "Сделать фейсбук",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0414\\u0430\\u0442\\u0430 \\u0437\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043d\\u0438\\u044f\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2023-08-08T12:14:40.732Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "1",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\"",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"tag\", \"object\": \"\\u041c\\u0430\\u0433\\u0430\\u0437\\u0438\\u043d\"}}, {\"added\": {\"name\": \"tag\", \"object\": \"\\u0422\\u0435\\u0433\"}}, {\"added\": {\"name\": \"tag\", \"object\": \"\\u0422\\u0435\\u0433 \\u044e\\u0437\\u0435\\u0440\\u0430 1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2023-08-09T07:32:39.597Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "1",
+    "object_repr": "Интернет магазин \"Очумелые Ручки\"",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"tag\", \"object\": \"\\u0435\\u0449\\u0435 \\u043e\\u0434\\u0438\\u043d \\u0442\\u0435\\u0433\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2023-08-09T07:59:54.868Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "6",
+    "object_repr": "string",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2023-08-09T08:00:00.350Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "5",
+    "object_repr": "string",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2023-08-09T10:10:53.090Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "4",
+    "object_repr": "Еще один тег",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041d\\u0430\\u0437\\u0432\\u0430\\u043d\\u0438\\u0435 \\u0442\\u0435\\u0433\\u0430\"]}}]"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "98eqpuhlhxbhfw7x8bzckclqebbdngru",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAUBf-FtSHcEgi4dO83kPsAqZqSlHZl_Hcl6UK3Z2bOSyXct5r2ntc0izorUKffjZAfeRlA7rjcmua2bOtMeij6oF1fm-Tn5XD_Dir2-q0tY8gQSDCwB2ehGMnFOAksFjgDRydGLFF0HBGMHwwndh5CoUm9PwQhOH0:1qTboY:iC3j7TcrcalG5yfNxEC0I5UuqgDRMnp_6TBjLvvcKLw",
+    "expire_date": "2023-08-23T05:32:58.891Z"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "ov01omkgs1htnar5mhhvr5chyn2fyvj2",
   "fields": {
@@ -372,10 +497,18 @@
   }
 },
 {
+  "model": "sessions.session",
+  "pk": "wup254uo65n57zus6qqzbuud29vs2jv5",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAUBf-FtSHcEgi4dO83kPsAqZqSlHZl_Hcl6UK3Z2bOSyXct5r2ntc0izorUKffjZAfeRlA7rjcmua2bOtMeij6oF1fm-Tn5XD_Dir2-q0tY8gQSDCwB2ehGMnFOAksFjgDRydGLFF0HBGMHwwndh5CoUm9PwQhOH0:1qTLLX:uOQMW0lGnuZAftM8nLQAVV6WW5ER731eooWBDoREV2M",
+    "expire_date": "2023-08-22T11:57:55.271Z"
+  }
+},
+{
   "model": "users.user",
   "pk": 1,
   "fields": {
-    "last_login": "2023-07-24T07:26:58.542Z",
+    "last_login": "2023-08-09T10:10:53.300Z",
     "is_superuser": true,
     "first_name": "Admin",
     "last_name": "Adminov",
@@ -384,7 +517,8 @@
     "date_joined": "2023-07-24T07:25:18.575Z",
     "email": "admin@admin.com",
     "username": null,
-    "photo": "",
+    "chat_id": null,
+    "photo": "photo.jpg",
     "phone": null,
     "position": null,
     "date_of_birth": null,
@@ -409,7 +543,8 @@
     "date_joined": "2023-07-24T07:41:06.071Z",
     "email": "user_1@user.com",
     "username": "user_1",
-    "photo": "",
+    "chat_id": null,
+    "photo": "photo.jpg",
     "phone": "+79998887766",
     "position": "Бэкенд",
     "date_of_birth": null,
@@ -434,7 +569,8 @@
     "date_joined": "2023-07-24T07:41:47.611Z",
     "email": "user_2@user.com",
     "username": "user_2",
-    "photo": "",
+    "chat_id": null,
+    "photo": "photo.jpg",
     "phone": "+79996665544",
     "position": "Бекенд",
     "date_of_birth": null,
@@ -459,7 +595,8 @@
     "date_joined": "2023-07-24T07:42:26.711Z",
     "email": "user_3@user.com",
     "username": "user_3",
-    "photo": "",
+    "chat_id": null,
+    "photo": "photo.jpg",
     "phone": "+79996664466",
     "position": "Фронт",
     "date_of_birth": null,
@@ -484,7 +621,8 @@
     "date_joined": "2023-07-24T07:43:02.991Z",
     "email": "user_4@user.com",
     "username": "user_4",
-    "photo": "",
+    "chat_id": null,
+    "photo": "photo.jpg",
     "phone": "+79993332211",
     "position": "ПМ",
     "date_of_birth": null,
@@ -497,13 +635,58 @@
   }
 },
 {
+  "model": "tasks.tag",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "title": "Магазин",
+    "project": 1
+  }
+},
+{
+  "model": "tasks.tag",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "title": "Тег",
+    "project": 1
+  }
+},
+{
+  "model": "tasks.tag",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "title": "Тег юзера 1",
+    "project": 1
+  }
+},
+{
+  "model": "tasks.tag",
+  "pk": 4,
+  "fields": {
+    "user": 1,
+    "title": "Еще один тег",
+    "project": 1
+  }
+},
+{
+  "model": "tasks.tag",
+  "pk": 8,
+  "fields": {
+    "user": 1,
+    "title": "Магазин",
+    "project": 2
+  }
+},
+{
   "model": "tasks.project",
   "pk": 1,
   "fields": {
     "created_at": "2023-07-24T07:47:00.010Z",
-    "updated_at": "2023-07-24T07:47:48.020Z",
+    "updated_at": "2023-08-09T07:32:39.583Z",
     "title": "Интернет магазин \"Очумелые Ручки\"",
-    "description": null,
+    "description": "",
     "date_start": "2023-07-24",
     "date_finish": "2023-09-30",
     "is_active": true
@@ -519,6 +702,19 @@
     "description": null,
     "date_start": "2023-07-24",
     "date_finish": "2023-07-24",
+    "is_active": true
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 5,
+  "fields": {
+    "created_at": "2023-07-26T06:54:14.178Z",
+    "updated_at": "2023-07-26T06:54:56.366Z",
+    "title": "Сделать фейсбук",
+    "description": "Сделать аналог фейсбука и стричь капусту",
+    "date_start": "2023-07-26",
+    "date_finish": "2023-07-28",
     "is_active": true
   }
 },
@@ -568,11 +764,20 @@
   }
 },
 {
+  "model": "tasks.projectuser",
+  "pk": 7,
+  "fields": {
+    "project": 5,
+    "user": 5,
+    "role": "pm"
+  }
+},
+{
   "model": "tasks.task",
   "pk": 1,
   "fields": {
     "created_at": "2023-07-24T07:50:30.134Z",
-    "updated_at": "2023-07-24T07:54:55.007Z",
+    "updated_at": "2023-07-26T06:21:01.329Z",
     "title": "Написать модель Item",
     "description": "Написать модель Item, которая описывает единицу товара. \r\n\r\nПоля:\r\n\r\n- name (charfield)\r\n- description (textfield)\r\n- price (decimalfield)",
     "column": "backlog",
@@ -580,7 +785,7 @@
     "author": 1,
     "status": "nonurgent",
     "deadline": "2023-07-24T07:50:22Z",
-    "ordering": 0,
+    "ordering": 999,
     "users": [
       2
     ]

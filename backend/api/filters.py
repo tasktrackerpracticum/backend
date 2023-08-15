@@ -2,7 +2,7 @@ from django.db.models import Case, IntegerField, Q, QuerySet, Value, When
 
 from django_filters import rest_framework as filters
 from rest_framework import filters as f
-from tasks.models import Project, User
+from tasks.models import Project, User, Tag
 
 
 class CustomProjectOrderingFilter(f.OrderingFilter):
@@ -56,6 +56,8 @@ class ProjectFilter(filters.FilterSet):
     search_doc = """Позволяет фильтровать по названию проекта,
     имени, фамилии пользователя и его email."""
     search = filters.CharFilter(method='custom_search', help_text=search_doc)
+    tag = filters.CharFilter(
+        method='tag_filter', help_text='Фильтрует проекты по названию тега')
 
     def custom_search(self, queryset: QuerySet, _, value: str):
         q1 = Q(title__istartswith=value)
@@ -77,3 +79,25 @@ class ProjectFilter(filters.FilterSet):
                 output_field=IntegerField(),
             )
         ).order_by('search_ordering')
+
+    def tag_filter(self, queryset: QuerySet, _, value: str):
+        project_ids = Tag.objects.filter(
+            title__iexact=value).values_list('project')
+        tag_projects = Project.objects.filter(pk__in=project_ids)
+        return queryset & tag_projects
+
+class TagFilter(filters.FilterSet):
+    project = filters.NumberFilter(
+        method='project_filter', help_text='Фильтрует теги по id проекта.')
+    distinct = filters.CharFilter(
+        method='distinct_filter',
+        help_text='Выводит теги без повторений в названии. Варианты: true',
+    )
+
+    def project_filter(self, queryset: QuerySet, _, value):
+        return queryset.filter(project_id=value)
+
+    def distinct_filter(self, queryset: QuerySet, _, value):
+        if value == 'true':
+            return queryset.distinct('title')
+        return queryset

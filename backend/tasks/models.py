@@ -11,6 +11,23 @@ class CreatedAtUpdatedAt(models.Model):
         abstract = True
 
 
+class Tag(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField('Название тега', max_length=100)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        self.name = self.title.capitalize()
+        super().save(*args, **kwargs)
+
+
 class Project(CreatedAtUpdatedAt):
     title = models.CharField(max_length=200)
     users = models.ManyToManyField(User, through='ProjectUser')
@@ -18,6 +35,8 @@ class Project(CreatedAtUpdatedAt):
     date_start = models.DateField('Дата начала', blank=True, null=True)
     date_finish = models.DateField('Дата завершения', blank=True, null=True)
     is_active = models.BooleanField('Статус', default=True)
+
+    objects = models.Manager()
 
     class Meta:
         verbose_name = 'Проект'
