@@ -13,7 +13,7 @@ services:
     image: catstyle1101/tasktracker_backend:latest
     restart: always
     volumes:
-      - /root/frontend/build/static/:/app/static/
+      - static_volume:/app/static/
       - media_volume:/app/media/
     depends_on:
       - db
@@ -32,6 +32,7 @@ services:
       - ./docs/:/usr/share/nginx/html/api/docs/
       - /root/frontend/build/static/:/etc/nginx/html/static/
       - media_volume:/etc/nginx/html/media/
+      - static_volume:/etc/nginx/static/
       - /etc/cert/:/etc/cert/
     depends_on:
       - backend
@@ -43,5 +44,6 @@ services:
       - "6379:6379"
 
 volumes:
+  static_volume:
   media_volume:
   postgres_volume:
