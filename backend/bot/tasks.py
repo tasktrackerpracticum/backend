@@ -15,4 +15,5 @@ def deadline_task() -> None:
     for task in tasks:
         users = task.users.all()
         for user in users:
-            notification.send(type='deadline', task=task, user=user)
+            if user.notify_in_chat:
+                notification.send(type='deadline', task=task, user=user)
