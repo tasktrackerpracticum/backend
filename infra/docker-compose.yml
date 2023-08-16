@@ -13,7 +13,7 @@ services:
     image: catstyle1101/tasktracker_backend:latest
     restart: always
     volumes:
-      - /root/frontend/build/:/app/static/
+      - /root/frontend/build/static/:/app/static/
       - media_volume:/app/media/
     depends_on:
       - db
