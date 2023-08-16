@@ -28,6 +28,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /root/frontend/build:/usr/share/nginx/html/
       - ./docs/:/usr/share/nginx/html/api/docs/
       - static_volume:/etc/nginx/html/static/
       - media_volume:/etc/nginx/html/media/
