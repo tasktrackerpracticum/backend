@@ -30,7 +30,7 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - /root/frontend/build:/usr/share/nginx/html/
       - ./docs/:/usr/share/nginx/html/api/docs/
-      - static_volume:/etc/nginx/html/static/
+      - /root/frontend/build/static/:/etc/nginx/html/static/
       - media_volume:/etc/nginx/html/media/
       - /etc/cert/:/etc/cert/
     depends_on:
@@ -43,6 +43,5 @@ services:
       - "6379:6379"
 
 volumes:
-  static_volume:
   media_volume:
   postgres_volume:
