@@ -1,13 +1,13 @@
-"""Команды бота."""
 import contextlib
 import json
 from typing import Any
 
 import requests
+
 from bot.config import config
 
 
-class Bot():
+class Bot:
 
     def __init__(self):
         self.url = config.TELEGRAM_URL
@@ -65,7 +65,7 @@ class Bot():
             (content for content in contents if content in message), '')
 
     @staticmethod
-    def get_data_type(data: dict[str, Any]) -> str | None:
+    def get_data_type(data: dict[str, Any]) -> str:
         """Получение типа обновления, поступившего на вебхук."""
         if 'callback_query' in data:
             return 'callback_query'
@@ -77,4 +77,4 @@ class Bot():
         return ''
 
 
-tgbot = Bot()
+tg_bot = Bot()

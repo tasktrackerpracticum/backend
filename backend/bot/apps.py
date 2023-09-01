@@ -6,7 +6,7 @@ class BotConfig(AppConfig):
     name = 'bot'
 
     def ready(self):
-        from bot.classes.bot import tgbot
+        from bot.classes.bot import tg_bot
         from bot.config import config
-        tgbot.set_webhook({'url': config.WEBHOOK_URL})
-        tgbot.set_commands()
+        tg_bot.set_webhook({'url': config.WEBHOOK_URL})
+        tg_bot.set_commands()

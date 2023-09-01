@@ -2,7 +2,4 @@
 sleep 5
 python manage.py migrate;
 python manage.py collectstatic --noinput;
-python manage.py loaddata db.json
 gunicorn -w 2 -b 0:8000 backend.wsgi;
-celery -A backend worker -l info
-celery -A backend beat -l info

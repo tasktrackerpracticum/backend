@@ -15,14 +15,14 @@ from .datatypesclass import Observer, Road, Subject
 
 class HighLevelCommand(Observer):
     def update(
-            self, subject: Subject, tgbot: Bot, tguser: TgUser, **kwargs
+            self, subject: Subject, tg_bot: Bot, tg_user: TgUser, **kwargs
     ) -> None:
         """Направления при получении комманды."""
         from .commandlevel import CommandSetPassword, CommandStart
-        if subject._state == 'command':
+        if subject.state == 'command':
             command = kwargs['message']['text'][1:]
             road = Road()
-            pathes = (CommandStart(), CommandSetPassword())
-            for path in pathes:
+            paths = (CommandStart(), CommandSetPassword())
+            for path in paths:
                 road.attach(path)
-            road.go(command, tgbot, tguser)
+            road.go(command, tg_bot, tg_user)

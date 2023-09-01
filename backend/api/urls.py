@@ -1,7 +1,8 @@
+from rest_framework.routers import SimpleRouter
+
 from django.urls import include, path
 
 import api.views as views
-from rest_framework.routers import SimpleRouter
 
 app_name = 'api'
 
@@ -10,8 +11,6 @@ router = SimpleRouter()
 router.register('users', views.UserViewSet, basename='users')
 router.register('projects', views.ProjectViewSet, basename='projects')
 router.register('tasks', views.TasksViewSet, basename='tasks')
-# router.register('tags', views.TasksViewSet, basename='tags')
-
 
 urlpatterns = [
     path(

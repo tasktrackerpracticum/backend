@@ -1,10 +1,12 @@
+from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
-from drf_extra_fields.fields import Base64ImageField
 
-from rest_framework import serializers
-from rest_framework.exceptions import NotFound, ValidationError
-from tasks.models import Comment, Project, ProjectUser, Task, Tag
+from tasks.models import Comment, Project, ProjectUser, Tag, Task
 from users.models import User
 
 
@@ -189,7 +191,7 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
                 pass
         return project
 
-######!!!!
+
 class TaskAddSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -200,11 +202,8 @@ class TaskAddSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        try:
-            project = Project.objects.get(
-                pk=self.context['view'].kwargs.get('project_id'))
-        except ObjectDoesNotExist:
-            raise NotFound('Проекта с таким id не существует')
+        project = get_object_or_404(
+            Project, pk=self.context['view'].kwargs.get('project_id'))
         instance = Task.objects.create(**validated_data, project=project)
         return instance
 
