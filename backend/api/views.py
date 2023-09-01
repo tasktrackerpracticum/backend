@@ -53,7 +53,7 @@ class UserViewSet(DjoserUserViewSet):
 
 
 class ProjectViewSet(ModelViewSet):
-    permission_classes = (p.IsProjectManager | p.IsAdminUser,)
+    permission_classes = (p.IsProjectManager,)
     serializer_class = s.ProjectSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'project_id'
