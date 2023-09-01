@@ -44,7 +44,7 @@ services:
     ports:
       - "6379:6379"
   celery:
-    build: ..
+    image: catstyle1101/tasktracker_backend:latest
     entrypoint: /app/run_worker.sh
     volumes:
       - static_volume:/app/static/
@@ -54,7 +54,7 @@ services:
       - backend
       - redis
   celery-beat:
-    build: ..
+    image: catstyle1101/tasktracker_backend:latest
     entrypoint: /app/run_worker_beat.sh
     volumes:
       - static_volume:/app/static/
