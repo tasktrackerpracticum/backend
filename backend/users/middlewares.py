@@ -9,6 +9,6 @@ class SetLastVisitMiddleware:
 
     def __call__(self, request):
         if request.user.is_authenticated:
-            User.objects.filter(pk=request.user.pk)[0].update(last_login=now())
+            User.objects.filter(pk=request.user.pk).update(last_login=now())
         response = self.get_response(request)
         return response
