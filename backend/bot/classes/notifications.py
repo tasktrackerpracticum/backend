@@ -1,11 +1,11 @@
 import contextlib
 
 import jinja2
-from bot.classes.bot import tgbot
-from bot.config import config
-from users.models import User
 
+from bot.classes.bot import tg_bot
+from bot.config import config
 from tasks.models import Comment, Task
+from users.models import User
 
 
 def _get_template_env():
@@ -47,7 +47,7 @@ class Notification():
         """Посылаем сообщение юзеру в бот."""
         if user.chat_id:
             text = self._get_text(type, {'task': task, 'comment': comment})
-            tgbot.send_answer({
+            tg_bot.send_answer({
                 'chat_id': user.chat_id,
                 'text': text
             })
@@ -57,8 +57,9 @@ class Notification():
         if usernames := self._get_all_mentions(comment.text):
             for username in usernames:
                 with contextlib.suppress(User.DoesNotExist):
-                    user = User.objects.get(username=username)
-                self._send_to_user(type, user, None, comment)
+                    user = User.objects.filter(username=username)
+                if user.exists():
+                    self._send_to_user(type, user[0], None, comment)
 
     def _get_all_mentions(self, text: str) -> list[str]:
         """Получаем упоминания в тексте комментария."""
@@ -69,9 +70,8 @@ class Notification():
 
     def _send_to_users(self, type: str, task: Task) -> None:
         """Рассылаем сообщения всем участникам задачи."""
-        if users := task.users.all():
-            for user in users:
-                self._send_to_user(type, user, task, None)
+        for user in task.users.all():
+            self._send_to_user(type, user, task, None)
 
     def _get_text(self, type: str, data: dict[str, Task | Comment]):
         """Рендерим шаблон сообщения."""

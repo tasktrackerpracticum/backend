@@ -1,3 +1,13 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet as DjoserUserViewSet
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import mixins, status
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
@@ -6,17 +16,7 @@ from api import permissions as p
 from api import schemas as schemas
 from api import serializers as s
 from bot.classes.notifications import notification
-from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet as DjoserUserViewSet
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import mixins
-from rest_framework import status
-from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from tasks.models import Comment, Project, ProjectUser, Task, Tag
+from tasks.models import Comment, Project, ProjectUser, Tag, Task
 from users.models import User
 
 

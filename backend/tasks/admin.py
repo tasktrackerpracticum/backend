@@ -19,7 +19,6 @@ class TagInline(admin.TabularInline):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title',)
-    list_filter = ('title',)
     search_fields = ('title', 'users__username')
     inlines = [
         ProjectUserInline, TagInline

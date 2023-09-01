@@ -4,17 +4,19 @@ from users.models import User
 
 
 class CreatedAtUpdatedAt(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(verbose_name='Создано', auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name='Изменено', auto_now=True)
 
     class Meta:
         abstract = True
 
 
 class Tag(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='tags')
     title = models.CharField('Название тега', max_length=100)
-    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        'Project', on_delete=models.CASCADE, related_name='tags')
 
     class Meta:
         verbose_name = 'Тег'
@@ -24,7 +26,7 @@ class Tag(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.name = self.title.capitalize()
+        self.title = self.title.capitalize()
         super().save(*args, **kwargs)
 
 
@@ -36,14 +38,12 @@ class Project(CreatedAtUpdatedAt):
     date_finish = models.DateField('Дата завершения', blank=True, null=True)
     is_active = models.BooleanField('Статус', default=True)
 
-    objects = models.Manager()
-
     class Meta:
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
 
     def __str__(self):
-        return f"{self.title}"
+        return self.title
 
 
 class ProjectUser(models.Model):

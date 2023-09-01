@@ -70,11 +70,13 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
+            echo DEBUG=${{ secrets.DEBUG }} >> .env
+            echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
             
             sudo docker compose down
-            sudo docker image prune -f
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/tasktracker_backend
             sudo docker compose up -d
+            sudo docker image prune -f
 
   send_message:
     runs-on: ubuntu-latest
