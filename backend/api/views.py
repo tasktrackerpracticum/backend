@@ -21,7 +21,7 @@ from users.models import User
 
 
 class UserViewSet(DjoserUserViewSet):
-    permission_classes = (p.IsAuthenticated | p.IsAdminUser | p.IsSelf,)
+    permission_classes = (p.IsAuthenticated | p.IsSelf,)
     queryset = User.objects.all()
 
     @action(['get', 'patch', 'delete'], detail=False)
