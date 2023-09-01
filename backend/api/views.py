@@ -45,7 +45,7 @@ class UserViewSet(DjoserUserViewSet):
         )
     def destroy(self, request, *args, **kwargs):
         """
-        В этом эндпоинте можно удалить пользователя.
+        В этом эндпоинте можно удалить пользователя
 
         ---
         """
