@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 until cd /app/
