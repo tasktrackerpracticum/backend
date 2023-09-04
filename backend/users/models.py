@@ -76,6 +76,7 @@ class User(AbstractUser):
         blank=True,
     )
     password = models.CharField('Пароль', max_length=200)
+    last_login = models.DateTimeField(verbose_name='Время последней активности')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
