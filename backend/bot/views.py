@@ -1,10 +1,10 @@
 import json
 from typing import Any
 
-from rest_framework import status
-
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework import status
 
 from bot.classes.bot import tg_bot
 from bot.classes.tguser import TgUser
@@ -15,6 +15,7 @@ from .datatypes_classes import HighLevelCommand
 
 @csrf_exempt
 def webhook(request):
+    """Set webhook for telegram bot."""
     try:
         from_tg: dict[str, Any] = json.loads(request.body)
     except Exception:

@@ -4,6 +4,8 @@ from users.models import User
 
 
 class CreatedAtUpdatedAt(models.Model):
+    """Abstract model mixin, add created_at, updated_at fields."""
+
     created_at = models.DateTimeField(verbose_name='Создано', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Изменено', auto_now=True)
 
@@ -12,6 +14,8 @@ class CreatedAtUpdatedAt(models.Model):
 
 
 class Tag(models.Model):
+    """Tag model."""
+
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='tags')
     title = models.CharField('Название тега', max_length=100)
@@ -26,16 +30,19 @@ class Tag(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        """Redefine save method."""
         self.title = self.title.capitalize()
         super().save(*args, **kwargs)
 
 
 class Project(CreatedAtUpdatedAt):
+    """Project model."""
+
     title = models.CharField(max_length=200)
     users = models.ManyToManyField(User, through='ProjectUser')
-    description = models.TextField('Описание проекта', blank=True, null=True)
-    date_start = models.DateField('Дата начала', blank=True, null=True)
-    date_finish = models.DateField('Дата завершения', blank=True, null=True)
+    description = models.TextField('Описание проекта', blank=True)
+    date_start = models.DateField('Дата начала', blank=True)
+    date_finish = models.DateField('Дата завершения', blank=True)
     is_active = models.BooleanField('Статус', default=True)
 
     class Meta:
@@ -47,6 +54,7 @@ class Project(CreatedAtUpdatedAt):
 
 
 class ProjectUser(models.Model):
+    """ProjectUser model."""
 
     OBSERVER = 'observer'
     BASE_USER = 'user'
@@ -57,15 +65,19 @@ class ProjectUser(models.Model):
         (OBSERVER, 'наблюдатель'),
         (BASE_USER, 'базовый пользователь'),
         (PROJECT_MANAGER, 'ПМ'),
-        (FORBIDDEN, 'запрещено')
+        (FORBIDDEN, 'запрещено'),
     )
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLES)
 
+    def __str__(self):
+        return f'ProjectUser ({self.id})'
+
 
 class Task(CreatedAtUpdatedAt):
+    """Task model."""
 
     BACKLOG = 'backlog'
     TODO = 'todo'
@@ -90,7 +102,7 @@ class Task(CreatedAtUpdatedAt):
     )
 
     title = models.CharField(max_length=200)
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(blank=True)
     column = models.CharField(max_length=15, choices=COLUMNS)
     users = models.ManyToManyField(User, related_name='tasks')
     project = models.ForeignKey(
@@ -106,26 +118,41 @@ class Task(CreatedAtUpdatedAt):
         verbose_name_plural = 'Задачи'
 
     def __str__(self):
-        return f"{self.project} ({self.title})"
+        return f'{self.project} ({self.title})'
 
 
 class TaskFile(models.Model):
+    """TaskFile model."""
+
     title = models.CharField(max_length=200)
-    file = models.ImageField(upload_to='media/tasks')
+    image = models.ImageField(upload_to='media/tasks')
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, related_name='files')
 
+    def __str__(self):
+        return f'File ({self.id})'
+
 
 class TaskImage(models.Model):
+    """Image model."""
+
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='media/tasks')
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, related_name='images')
 
+    def __str__(self):
+        return f'Image ({self.id})'
+
 
 class Comment(CreatedAtUpdatedAt):
+    """Comment model."""
+
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     author = models.ForeignKey(
         User, related_name='comments', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Comment ({self.id})'

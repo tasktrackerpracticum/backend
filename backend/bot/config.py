@@ -4,7 +4,9 @@ from django.conf import settings
 
 
 class Conf():
-    BOT_TOKEN: str = os.getenv("BOT_TOKEN")
+    """Config class for bot."""
+
+    BOT_TOKEN: str = os.getenv('BOT_TOKEN')
     BASE_URL: str = 'https://taksa-tracker.ru/'
     WEBHOOK_URL: str = f'{BASE_URL}webhook/'
     TELEGRAM_URL: str = f'https://api.telegram.org/bot{BOT_TOKEN}/'
@@ -15,7 +17,7 @@ class Conf():
     COMMANDS: list[dict[str, str]] = [
         {
             'command': 'setpassword',
-            'description': 'Сменить пароль к TaskTracker'
+            'description': 'Сменить пароль к TaskTracker',
         },
     ]
 

@@ -2,11 +2,14 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class MyUserManager(BaseUserManager):
+    """Custon user manager for project."""
+
     def create_user(
             self,
             email,
-            password=None
+            password=None,
     ):
+        """Create user."""
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -21,8 +24,9 @@ class MyUserManager(BaseUserManager):
     def create_superuser(
             self,
             email,
-            password=None
+            password=None,
     ):
+        """Create supuser."""
         user = self.create_user(
             email=email,
             password=password,

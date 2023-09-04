@@ -6,6 +6,7 @@ class BotConfig(AppConfig):
     name = 'bot'
 
     def ready(self):
+        """Set bot to work."""
         from bot.classes.bot import tg_bot
         from bot.config import config
         tg_bot.set_webhook({'url': config.WEBHOOK_URL})

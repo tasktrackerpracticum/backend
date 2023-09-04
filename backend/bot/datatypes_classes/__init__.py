@@ -1,2 +1,2 @@
-from .datatypesclass import Road
-from .highlevel import HighLevelCommand
+from .datatypesclass import Road  # noqa
+from .highlevel import HighLevelCommand  # noqa

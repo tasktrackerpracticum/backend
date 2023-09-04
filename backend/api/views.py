@@ -1,3 +1,6 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
+
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
 from drf_yasg import openapi
@@ -7,9 +10,6 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction
 
 from api import filters as f
 from api import permissions as p
@@ -21,11 +21,17 @@ from users.models import User
 
 
 class UserViewSet(DjoserUserViewSet):
+    """User viewset."""
+
     permission_classes = (p.IsAuthenticated | p.IsSelf,)
     queryset = User.objects.all()
 
     @action(['get', 'patch', 'delete'], detail=False)
     def me(self, request, *args, **kwargs):
+        """В этом эндпоинте можно получить себя, как пользователя.
+
+        ---
+        """
         self.get_object = self.get_instance
         if request.method == 'GET':
             return self.retrieve(request, *args, **kwargs)
@@ -39,13 +45,12 @@ class UserViewSet(DjoserUserViewSet):
                 type=openapi.TYPE_OBJECT,
                 properties={
                     'current_password': openapi.Schema(
-                        type=openapi.TYPE_STRING)
+                        type=openapi.TYPE_STRING),
                 },
             ),
         )
     def destroy(self, request, *args, **kwargs):
-        """
-        В этом эндпоинте можно удалить пользователя
+        """В этом эндпоинте можно удалить пользователя.
 
         ---
         """
@@ -53,6 +58,8 @@ class UserViewSet(DjoserUserViewSet):
 
 
 class ProjectViewSet(ModelViewSet):
+    """Project viewset."""
+
     permission_classes = (p.IsProjectManager,)
     serializer_class = s.ProjectSerializer
     lookup_field = 'id'
@@ -71,6 +78,7 @@ class ProjectViewSet(ModelViewSet):
     }
 
     def get_serializer_class(self):
+        """Get serializer for different http request."""
         return self.action_serializers.get(self.action, self.serializer_class)
 
     @swagger_auto_schema(tags=['projects'])
@@ -148,8 +156,7 @@ class ProjectViewSet(ModelViewSet):
     )
     def users(self, request, *args, **kwargs):
         """
-        В этом эндпоинте можно добавить пользователя или изменить его роль в
-        проекте.
+        В этом эндпоинте можно добавить пользователя или изменить его роль.
 
         ---
         """
@@ -163,16 +170,17 @@ class ProjectViewSet(ModelViewSet):
         obj, _ = ProjectUser.objects.update_or_create(
             project=project,
             user=user,
-            defaults={'role': serializer.data.get('role')}
+            defaults={'role': serializer.data.get('role')},
         )
         obj.save()
         return Response(
-            serializer.data, status=status.HTTP_200_OK
+            serializer.data, status=status.HTTP_200_OK,
         )
 
     @swagger_auto_schema(
-        tags=['projects'], manual_parameters=[
-            schemas.project_id_param, schemas.user_id_param])
+        tags=['projects'],
+        manual_parameters=[schemas.project_id_param, schemas.user_id_param],
+    )
     @transaction.atomic
     def delete_user(self, request, *args, **kwargs):
         """
@@ -194,6 +202,8 @@ class ProjectViewSet(ModelViewSet):
 
 
 class TasksViewSet(ModelViewSet):
+    """Task viewset."""
+
     queryset = Task.objects.all()
     lookup_url_kwarg = 'task_id'
     permission_classes = (
@@ -204,7 +214,7 @@ class TasksViewSet(ModelViewSet):
         DjangoFilterBackend,
     )
     filterset_class = f.TaskFilter
-    ordering = ('column', 'ordering',)
+    ordering = ('column', 'ordering')
     action_serializers = {
         'create': s.TaskAddSerializer,
         'partial_update': s.TaskAddSerializer,
@@ -212,9 +222,10 @@ class TasksViewSet(ModelViewSet):
     }
 
     def get_queryset(self):
+        """Get queryset."""
         if project_id := self.kwargs.get('project_id'):
             try:
-                project = Project.objects.get(pk=project_id)
+                Project.objects.get(pk=project_id)
             except ObjectDoesNotExist:
                 raise NotFound('Проекта с таким id не существует')
         if self.request.method == 'GET' and project_id:
@@ -224,6 +235,7 @@ class TasksViewSet(ModelViewSet):
         return super().get_queryset()
 
     def get_serializer_class(self):
+        """Get serializer for different http request."""
         if hasattr(self, 'action_serializers'):
             return self.action_serializers.get(
                 self.action, self.serializer_class)
@@ -248,8 +260,10 @@ class TasksViewSet(ModelViewSet):
         """
         return super().list(*args, **kwargs)
 
-    @swagger_auto_schema(manual_parameters=[
-        schemas.project_id_param, schemas.task_id_param], tags=['tasks'])
+    @swagger_auto_schema(
+        manual_parameters=[schemas.project_id_param, schemas.task_id_param],
+        tags=['tasks'],
+    )
     def partial_update(self, request, *args, **kwargs):
         """
         Этот эндпоинт позволяет изменить основные параметры задачи.
@@ -259,8 +273,10 @@ class TasksViewSet(ModelViewSet):
         notification.send(type='change_task', task=self.get_object())
         return super().partial_update(request, *args, **kwargs)
 
-    @swagger_auto_schema(manual_parameters=[
-        schemas.project_id_param, schemas.task_id_param], tags=['tasks'])
+    @swagger_auto_schema(
+        manual_parameters=[schemas.project_id_param, schemas.task_id_param],
+        tags=['tasks'],
+    )
     def update(self, request, *args, **kwargs):
         """
         В этом эндпоинте можно обновить параметры задачи.
@@ -292,8 +308,10 @@ class TasksViewSet(ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    @swagger_auto_schema(manual_parameters=[
-        schemas.task_id_param], tags=['tasks'])
+    @swagger_auto_schema(
+        manual_parameters=[schemas.task_id_param],
+        tags=['tasks'],
+    )
     @action(
         methods=['POST'],
         detail=True,
@@ -320,8 +338,10 @@ class TasksViewSet(ModelViewSet):
         notification.send(type='new_task', task=task, user=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(manual_parameters=[
-        schemas.task_id_param, schemas.project_id_param], tags=['tasks'])
+    @swagger_auto_schema(
+        manual_parameters=[schemas.task_id_param, schemas.project_id_param],
+        tags=['tasks'],
+    )
     def destroy(self, *args, **kwargs):
         """
         Этот эндпоинт удаляет задачу.
@@ -333,8 +353,10 @@ class TasksViewSet(ModelViewSet):
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(manual_parameters=[
-        schemas.task_id_param, schemas.user_id_param], tags=['tasks'])
+    @swagger_auto_schema(
+        manual_parameters=[schemas.task_id_param, schemas.user_id_param],
+        tags=['tasks'],
+    )
     def delete_user(self, *args, **kwargs):
         """
         Этот эндпоинт удаляет пользователя из задачи.
@@ -352,6 +374,8 @@ class TasksViewSet(ModelViewSet):
 
 
 class CommentViewSet(ModelViewSet):
+    """Comment Viewset."""
+
     queryset = Comment.objects.all()
     serializer_class = s.AddCommentSerializer
     permission_classes = (
@@ -362,12 +386,14 @@ class CommentViewSet(ModelViewSet):
     }
 
     def get_serializer_class(self):
+        """Change serializer for different request methods."""
         if hasattr(self, 'action_serializers'):
             return self.action_serializers.get(
                 self.action, self.serializer_class)
         return super().get_serializer_class()
 
     def get_queryset(self):
+        """Get all comments for one task."""
         if not self.kwargs.get('task_id'):
             return super().get_queryset()
         try:
@@ -442,6 +468,8 @@ class TagViewSet(
     mixins.DestroyModelMixin,
     GenericViewSet,
 ):
+    """Tag viewset."""
+
     serializer_class = s.TagSerializer
     lookup_url_kwarg = 'tag_id'
     permission_classes = (p.TagPermission,)
@@ -451,6 +479,7 @@ class TagViewSet(
     filterset_class = f.TagFilter
 
     def get_queryset(self):
+        """Get queryset for view. Show tags only requested user."""
         return Tag.objects.filter(user=self.request.user)
 
     @swagger_auto_schema(tags=['tags'])

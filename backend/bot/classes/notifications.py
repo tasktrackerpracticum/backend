@@ -24,42 +24,43 @@ def _get_template_env():
 
 
 class Notification():
+    """Notification class."""
 
     def send(
-        self, type: str | None = None, task: Task | None = None, **kwargs
+        self, type_: str | None = None, task: Task | None = None, **kwargs,
     ) -> None:
         """Рассылаем оповещения разных типов."""
-        match type:
+        match type_:
             case 'new_task' | 'deadline':
                 user = kwargs.get('user')
                 if task and user:
-                    self._send_to_user(type, user, task, None)
+                    self._send_to_user(type_, user, task, None)
             case 'mention':
                 if comment := kwargs.get('comment'):
-                    self._send_to_usernames(type, comment)
+                    self._send_to_usernames(type_, comment)
             case 'change_task':
                 if task:
-                    self._send_to_users(type, task)
+                    self._send_to_users(type_, task)
 
     def _send_to_user(
-        self, type: str, user: User, task: Task, comment: Comment
+        self, type_: str, user: User, task: Task, comment: Comment,
     ) -> None:
         """Посылаем сообщение юзеру в бот."""
         if user.chat_id:
-            text = self._get_text(type, {'task': task, 'comment': comment})
+            text = self._get_text(type_, {'task': task, 'comment': comment})
             tg_bot.send_answer({
                 'chat_id': user.chat_id,
-                'text': text
+                'text': text,
             })
 
-    def _send_to_usernames(self, type: str, comment: Comment) -> None:
+    def _send_to_usernames(self, type_: str, comment: Comment) -> None:
         """Получаем пользователей по username и отсылаем им сообщения."""
         if usernames := self._get_all_mentions(comment.text):
             for username in usernames:
                 with contextlib.suppress(User.DoesNotExist):
                     user = User.objects.filter(username=username)
                 if user.exists():
-                    self._send_to_user(type, user[0], None, comment)
+                    self._send_to_user(type_, user[0], None, comment)
 
     def _get_all_mentions(self, text: str) -> list[str]:
         """Получаем упоминания в тексте комментария."""
@@ -68,16 +69,16 @@ class Notification():
             mentions[count] = mentions[count][1:]
         return mentions
 
-    def _send_to_users(self, type: str, task: Task) -> None:
+    def _send_to_users(self, type_: str, task: Task) -> None:
         """Рассылаем сообщения всем участникам задачи."""
         for user in task.users.all():
-            self._send_to_user(type, user, task, None)
+            self._send_to_user(type_, user, task, None)
 
-    def _get_text(self, type: str, data: dict[str, Task | Comment]):
+    def _get_text(self, type_: str, data: dict[str, Task | Comment]):
         """Рендерим шаблон сообщения."""
-        if not type or not data:
+        if not type_ or not data:
             return
-        template = _get_template_env().get_template(f'{type}.j2')
+        template = _get_template_env().get_template(f'{type_}.j2')
         return template.render(**data)
 
 
