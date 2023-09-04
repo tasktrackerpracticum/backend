@@ -8,8 +8,10 @@ from bot.config import config
 
 
 class Bot:
+    """Bot class."""
 
     def __init__(self):
+        """Init bot."""
         self.url = config.TELEGRAM_URL
         self.commands = config.COMMANDS
 
@@ -60,9 +62,9 @@ class Bot:
     @staticmethod
     def get_content_type(message: dict[str, Any]) -> str:
         """Получение типа контента, поступвшего на вебхук."""
-        contents = ['text', 'document', 'photo']
+        content_types = ['text', 'document', 'photo']
         return next(
-            (content for content in contents if content in message), '')
+            (content for content in content_types if content in message), '')
 
     @staticmethod
     def get_data_type(data: dict[str, Any]) -> str:

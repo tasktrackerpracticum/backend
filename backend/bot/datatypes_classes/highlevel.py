@@ -1,10 +1,11 @@
 """
-    Класс направлений верхнего уровня.
-    Идет перенаправление в зависимости от получения одного из 4 состояний:
-    - Состояние юзера;
-    - Команда;
-    - Callback_query;
-    - Текст.
+Класс направлений верхнего уровня.
+
+Идет перенаправление в зависимости от получения одного из 4 состояний:
+- Состояние юзера;
+- Команда;
+- Callback_query;
+- Текст.
 """
 
 from bot.classes.bot import Bot
@@ -14,8 +15,10 @@ from .datatypesclass import Observer, Road, Subject
 
 
 class HighLevelCommand(Observer):
+    """Command update handler."""
+
     def update(
-            self, subject: Subject, tg_bot: Bot, tg_user: TgUser, **kwargs
+            self, subject: Subject, tg_bot: Bot, tg_user: TgUser, **kwargs,
     ) -> None:
         """Направления при получении комманды."""
         from .commandlevel import CommandSetPassword, CommandStart

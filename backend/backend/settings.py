@@ -71,7 +71,7 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
         'HOST': os.getenv('DB_HOST', '0.0.0.0'),
         'PORT': os.getenv('DB_PORT', '8000'),
-    }
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -135,9 +135,9 @@ SWAGGER_SETTINGS = {
       'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
-            'in': 'header'
-      }
-   }
+            'in': 'header',
+      },
+   },
 }
 DJOSER = {
     'SERIALIZERS': {

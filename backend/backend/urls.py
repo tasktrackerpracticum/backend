@@ -1,32 +1,36 @@
-from drf_yasg import openapi
-from drf_yasg.generators import OpenAPISchemaGenerator
-from drf_yasg.views import get_schema_view
-from rest_framework import permissions
-
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
 
+from drf_yasg import openapi
+from drf_yasg.generators import OpenAPISchemaGenerator
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+
 
 class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
+    """Add HTTP and HTTPS request type to swagger documentation."""
+
     def get_schema(self, request=None, public=False):
+        """Get schema for swagger."""
         schema = super().get_schema(request, public)
         schema.schemes = ['https', 'http']
         return schema
+
 
 schema_view = get_schema_view(
     openapi.Info(
         title='Task Tracker',
         default_version='v1',
-        description='''API documentation for Task Tracker project.
+        description="""API documentation for Task Tracker project.
         Made by graduates of Yandex Practikum school.
         <a href="https://t.me/catstyle1101" target="_blank">Anton Masyuk,</a>\
         <a href="https://t.me/afoninsb" target="_blank">Sergey Afonin,</a>\
         <a href="https://t.me/Duglov" target="_blank">Dmitriy Uglov,</a>\
         and <a href="https://t.me/K0nstantin8891" target="_blank">\
-        Konstantin Vasilyev</a>''',
+        Konstantin Vasilyev</a>""",
         license=openapi.License(name='MIT License'),
     ),
     public=True,

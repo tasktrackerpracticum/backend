@@ -1,6 +1,7 @@
-"""
-    Классы, определяющие Наблюдателя и Подписчика,
-    а также интерфейс для их взаимодействия.
+"""Datatype class module.
+
+Классы, определяющие Наблюдателя и Подписчика,
+а также интерфейс для их взаимодействия.
 """
 
 from abc import ABC, abstractmethod
@@ -10,8 +11,11 @@ from bot.classes.tguser import TgUser
 
 
 class Subject(ABC):
-    """ Интферфейс издателя объявляет набор методов
-    для управлениями подписчиками."""
+    """Subject abstract class.
+
+    Интерфейс издателя объявляет набор методов
+    для управления подписчиками.
+    """
 
     @abstractmethod
     def attach(self, observer: 'Observer') -> None:
@@ -27,8 +31,11 @@ class Subject(ABC):
 
 
 class Observer(ABC):
-    """Интерфейс Наблюдателя объявляет метод уведомления, который издатели
-    используют для оповещения своих подписчиков."""
+    """Observer abstract class.
+
+    Интерфейс Наблюдателя объявляет метод уведомления, который издатели
+    используют для оповещения своих подписчиков.
+    """
 
     @abstractmethod
     def update(self, subject: Subject) -> None:
@@ -36,8 +43,11 @@ class Observer(ABC):
 
 
 class Road(Subject):
-    """Издатель владеет некоторым важным состоянием и оповещает наблюдателей
-    о его изменениях."""
+    """Road class.
+
+    Издатель владеет некоторым важным состоянием и оповещает наблюдателей
+    о его изменениях.
+    """
 
     state: str | None = None
     """Для удобства в этой переменной хранится состояние Издателя, необходимое
@@ -47,9 +57,11 @@ class Road(Subject):
     """Список подписчиков."""
 
     def attach(self, observer: Observer) -> None:
+        """Attach observer."""
         self._observers.append(observer)
 
     def clean(self, observer: Observer) -> None:
+        """Clean observer."""
         self._observers.clear()
 
     def notify(self, tgbot: Bot, tguser: TgUser, **kwargs) -> None:
@@ -60,7 +72,10 @@ class Road(Subject):
         self.clean(observer)
 
     def go(self, state: str, tgbot: Bot, tguser: TgUser, **kwargs) -> None:
-        """Получаем состояние state и запускаем оповещение всех
-        прикреплённых на данный момент подписчиков."""
+        """Go method.
+
+        Получаем состояние state и запускаем оповещение всех
+        прикреплённых на данный момент подписчиков.
+        """
         self.state = state
         self.notify(tgbot, tguser, **kwargs)
