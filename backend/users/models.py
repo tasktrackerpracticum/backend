@@ -23,6 +23,7 @@ class User(AbstractUser):
     username = models.CharField(
         'Имя пользователя',
         max_length=100,
+        null=True,
         blank=True,
     )
     chat_id = models.BigIntegerField(
@@ -60,11 +61,13 @@ class User(AbstractUser):
         max_length=6,
         choices=GENDERS,
         blank=True,
+        null=True,
     )
     country = models.CharField(
         'Страна',
         max_length=100,
         blank=True,
+        null=True,
     )
     timezone = TimeZoneField(
         'Часовой пояс',
