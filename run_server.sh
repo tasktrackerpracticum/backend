@@ -1,10 +1,6 @@
 #!/bin/sh
 
-until cd /app/
-do
-    echo "Waiting server volume..."
-done
-
+sleep 5
 
 until python manage.py migrate
 do
