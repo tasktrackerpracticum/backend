@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='country',
-            field=models.CharField(blank=True, default=django.utils.timezone.now, max_length=20, verbose_name='Страна'),
+            field=models.CharField(blank=True, default=django.utils.timezone.now, max_length=100, verbose_name='Страна'),
             preserve_default=False,
         ),
         migrations.AlterField(

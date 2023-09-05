@@ -63,7 +63,7 @@ class User(AbstractUser):
     )
     country = models.CharField(
         'Страна',
-        max_length=20,
+        max_length=100,
         blank=True,
     )
     timezone = TimeZoneField(
