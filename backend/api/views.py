@@ -11,10 +11,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from api import filters as f
-from api import permissions as p
-from api import schemas as schemas
-from api import serializers as s
+from api import filters, permissions, schemas, serializers
 from bot.classes.notifications import notification
 from tasks.models import Comment, Project, ProjectUser, Tag, Task
 from users.models import User
@@ -23,7 +20,7 @@ from users.models import User
 class UserViewSet(DjoserUserViewSet):
     """User viewset."""
 
-    permission_classes = (p.IsAuthenticated | p.IsSelf,)
+    permission_classes = (permissions.IsAuthenticated | permissions.IsSelf,)
     queryset = User.objects.all()
 
     @action(['get', 'patch', 'delete'], detail=False)
@@ -60,21 +57,21 @@ class UserViewSet(DjoserUserViewSet):
 class ProjectViewSet(ModelViewSet):
     """Project viewset."""
 
-    permission_classes = (p.IsProjectManager,)
-    serializer_class = s.ProjectSerializer
+    permission_classes = (permissions.IsProjectManager,)
+    serializer_class = serializers.ProjectSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'project_id'
     queryset = Project.objects.all()
     filter_backends = (
         DjangoFilterBackend,
-        f.CustomProjectOrderingFilter,
+        filters.CustomProjectOrderingFilter,
     )
-    filterset_class = f.ProjectFilter
+    filterset_class = filters.ProjectFilter
     ordering_fields = ('title', 'is_active', 'date_start', 'date_finish')
     ordering = ('is_active', 'date_finish', 'title')
     action_serializers = {
-        'list': s.ShortProjectSerializer,
-        'create': s.ProjectCreateSerializer,
+        'list': serializers.ShortProjectSerializer,
+        'create': serializers.ProjectCreateSerializer,
     }
 
     def get_serializer_class(self):
@@ -152,7 +149,7 @@ class ProjectViewSet(ModelViewSet):
     @action(
         methods=['POST'],
         detail=True,
-        serializer_class=s.ProjectUserAddSerializer,
+        serializer_class=serializers.ProjectUserAddSerializer,
     )
     def users(self, request, *args, **kwargs):
         """
@@ -207,18 +204,19 @@ class TasksViewSet(ModelViewSet):
     queryset = Task.objects.all()
     lookup_url_kwarg = 'task_id'
     permission_classes = (
-        p.IsProjectManagerTask | p.IsObserverTask | p.IsBaseUserTask,
+        permissions.IsProjectManagerTask | permissions.IsObserverTask |
+        permissions.IsBaseUserTask,
     )
-    serializer_class = s.TaskSerializer
+    serializer_class = serializers.TaskSerializer
     filter_backends = (
         DjangoFilterBackend,
     )
-    filterset_class = f.TaskFilter
+    filterset_class = filters.TaskFilter
     ordering = ('column', 'ordering')
     action_serializers = {
-        'create': s.TaskAddSerializer,
-        'partial_update': s.TaskAddSerializer,
-        'update': s.TaskAddSerializer,
+        'create': serializers.TaskAddSerializer,
+        'partial_update': serializers.TaskAddSerializer,
+        'update': serializers.TaskAddSerializer,
     }
 
     def get_queryset(self):
@@ -315,7 +313,7 @@ class TasksViewSet(ModelViewSet):
     @action(
         methods=['POST'],
         detail=True,
-        serializer_class=s.TaskUserAddSerializer,
+        serializer_class=serializers.TaskUserAddSerializer,
     )
     def users(self, request, **kwargs):
         """
@@ -377,12 +375,12 @@ class CommentViewSet(ModelViewSet):
     """Comment Viewset."""
 
     queryset = Comment.objects.all()
-    serializer_class = s.AddCommentSerializer
+    serializer_class = serializers.AddCommentSerializer
     permission_classes = (
-        p.IsProjectManagerComment | p.IsObserverComment | p.IsBaseUserComment,
+        permissions.IsProjectManagerComment | permissions.IsObserverComment | permissions.IsBaseUserComment,
     )
     action_serializers = {
-        'list': s.CommentSerializer,
+        'list': serializers.CommentSerializer,
     }
 
     def get_serializer_class(self):
@@ -470,13 +468,13 @@ class TagViewSet(
 ):
     """Tag viewset."""
 
-    serializer_class = s.TagSerializer
+    serializer_class = serializers.TagSerializer
     lookup_url_kwarg = 'tag_id'
-    permission_classes = (p.TagPermission,)
+    permission_classes = (permissions.TagPermission,)
     filter_backends = (
         DjangoFilterBackend,
     )
-    filterset_class = f.TagFilter
+    filterset_class = filters.TagFilter
 
     def get_queryset(self):
         """Get queryset for view. Show tags only requested user."""
