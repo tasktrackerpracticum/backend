@@ -50,6 +50,7 @@ class User(AbstractUser):
         'Должность',
         max_length=100,
         blank=True,
+        null=True,
     )
     date_of_birth = models.DateField(
         'Дата рождения',
