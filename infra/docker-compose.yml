@@ -1,0 +1,70 @@
+version: '3.3'
+services:
+
+  db:
+    image: postgres:13.0-alpine
+    restart: always
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+    env_file:
+      - .env
+
+  backend:
+    image: catstyle1101/tasktracker_backend:latest
+    entrypoint: /app/run_server.sh
+    restart: always
+    volumes:
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:1.19.3
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /root/frontend/build/:/usr/share/nginx/html/
+      - ./docs/:/usr/share/nginx/html/api/docs/
+      - /root/frontend/build/static/:/etc/nginx/html/static/
+      - media_volume:/etc/nginx/html/media/
+      - static_volume:/etc/nginx/static/
+      - /etc/cert/:/etc/cert/
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+  celery:
+    image: catstyle1101/tasktracker_backend:latest
+    entrypoint: /app/run_worker.sh
+    volumes:
+      - static_volume:/app/static/
+    env_file:
+      - .env
+    depends_on:
+      - backend
+      - redis
+  celery-beat:
+    image: catstyle1101/tasktracker_backend:latest
+    entrypoint: /app/run_worker_beat.sh
+    volumes:
+      - static_volume:/app/static/
+    env_file:
+      - .env
+    depends_on:
+      - backend
+      - redis
+
+volumes:
+  static_volume:
+  media_volume:
+  postgres_volume:
