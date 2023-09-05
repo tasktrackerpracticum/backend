@@ -2,7 +2,6 @@
 
 import datetime
 from django.db import migrations, models
-import django.utils.timezone
 import timezone_utils.fields
 
 
@@ -28,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='position',
-            field=models.CharField(blank=True, default=django.utils.timezone.now, max_length=100, verbose_name='Должность'),
+            field=models.CharField(blank=True, default='', max_length=100, verbose_name='Должность'),
             preserve_default=False,
         ),
         migrations.AlterField(
