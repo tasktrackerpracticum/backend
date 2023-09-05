@@ -40,10 +40,10 @@ class Project(CreatedAtUpdatedAt):
 
     title = models.CharField(max_length=200)
     users = models.ManyToManyField(User, through='ProjectUser')
-    description = models.TextField('Описание проекта', blank=True)
-    date_start = models.DateField('Дата начала', blank=True)
-    date_finish = models.DateField('Дата завершения', blank=True)
-    is_active = models.BooleanField('Статус', default=True)
+    description = models.TextField('Описание проекта', blank=True, null=True)
+    date_start = models.DateField('Дата начала', blank=True, null=True)
+    date_finish = models.DateField('Дата завершения', blank=True, null=True)
+    is_active = models.BooleanField('Статус', default=True, null=True)
 
     class Meta:
         verbose_name = 'Проект'
@@ -102,7 +102,7 @@ class Task(CreatedAtUpdatedAt):
     )
 
     title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
     column = models.CharField(max_length=15, choices=COLUMNS)
     users = models.ManyToManyField(User, related_name='tasks')
     project = models.ForeignKey(
